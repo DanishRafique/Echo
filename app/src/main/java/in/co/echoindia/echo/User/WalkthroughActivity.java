@@ -2,6 +2,7 @@ package in.co.echoindia.echo.User;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -155,6 +156,8 @@ public class WalkthroughActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
         prefManager.setFirstTimeLaunch(false);
+        SharedPreferences sp = getSharedPreferences("init", 0);
+        sp.edit().putString("done", "1").apply();
         startActivity(new Intent(WalkthroughActivity.this, HomePageActivity.class));
         finish();
     }
