@@ -26,7 +26,7 @@ import in.co.echoindia.echo.Utils.PrefManager;
  * Created by Danish Rafique on 03-03-2017.
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class WalkthroughActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
@@ -155,7 +155,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
         prefManager.setFirstTimeLaunch(false);
-        startActivity(new Intent(SplashActivity.this, HomePageActivity.class));
+        startActivity(new Intent(WalkthroughActivity.this, HomePageActivity.class));
         finish();
     }
 
