@@ -1,36 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <group android:id="@+id/nav_group_primary" android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_my_account"
+            android:icon="@drawable/ic_menu_my_account"
+            android:title="My Account" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_elected_representative"
+            android:icon="@drawable/ic_elected_representative"
+            android:title="Elected Representative" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_development_in_progress"
+            android:icon="@drawable/ic_development_in_progress"
+            android:title="Development in Progress" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_spending"
+            android:icon="@drawable/ic_spending"
+            android:title="Spending" />
     </group>
+    <group android:id="@+id/nav_group_speaks" android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_opposition_speak"
+                android:icon="@drawable/ic_opposition_speak"
+                android:title="Opposition Speaks" />
+            <item
+                android:id="@+id/nav_ngo_speak"
+                android:icon="@drawable/ic_ngo_speak"
+                android:title="NGO Speaks" />
+    </group>
+    <group android:id="@+id/nav_group_communicate" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_about_us"
+            android:icon="@drawable/ic_about_us"
+            android:title="About Us" />
+        <item
+                android:id="@+id/nav_contact_us"
+                android:icon="@drawable/ic_contact_us"
+                android:title="Contact Us" />
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_share"
+            android:title="Share" />
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+       </group>
+    <group android:id="@+id/nav_group_log_out" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/ic_log_out"
+            android:title="Log Out" />
+        </group>
 
 </menu>
