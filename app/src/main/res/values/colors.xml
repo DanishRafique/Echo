@@ -3,8 +3,8 @@
 
     <color name="bg_slider_1">#FF9933</color>
 
-    <color name="colorPrimary">#03A9F4</color>
-    <color name="colorPrimaryDark">#0288D1</color>
+    <color name="colorPrimary">#087cb0</color>
+    <color name="colorPrimaryDark">#0871a0</color>
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
     <color name="primary_light">#B3E5FC</color>
