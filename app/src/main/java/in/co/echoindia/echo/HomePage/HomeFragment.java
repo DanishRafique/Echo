@@ -1,14 +1,18 @@
 package in.co.echoindia.echo.HomePage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import in.co.echoindia.echo.R;
+import in.co.echoindia.echo.User.SignupActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +70,18 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Button btn = (Button) view.findViewById(R.id.btnSignup);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), SignupActivity.class));
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
