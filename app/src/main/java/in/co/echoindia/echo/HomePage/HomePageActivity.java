@@ -32,10 +32,9 @@ import in.co.echoindia.echo.User.ContactUsActivity;
 import in.co.echoindia.echo.User.DevelopmentInProgressActivity;
 import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
 import in.co.echoindia.echo.User.MyAccountActivity;
+import in.co.echoindia.echo.User.SettingsActivity;
 import in.co.echoindia.echo.User.SignupActivity;
 import in.co.echoindia.echo.User.SpendingActivity;
-
-import static android.R.attr.id;
 
 public class HomePageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -140,7 +139,8 @@ public class HomePageActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent i =new Intent(HomePageActivity.this, SettingsActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -150,7 +150,7 @@ public class HomePageActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-
+        int id = item.getItemId();
         if(id == R.id.nav_my_account){
             Intent i = new Intent(HomePageActivity.this, MyAccountActivity.class);
             startActivity(i);

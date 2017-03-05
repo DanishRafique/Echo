@@ -118,8 +118,8 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_my_account">My Account</string>
-    <string name="title_activity_elected_representative">ElectedRepresentativeActivity</string>
-    <string name="title_activity_spending">SpendingActivity</string>
-    <string name="title_activity_about_us">AboutUsActivity</string>
-    <string name="title_activity_contact_us">ContactUsActivity</string>
+    <string name="title_activity_elected_representative">Elected Representative</string>
+    <string name="title_activity_spending">Spending</string>
+    <string name="title_activity_about_us">About Us</string>
+    <string name="title_activity_contact_us">Contact Us</string>
 </resources>
