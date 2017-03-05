@@ -10,27 +10,6 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     android:overScrollMode="always">
-
-
-
-    <include
-        layout="@layout/app_bar_home_page"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        android:overScrollMode="always"
-        app:headerLayout="@layout/nav_header_home_page"
-        app:menu="@menu/activity_home_page_drawer" />
-
-
-
-
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -77,5 +56,26 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
     </android.support.design.widget.CoordinatorLayout>
+
+
+    <include
+        layout="@layout/app_bar_home_page"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:overScrollMode="always"
+        app:headerLayout="@layout/nav_header_home_page"
+        app:menu="@menu/activity_home_page_drawer" />
+
+
+
+
+
 
 </android.support.v4.widget.DrawerLayout>

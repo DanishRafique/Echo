@@ -15,9 +15,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,11 @@ public class HomePageActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Echo");
         setSupportActionBar(toolbar);
@@ -57,11 +64,7 @@ public class HomePageActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -75,9 +78,10 @@ public class HomePageActivity extends AppCompatActivity
         adapter.addFragment(mHomeFragment, "HOME");
         adapter.addFragment(mSpendingFragment, "SPENDING");
         adapter.addFragment(mOppositionSpeakFragment, "OPPOSITION SPEAKS");
-        adapter.addFragment(mNewsFragment, "NEWS");
-        adapter.addFragment(mNGOSpeakFragment, "NGO SPEAKS");
+        //adapter.addFragment(mNewsFragment, "NEWS");
+        //adapter.addFragment(mNGOSpeakFragment, "NGO SPEAKS");
         viewPager.setAdapter(adapter);
+
     }
 
     @Override
@@ -170,6 +174,21 @@ public class HomePageActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    private void setupTabIcons() {
+
+        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_about_us, 0, 0);
+        tabLayout.getTabAt(0).setCustomView(tabOne);
+
+        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_about_us, 0, 0);
+        tabLayout.getTabAt(1).setCustomView(tabTwo);
+
+        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_about_us, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabThree);
     }
 
 }
