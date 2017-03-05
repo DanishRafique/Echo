@@ -22,16 +22,6 @@
             android:icon="@drawable/ic_spending"
             android:title="Spending" />
     </group>
-    <group android:id="@+id/nav_group_speaks" android:checkableBehavior="single">
-            <item
-                android:id="@+id/nav_opposition_speak"
-                android:icon="@drawable/ic_opposition_speak"
-                android:title="Opposition Speaks" />
-            <item
-                android:id="@+id/nav_ngo_speak"
-                android:icon="@drawable/ic_ngo_speak"
-                android:title="NGO Speaks" />
-    </group>
     <group android:id="@+id/nav_group_communicate" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_about_us"

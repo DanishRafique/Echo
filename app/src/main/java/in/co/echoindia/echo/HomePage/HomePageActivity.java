@@ -1,6 +1,9 @@
 package in.co.echoindia.echo.HomePage;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -15,11 +18,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,9 @@ import java.util.List;
 import in.co.echoindia.echo.R;
 
 public class HomePageActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OppositionSpeakFragment.OnFragmentInteractionListener,
-        NewsFragment.OnFragmentInteractionListener, NGOSpeakFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,
-        SpendingFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        NewsFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,PollFragment.OnFragmentInteractionListener,BuzzFragment.OnFragmentInteractionListener
+        {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -64,24 +65,43 @@ public class HomePageActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        setupTabIcons();
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getIcon().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                if (Build.VERSION.SDK_INT >= 23) {
+                    tabLayout.getTabAt(tabLayout.getSelectedTabPosition()).getIcon().setColorFilter(getColor(R.color.tab_unselected), PorterDuff.Mode.SRC_IN);
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
+
+
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        SpendingFragment mSpendingFragment = new SpendingFragment();
         NewsFragment mNewsFragment = new NewsFragment();
-        NGOSpeakFragment mNGOSpeakFragment = new NGOSpeakFragment();
-        OppositionSpeakFragment mOppositionSpeakFragment = new OppositionSpeakFragment();
+        PollFragment mPollFragment = new PollFragment();
         HomeFragment mHomeFragment = new HomeFragment();
+        BuzzFragment mBuzzFragment=new BuzzFragment();
 
-        adapter.addFragment(mHomeFragment, "HOME");
-        adapter.addFragment(mSpendingFragment, "SPENDING");
-        adapter.addFragment(mOppositionSpeakFragment, "OPPOSITION SPEAKS");
-        //adapter.addFragment(mNewsFragment, "NEWS");
-        //adapter.addFragment(mNGOSpeakFragment, "NGO SPEAKS");
+        adapter.addFragment(mHomeFragment,"HOME");
+        adapter.addFragment(mBuzzFragment,"BUZZ");
+        adapter.addFragment(mPollFragment,"POLL");
+        adapter.addFragment(mNewsFragment,"NEWS");
+
         viewPager.setAdapter(adapter);
-
     }
 
     @Override
@@ -177,18 +197,11 @@ public class HomePageActivity extends AppCompatActivity
     }
 
     private void setupTabIcons() {
-
-        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_about_us, 0, 0);
-        tabLayout.getTabAt(0).setCustomView(tabOne);
-
-        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_about_us, 0, 0);
-        tabLayout.getTabAt(1).setCustomView(tabTwo);
-
-        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_about_us, 0, 0);
-        tabLayout.getTabAt(2).setCustomView(tabThree);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_poll_blue);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_news_blue);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_buzz_blue);
     }
+
 
 }

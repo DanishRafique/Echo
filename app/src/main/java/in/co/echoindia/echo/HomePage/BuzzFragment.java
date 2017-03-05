@@ -13,12 +13,12 @@ import in.co.echoindia.echo.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NGOSpeakFragment.OnFragmentInteractionListener} interface
+ * {@link BuzzFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NGOSpeakFragment#newInstance} factory method to
+ * Use the {@link BuzzFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NGOSpeakFragment extends Fragment {
+public class BuzzFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +30,7 @@ public class NGOSpeakFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public NGOSpeakFragment() {
+    public BuzzFragment() {
         // Required empty public constructor
     }
 
@@ -40,11 +40,11 @@ public class NGOSpeakFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NGOSpeakFragment.
+     * @return A new instance of fragment BuzzFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NGOSpeakFragment newInstance(String param1, String param2) {
-        NGOSpeakFragment fragment = new NGOSpeakFragment();
+    public static BuzzFragment newInstance(String param1, String param2) {
+        BuzzFragment fragment = new BuzzFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,7 +65,7 @@ public class NGOSpeakFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ngospeak, container, false);
+        return inflater.inflate(R.layout.fragment_buzz, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

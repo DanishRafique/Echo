@@ -35,8 +35,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary"
-                    app:tabGravity="center"
-                    app:tabMode="scrollable"
+                    app:tabMode="fixed"
+                    app:tabGravity="fill"
+                    app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
                     app:tabSelectedTextColor="#ffffff"
                     app:tabTextColor="#81d6fe" />
                 <View
