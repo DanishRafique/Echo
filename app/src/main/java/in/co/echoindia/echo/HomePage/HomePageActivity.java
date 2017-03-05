@@ -1,5 +1,6 @@
 package in.co.echoindia.echo.HomePage;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
@@ -26,6 +27,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.co.echoindia.echo.R;
+import in.co.echoindia.echo.User.AboutUsActivity;
+import in.co.echoindia.echo.User.ContactUsActivity;
+import in.co.echoindia.echo.User.DevelopmentInProgressActivity;
+import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
+import in.co.echoindia.echo.User.MyAccountActivity;
+import in.co.echoindia.echo.User.SignupActivity;
+import in.co.echoindia.echo.User.SpendingActivity;
+
+import static android.R.attr.id;
 
 public class HomePageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -140,21 +150,29 @@ public class HomePageActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
+        if(id == R.id.nav_my_account){
+            Intent i = new Intent(HomePageActivity.this, MyAccountActivity.class);
+            startActivity(i);
+        } else if(id == R.id.nav_elected_representative){
+            Intent i = new Intent(HomePageActivity.this, ElectedRepresentativeActivity.class);
+            startActivity(i);
+        } else if(id == R.id.nav_development_in_progress){
+            Intent i = new Intent(HomePageActivity.this, DevelopmentInProgressActivity.class);
+            startActivity(i);
+        } else if(id == R.id.nav_spending){
+            Intent i = new Intent(HomePageActivity.this, SpendingActivity.class);
+            startActivity(i);
+        } else if(id == R.id.nav_about_us){
+            Intent i = new Intent(HomePageActivity.this, AboutUsActivity.class);
+            startActivity(i);
+        } else if(id == R.id.nav_contact_us){
+            Intent i = new Intent(HomePageActivity.this,ContactUsActivity.class);
+            startActivity(i);
+        } else if(id == R.id.nav_log_out){
+            Intent i = new Intent(HomePageActivity.this, SignupActivity.class);
+            startActivity(i);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
