@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity{
                 if (responseCode == HttpsURLConnection.HTTP_OK) {
                     BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
                     StringBuffer sb = new StringBuffer("");
+
                     String line = "";
                     while ((line = in.readLine()) != null) {
                         sb.append(line);
