@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     tools:context="in.co.echoindia.echo.HomePage.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnOpenLogin"
+        android:text="Login"/>
 
 </FrameLayout>
