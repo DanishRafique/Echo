@@ -1,6 +1,7 @@
 package in.co.echoindia.echo.HomePage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import in.co.echoindia.echo.R;
+import in.co.echoindia.echo.User.LoginActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,6 +75,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Button btn = (Button) view.findViewById(R.id.btnOpenLogin);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), LoginActivity.class));
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
