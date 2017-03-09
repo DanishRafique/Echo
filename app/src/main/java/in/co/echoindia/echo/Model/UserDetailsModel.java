@@ -22,8 +22,27 @@ public class UserDetailsModel implements Serializable{
     private String userPhoto="";
     private String aadhaarPhoto="";
     private String voterIdPhoto="";
-    private boolean issueMaker;
-    private boolean isVerified;
+    private String isVerified="";
+    private String issueMaker="";
+
+    public String getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(String isVerified) {
+        this.isVerified = isVerified;
+    }
+
+
+
+    public String getIssueMaker() {
+        return issueMaker;
+    }
+
+    public void setIssueMaker(String issueMaker) {
+        this.issueMaker = issueMaker;
+    }
+
 
     public String getUserName() {
         return userName;
@@ -145,20 +164,6 @@ public class UserDetailsModel implements Serializable{
         this.voterIdPhoto = voterIdPhoto;
     }
 
-    public boolean issueMaker() {
-        return issueMaker;
-    }
 
-    public void setIssueMaker(boolean issueMaker) {
-        this.issueMaker = issueMaker;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean verified) {
-        isVerified = verified;
-    }
 
 }

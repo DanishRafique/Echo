@@ -1,6 +1,7 @@
 package in.co.echoindia.echo.User;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,7 +10,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,9 +29,11 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
+import in.co.echoindia.echo.Utils.Constants;
 
 public class LoginActivity extends AppCompatActivity{
 
@@ -73,6 +80,9 @@ public class LoginActivity extends AppCompatActivity{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pDialog.show();
+            pDialog.setMessage("Please Wait");
+            pDialog.setCancelable(true);
         }
 
         @Override
@@ -91,7 +101,7 @@ public class LoginActivity extends AppCompatActivity{
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);
-                conn.setRequestMethod("GET");
+                conn.setRequestMethod("POST");
                 conn.setDoInput(true);
                 conn.setDoOutput(true);
                 OutputStream os = conn.getOutputStream();
@@ -118,7 +128,6 @@ public class LoginActivity extends AppCompatActivity{
                     return new String("false : " + responseCode);
                 }
             } catch (Exception ex) {
-                Log.e(LOG_TAG,"Exception inside");
                 return null;
             } finally {
                 if (bufferedReader != null) {
@@ -133,16 +142,65 @@ public class LoginActivity extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(Object o) {
-            Log.e(LOG_TAG,"onPostExecute");
-            Log.e(LOG_TAG,"JSONObject Received "+o.toString());
-            try {
-                JSONObject jObject = new JSONObject(o.toString());
-                Log.e(LOG_TAG,jObject.toString());
+            super.onPostExecute(o);
+            pDialog.dismiss();
+            setUserData(o);
 
-            } catch (JSONException e) {
-                Log.e(LOG_TAG,e.toString());
-                e.printStackTrace();
-            }
+
         }
+    }
+
+    private void setUserData(Object o)  {
+        try {
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("0")&&o != null){
+                mUserDetailsModel=new UserDetailsModel();
+                JSONObject responseObject=jObject.getJSONObject("response");
+                JSONArray jArray=responseObject.getJSONArray("UserDetail");
+                JSONObject userObj=jArray.getJSONObject(0);
+                mUserDetailsModel.setUserName(userObj.getString("UserCode"));
+                mUserDetailsModel.setPassword(password.getText().toString().trim());
+                mUserDetailsModel.setFirstName(userObj.getString("FirstName"));
+                mUserDetailsModel.setLastName(userObj.getString("LastName"));
+                mUserDetailsModel.setEmailId(userObj.getString("EmailId"));
+                mUserDetailsModel.setPhoneNo(userObj.getString("PhoneNo"));
+                mUserDetailsModel.setAddress(userObj.getString("Address"));
+                mUserDetailsModel.setWard(userObj.getString("City"));
+                mUserDetailsModel.setPinCode(userObj.getString("PinCode"));
+                mUserDetailsModel.setDistrict(userObj.getString("District"));
+                mUserDetailsModel.setState(userObj.getString("State"));
+                mUserDetailsModel.setUserPhoto(userObj.getString("UserPhoto"));
+                mUserDetailsModel.setVoterIdPhoto(userObj.getString("VoterId"));
+                mUserDetailsModel.setAadhaarPhoto(userObj.getString("AadharCard"));
+                mUserDetailsModel.setIssueMaker(userObj.getString("IssueMaker"));
+                mUserDetailsModel.setIsVerified(userObj.getString("isVerified"));
+                editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE,"USER");
+                editor.putBoolean(Constants.SETTINGS_IS_LOGGED,true);
+                editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, userObj.getString("UserCode"));
+                editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(mUserDetailsModel));
+                editor.commit();
+                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
+                Intent i=new Intent(LoginActivity.this, HomePageActivity.class);
+                startActivity(i);
+                LoginActivity.this.finish();
+            }
+            else if(checkStatus.equals("1")){
+                Toast.makeText(this, "Please Check Your Username and Password", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "Login Failure", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(pDialog!=null)
+            pDialog.dismiss();
     }
 }
