@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.PrefManager;
 
@@ -155,10 +154,10 @@ public class WalkthroughActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        prefManager.setFirstTimeLaunch(false);
+        prefManager.setFirstTimeLaunch(true);
         SharedPreferences sp = getSharedPreferences("init", 0);
         sp.edit().putString("done", "1").apply();
-        startActivity(new Intent(WalkthroughActivity.this, HomePageActivity.class));
+        startActivity(new Intent(WalkthroughActivity.this, LoginActivity.class));
         finish();
     }
 

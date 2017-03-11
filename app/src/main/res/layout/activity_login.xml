@@ -1,23 +1,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/img_login_background"
     tools:context="in.co.echoindia.echo.User.LoginActivity">
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#60000000"
+        android:orientation="vertical"
+        android:weightSum="3">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@mipmap/icon"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:orientation="vertical">
 
 
@@ -26,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="50dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -37,7 +48,8 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_account_black" />
+                        app:srcCompat="@drawable/ic_account_black"
+                        />
 
                     <EditText
                         android:id="@+id/username"
@@ -46,10 +58,11 @@
                         android:layout_marginRight="20dp"
                         android:background="@android:color/transparent"
                         android:focusableInTouchMode="true"
-                        android:gravity="center"
+                        android:theme="@style/ChangeHintColor"
+                        android:layout_marginLeft="10dp"
                         android:hint="Username / Email ID "
                         android:inputType="textEmailAddress"
-                       />
+                        android:textColor="#fff" />
 
                 </LinearLayout>
 
@@ -61,7 +74,7 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
                 android:layout_marginTop="10dp"
-                android:background="#000" />
+                android:background="#CCFFFFFF" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,20 +93,23 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_password" />
+                        app:srcCompat="@drawable/ic_password" />
 
                     <EditText
+                        android:textColor="#fff"
                         android:id="@+id/password"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginRight="20dp"
+                        android:theme="@style/ChangeHintColor"
                         android:background="@android:color/transparent"
                         android:focusableInTouchMode="true"
-                        android:gravity="center"
+                        android:layout_marginLeft="10dp"
+
                         android:hint="Password"
                         android:inputType="textPassword"
 
-                       />
+                        />
 
                 </LinearLayout>
 
@@ -105,11 +121,29 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
                 android:layout_marginTop="10dp"
-                android:background="#000" />
+                android:background="#CCFFFFFF" />
+            <LinearLayout
+                android:id="@+id/login"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="120dp"
+                android:layout_marginRight="120dp"
+
+                android:background="@drawable/round_shaped_login_button"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LOGIN"
+                    android:textColor="#fff"
+                    android:textSize="17sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
                 android:gravity="center"
@@ -118,43 +152,48 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/font_Bold_White"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Forgot Password?" />
+                        android:text="Forgot Password?"
+                        android:textColor="#fff" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#fff" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
 
+
+
             <LinearLayout
-                android:id="@+id/login"
+                android:id="@+id/ll_sign_up"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginLeft="120dp"
-                android:layout_marginRight="120dp"
-                android:layout_marginTop="40dp"
-                android:background="@drawable/round_shaped_login_button"
-                android:gravity="center">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LOGIN"
-                    android:textSize="17sp" />
+                    android:layout_gravity="center"
+                    android:text="Not a member yet ?  "
+                    android:textColor="#fff" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sign Up Now"
+                    android:textColor="#fff"
+                    android:textStyle="bold" />
             </LinearLayout>
 
 
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 </LinearLayout>

@@ -4,10 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -43,6 +47,7 @@ public class LoginActivity extends AppCompatActivity{
 
     EditText userName,password;
     LinearLayout login;
+    LinearLayout signUp;
 
     UserDetailsModel mUserDetailsModel;
 
@@ -53,6 +58,12 @@ public class LoginActivity extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Window window = this.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.setStatusBarColor(ContextCompat.getColor(this,R.color.my_statusbar_color));
+        }
 
         sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
@@ -61,11 +72,20 @@ public class LoginActivity extends AppCompatActivity{
         userName = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
         login = (LinearLayout)findViewById(R.id.login);
+        signUp = (LinearLayout)findViewById(R.id.ll_sign_up);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Login login = new Login();
                 login.execute("");
+            }
+        });
+        signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signUpIntent=new Intent(LoginActivity.this,SignupActivity.class);
+                startActivity(signUpIntent);
+                LoginActivity.this.finish();
             }
         });
     }

@@ -1,23 +1,21 @@
 package in.co.echoindia.echo.User;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.R;
+import in.co.echoindia.echo.Utils.AppUtil;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class SplashActivity extends AppCompatActivity {
+
+    SharedPreferences sharedpreferences;
 
     private class splash implements Runnable{
 
@@ -59,12 +57,11 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     void gotoNextActivity(){
-        SharedPreferences sp = getSharedPreferences("init", 0);
-        if(!sp.contains("done"))
-            startActivity(new Intent(SplashActivity.this, WalkthroughActivity.class));
-        else
-            startActivity(new Intent(SplashActivity.this, HomePageActivity.class));
-        finish();
+
+        sharedpreferences = AppUtil.getAppPreferences(this);
+        Intent intentWalkThrough=new Intent(SplashActivity.this,WalkthroughActivity.class);
+        startActivity(intentWalkThrough);
+        SplashActivity.this.finish();
     }
 
 }

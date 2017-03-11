@@ -23,12 +23,12 @@ public class PrefManager {
     }
 
     public void setFirstTimeLaunch(boolean isFirstTime) {
-        //editor.putBoolean(Constants.IS_FIRST_TIME_LAUNCH, isFirstTime);
+        editor.putBoolean(Constants.IS_FIRST_TIME_LAUNCH, isFirstTime);
         editor.commit();
     }
 
     public boolean isFirstTimeLaunch() {
-        return pref.getBoolean(Constants.IS_FIRST_TIME_LAUNCH, true);
+        return pref.getBoolean(Constants.IS_FIRST_TIME_LAUNCH, false);
     }
 
 }

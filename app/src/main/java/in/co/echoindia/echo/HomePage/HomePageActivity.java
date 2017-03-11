@@ -1,6 +1,7 @@
 package in.co.echoindia.echo.HomePage;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,18 +33,24 @@ import in.co.echoindia.echo.User.AboutUsActivity;
 import in.co.echoindia.echo.User.ContactUsActivity;
 import in.co.echoindia.echo.User.DevelopmentInProgressActivity;
 import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
+import in.co.echoindia.echo.User.LoginActivity;
 import in.co.echoindia.echo.User.MyAccountActivity;
 import in.co.echoindia.echo.User.SettingsActivity;
-import in.co.echoindia.echo.User.SignupActivity;
 import in.co.echoindia.echo.User.SpendingActivity;
+import in.co.echoindia.echo.Utils.AppUtil;
+import in.co.echoindia.echo.Utils.Constants;
 
 public class HomePageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        NewsFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener,PollFragment.OnFragmentInteractionListener,BuzzFragment.OnFragmentInteractionListener
+         HomeFragment.OnFragmentInteractionListener,PollFragment.OnFragmentInteractionListener,BuzzFragment.OnFragmentInteractionListener
         {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor editor;
+    private static final String LOG_TAG = "HomePageActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,8 @@ public class HomePageActivity extends AppCompatActivity
         setContentView(R.layout.activity_home_page);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
+        sharedpreferences = AppUtil.getAppPreferences(this);
+        editor = sharedpreferences.edit();
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -170,8 +180,7 @@ public class HomePageActivity extends AppCompatActivity
             Intent i = new Intent(HomePageActivity.this,ContactUsActivity.class);
             startActivity(i);
         } else if(id == R.id.nav_log_out){
-            Intent i = new Intent(HomePageActivity.this, SignupActivity.class);
-            startActivity(i);
+            setWorkLogOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -219,6 +228,21 @@ public class HomePageActivity extends AppCompatActivity
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_poll_blue);
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_news_blue);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_buzz_blue);
+    }
+
+    private void setWorkLogOut() {
+        Log.e(LOG_TAG,sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"")+" .");
+        editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE, "");
+        editor.putBoolean(Constants.SETTINGS_IS_LOGGED, false);
+        editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, "");
+        editor.putString(Constants.SETTINGS_OBJ_USER,"");
+        editor.clear();
+        editor.commit();
+        Intent loginPathIntent = new Intent(HomePageActivity.this, LoginActivity.class);
+        loginPathIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(loginPathIntent);
+        HomePageActivity.this.finish();
+
     }
 
 

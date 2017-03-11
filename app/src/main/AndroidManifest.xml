@@ -43,16 +43,18 @@
             android:name=".User.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash"
-            android:theme="@style/FullscreenTheme" />
-        <activity android:name=".User.SignupActivity" />
-        <activity
-            android:name=".User.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:theme="@style/FullscreenTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            </activity>
+        <activity android:name=".User.SignupActivity" />
+        <activity
+            android:name=".User.LoginActivity"
+            android:label="@string/title_activity_login" >
+
             </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
