@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "in.co.echoindia.echo"
         minSdkVersion 17
@@ -33,6 +33,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.google.android.gms:play-services-maps:10.2.0'
     compile 'com.android.support:support-vector-drawable:24.2.1'
+    compile 'com.google.android.gms:play-services-maps:9.6.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     testCompile 'junit:junit:4.12'
 }
