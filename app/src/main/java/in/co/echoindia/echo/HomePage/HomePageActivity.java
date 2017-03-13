@@ -31,7 +31,7 @@ import java.util.List;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.User.AboutUsActivity;
 import in.co.echoindia.echo.User.ContactUsActivity;
-import in.co.echoindia.echo.User.DevelopmentInProgressActivity;
+import in.co.echoindia.echo.User.DevelopmentActivity;
 import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
 import in.co.echoindia.echo.User.LoginActivity;
 import in.co.echoindia.echo.User.MyAccountActivity;
@@ -168,7 +168,7 @@ public class HomePageActivity extends AppCompatActivity
             Intent i = new Intent(HomePageActivity.this, ElectedRepresentativeActivity.class);
             startActivity(i);
         } else if(id == R.id.nav_development_in_progress){
-            Intent i = new Intent(HomePageActivity.this, DevelopmentInProgressActivity.class);
+            Intent i = new Intent(HomePageActivity.this, DevelopmentActivity.class);
             startActivity(i);
         } else if(id == R.id.nav_spending){
             Intent i = new Intent(HomePageActivity.this, SpendingActivity.class);

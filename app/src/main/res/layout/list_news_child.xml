@@ -35,30 +35,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:background="#60000000"
-                android:gravity="center">
-
-                <ToggleButton
-                    android:id="@+id/news_heart"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/selector_wishlist_icon"
-                    android:textOff="@null"
-                    android:textOn="@null"
-                    android:layout_alignBottom="@+id/news_title"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp" />
-
-                <ToggleButton
-                    android:id="@+id/news_share"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:background="@drawable/ic_share"
-                    android:textOff="@null"
-                    android:textOn="@null"
-                    android:layout_marginEnd="17dp"
-                    android:layout_alignTop="@+id/news_heart"
-                    android:layout_toStartOf="@+id/news_heart" />
+                >
 
                 <TextView
                     android:id="@+id/news_title"
@@ -67,11 +44,11 @@
                     android:layout_marginEnd="11dp"
                     android:layout_marginLeft="25dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:text=" TITLE"
                     android:textColor="#fff"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:typeface="monospace" />
             </RelativeLayout>
@@ -124,6 +101,109 @@
                     android:text="4 hr ago"
                     android:textSize="12sp"
                     android:textStyle="italic" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/news_footer"
+                >
+                <LinearLayout
+                    android:layout_marginTop="20dp"
+
+                    android:layout_marginBottom="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="4"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+                        <ToggleButton
+                            android:id="@+id/news_upvote"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/selector_wishlist_icon"
+                            android:textOff="@null"
+                            android:textOn="@null"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kudos"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginLeft="5dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+                        <ToggleButton
+                            android:id="@+id/news_downvote"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/selector_downvote_icon"
+                            android:textOff="@null"
+                            android:textOn="@null"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nah"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginLeft="5dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+                        <ImageView
+                            android:id="@+id/news_full_story"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/ic_news_full_story"
+                            android:textOff="@null"
+                            android:textOn="@null"
+                            android:layout_alignBottom="@+id/news_title"
+                            android:layout_alignParentEnd="true"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Full Story"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginLeft="5dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+                        <ImageView
+                            android:id="@+id/news_share"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:background="@drawable/ic_share"
+                            android:textOff="@null"
+                            android:textOn="@null"
+                            android:layout_alignBottom="@+id/news_title"
+                            android:layout_alignParentEnd="true"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Share"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginLeft="5dp"/>
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
 
             </RelativeLayout>
 

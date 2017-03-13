@@ -5,9 +5,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
+import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
+import in.co.echoindia.echo.Utils.Constants;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -26,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            gotoNextActivity();
+
         }
     }
 
@@ -54,14 +57,24 @@ public class SplashActivity extends AppCompatActivity {
         // while interacting with the UI.
         Thread splash = new Thread(new splash());
         splash.start();
+        gotoNextActivity();
     }
 
     void gotoNextActivity(){
 
         sharedpreferences = AppUtil.getAppPreferences(this);
-        Intent intentWalkThrough=new Intent(SplashActivity.this,WalkthroughActivity.class);
-        startActivity(intentWalkThrough);
+        if(sharedpreferences.getBoolean(Constants.SETTINGS_IS_LOGGED,false)) {
+            Intent intentHomePage = new Intent(SplashActivity.this, HomePageActivity.class);
+            Toast.makeText(SplashActivity.this, "Welcome "+sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""), Toast.LENGTH_SHORT).show();
+            startActivity(intentHomePage);
+
+        }
+        else{
+            Intent intentWalkThrough = new Intent(SplashActivity.this, WalkthroughActivity.class);
+            startActivity(intentWalkThrough);
+        }
         SplashActivity.this.finish();
+
     }
 
 }

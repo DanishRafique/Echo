@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -29,33 +30,26 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
-
-
         </activity>
         <activity
             android:name=".HomePage.HomePageActivity"
             android:label="@string/title_activity_home_page"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".User.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash"
-            android:theme="@style/FullscreenTheme" >
+            android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            </activity>
+        </activity>
         <activity android:name=".User.SignupActivity" />
         <activity
             android:name=".User.LoginActivity"
-            android:label="@string/title_activity_login" >
-
-            </activity>
+            android:label="@string/title_activity_login"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -68,9 +62,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".User.DevelopmentInProgressActivity"
-            android:label="@string/title_activity_development_in_progress" />
         <activity
             android:name=".User.SettingsActivity"
             android:label="@string/title_activity_settings" />
@@ -113,6 +104,15 @@
         <activity
             android:name=".User.ContactUsActivity"
             android:label="@string/title_activity_contact_us"
+            android:parentActivityName=".HomePage.HomePageActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
+        </activity>
+        <activity
+            android:name=".User.DevelopmentActivity"
+            android:label="@string/title_activity_development"
             android:parentActivityName=".HomePage.HomePageActivity"
             android:theme="@style/MyMaterialTheme">
             <meta-data
