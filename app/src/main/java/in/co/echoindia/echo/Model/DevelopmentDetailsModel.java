@@ -19,18 +19,18 @@ package in.co.echoindia.echo.Model;
 import com.google.android.gms.maps.model.LatLng;
 import in.co.echoindia.echo.Utils.Clustering.ClusterItem;
 
-public class MyItem implements ClusterItem {
+public class DevelopmentDetailsModel implements ClusterItem {
     private final LatLng mPosition;
     private String mTitle;
     private String mSnippet;
 
-    public MyItem(double lat, double lng) {
+    public DevelopmentDetailsModel(double lat, double lng) {
         mPosition = new LatLng(lat, lng);
         mTitle = null;
         mSnippet = null;
     }
 
-    public MyItem(double lat, double lng, String title, String snippet) {
+    public DevelopmentDetailsModel(double lat, double lng, String title, String snippet) {
         mPosition = new LatLng(lat, lng);
         mTitle = title;
         mSnippet = snippet;

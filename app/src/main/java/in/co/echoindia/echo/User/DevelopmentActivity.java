@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import in.co.echoindia.echo.Model.MyItem;
+import in.co.echoindia.echo.Model.DevelopmentDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.Clustering.ClusterManager;
 
 public class DevelopmentActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private ClusterManager<MyItem> mClusterManager;
+    private ClusterManager<DevelopmentDetailsModel> mClusterManager;
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -68,7 +68,7 @@ public class DevelopmentActivity extends AppCompatActivity implements OnMapReady
         mMap.moveCamera(CameraUpdateFactory.newLatLng(kolkata));
         mMap.animateCamera(zoom);
 
-        mClusterManager = new ClusterManager<MyItem>(this, mMap);
+        mClusterManager = new ClusterManager<DevelopmentDetailsModel>(this, mMap);
 
         mMap.setOnCameraIdleListener(mClusterManager);
         try {
@@ -80,14 +80,14 @@ public class DevelopmentActivity extends AppCompatActivity implements OnMapReady
 
     private void readItems() throws JSONException {
         InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
-        List<MyItem> items = new MyItemReader().read(inputStream);
+        List<DevelopmentDetailsModel> items = new MyItemReader().read(inputStream);
         for (int i = 0; i < 10; i++) {
             double offset = i / 60d;
-            for (MyItem item : items) {
+            for (DevelopmentDetailsModel item : items) {
                 LatLng position = item.getPosition();
                 double lat = position.latitude + offset;
                 double lng = position.longitude + offset;
-                MyItem offsetItem = new MyItem(lat, lng);
+                DevelopmentDetailsModel offsetItem = new DevelopmentDetailsModel(lat, lng);
                 mClusterManager.addItem(offsetItem);
             }
         }
@@ -102,8 +102,8 @@ public class DevelopmentActivity extends AppCompatActivity implements OnMapReady
          */
         private static final String REGEX_INPUT_BOUNDARY_BEGINNING = "\\A";
 
-        public List<MyItem> read(InputStream inputStream) throws JSONException {
-            List<MyItem> items = new ArrayList<MyItem>();
+        public List<DevelopmentDetailsModel> read(InputStream inputStream) throws JSONException {
+            List<DevelopmentDetailsModel> items = new ArrayList<DevelopmentDetailsModel>();
             String json = new Scanner(inputStream).useDelimiter(REGEX_INPUT_BOUNDARY_BEGINNING).next();
             JSONArray array = new JSONArray(json);
             for (int i = 0; i < array.length(); i++) {
@@ -118,7 +118,7 @@ public class DevelopmentActivity extends AppCompatActivity implements OnMapReady
                 if (!object.isNull("snippet")) {
                     snippet = object.getString("snippet");
                 }
-                items.add(new MyItem(lat, lng, title, snippet));
+                items.add(new DevelopmentDetailsModel(lat, lng, title, snippet));
             }
             return items;
         }
