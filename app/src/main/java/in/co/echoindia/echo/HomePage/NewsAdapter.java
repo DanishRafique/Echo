@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import java.util.ArrayList;
 
 import in.co.echoindia.echo.Model.NewsDetailsModel;
@@ -67,6 +70,12 @@ public class NewsAdapter extends BaseAdapter {
         newsVendor=(TextView) convertView.findViewById(R.id.news_vendor_name);
         newsVendorLogo=(ImageView) convertView.findViewById(R.id.news_vendor_logo);
         newsTimeline=(TextView) convertView.findViewById(R.id.news_timeline);
+        newsTitle.setText(newsObj.getNewsTitle());
+        newsDescription.setText(newsObj.getNewsDescription());
+        newsVendor.setText(newsObj.getNewsVendor());
+        newsTimeline.setText(newsObj.getNewsTimeline());
+        Glide.with(activity).load(newsObj.getNewsImage()).diskCacheStrategy(DiskCacheStrategy.ALL).into(newsImage);
+        Glide.with(activity).load(newsObj.getNewsVendorLogo()).diskCacheStrategy(DiskCacheStrategy.ALL).into(newsVendorLogo);
         return convertView;
     }
 }

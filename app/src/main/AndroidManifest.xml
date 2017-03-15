@@ -34,7 +34,7 @@
         <activity
             android:name=".HomePage.HomePageActivity"
             android:label="@string/title_activity_home_page"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".User.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -49,7 +49,7 @@
         <activity android:name=".User.SignupActivity" />
         <activity
             android:name=".User.LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -118,6 +118,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
+        </activity>
+        <activity
+            android:name=".User.DocumentUpload"
+            android:label="@string/title_activity_document_upload"
+            android:parentActivityName=".User.SignupActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.co.echoindia.echo.User.SignupActivity" />
         </activity>
     </application>
 

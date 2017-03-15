@@ -7,13 +7,58 @@ import java.io.Serializable;
  */
 
 public class NewsDetailsModel implements Serializable {
+
+    private String newsID = "";
     private String newsTitle="";
     private String newsImage="";
     private String newsDescription="";
     private String newsVendor="";
     private String newsVendorLogo="";
     private String newsTimeline="";
-    private Boolean newsHeart;
+    private String newsVendorLink="";
+    private String newsState="";
+    private int newsUpVote;
+    private int newsDownVote;
+
+    public String getNewsID() {
+        return newsID;
+    }
+
+    public void setNewsID(String newsID) {
+        this.newsID = newsID;
+    }
+
+    public String getNewsVendorLink() {
+        return newsVendorLink;
+    }
+
+    public void setNewsVendorLink(String newsVendorLink) {
+        this.newsVendorLink = newsVendorLink;
+    }
+
+    public String getNewsState() {
+        return newsState;
+    }
+
+    public void setNewsState(String newsState) {
+        this.newsState = newsState;
+    }
+
+    public int getNewsUpVote() {
+        return newsUpVote;
+    }
+
+    public void setNewsUpVote(int newsUpVote) {
+        this.newsUpVote = newsUpVote;
+    }
+
+    public int getNewsDownVote() {
+        return newsDownVote;
+    }
+
+    public void setNewsDownVote(int newsDownVote) {
+        this.newsDownVote = newsDownVote;
+    }
 
     public String getNewsTitle() {
         return newsTitle;
@@ -61,14 +106,6 @@ public class NewsDetailsModel implements Serializable {
 
     public void setNewsTimeline(String newsTimeline) {
         this.newsTimeline = newsTimeline;
-    }
-
-    public Boolean getNewsHeart() {
-        return newsHeart;
-    }
-
-    public void setNewsHeart(Boolean newsHeart) {
-        this.newsHeart = newsHeart;
     }
 
 }

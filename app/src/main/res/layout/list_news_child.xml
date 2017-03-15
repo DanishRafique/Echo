@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:background="#60000000"
+                android:background="#30000000"
                 >
 
                 <TextView
@@ -46,9 +46,10 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
+                    android:paddingLeft="10dp"
                     android:text=" TITLE"
                     android:textColor="#fff"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:typeface="monospace" />
             </RelativeLayout>

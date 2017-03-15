@@ -2,12 +2,33 @@ package in.co.echoindia.echo.User;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import in.co.echoindia.echo.HomePage.HomePageActivity;
+import in.co.echoindia.echo.Model.NewsDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
@@ -19,21 +40,11 @@ import in.co.echoindia.echo.Utils.Constants;
 public class SplashActivity extends AppCompatActivity {
 
     SharedPreferences sharedpreferences;
-
-    private class splash implements Runnable{
-
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
+    private static final String LOG_TAG = "SplashActivity";
+    SharedPreferences.Editor editor;
     private View mContentView;
+    NewsDetailsModel mNewsDetailModel;
+    ArrayList<NewsDetailsModel> newsList=new ArrayList<NewsDetailsModel>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +53,9 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         mContentView = findViewById(R.id.fullscreen_content);
+        sharedpreferences = AppUtil.getAppPreferences(this);
+        editor = sharedpreferences.edit();
+
 
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -49,20 +63,11 @@ public class SplashActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-
-        // Set up the user interaction to manually show or hide the system UI.
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        Thread splash = new Thread(new splash());
-        splash.start();
-        gotoNextActivity();
+        FetchNews mFetchNews=new FetchNews();
+        mFetchNews.execute();
     }
 
     void gotoNextActivity(){
-
-        sharedpreferences = AppUtil.getAppPreferences(this);
         if(sharedpreferences.getBoolean(Constants.SETTINGS_IS_LOGGED,false)) {
             Intent intentHomePage = new Intent(SplashActivity.this, HomePageActivity.class);
             Toast.makeText(SplashActivity.this, "Welcome "+sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""), Toast.LENGTH_SHORT).show();
@@ -74,7 +79,112 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(intentWalkThrough);
         }
         SplashActivity.this.finish();
-
     }
 
+    class FetchNews extends AsyncTask {
+
+        String url_news_update = "http://echoindia.co.in/php/news.php";
+        int maxID=sharedpreferences.getInt(Constants.LAST_NEWS_UPDATE,0);
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_news_update);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("maxID",0);
+                Log.e(LOG_TAG,"URL"+url_news_update);
+                Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            setNewsData(o);
+        }
+    }
+    private void setNewsData(Object o)  {
+        int max=sharedpreferences.getInt(Constants.LAST_NEWS_UPDATE,0);
+        Log.e(LOG_TAG,"MAX ID VALUE :"+max);
+        try {
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("0")&&o != null){
+                JSONArray newsArray=jObject.getJSONArray("news");
+                for(int i =0 ; i<newsArray.length();i++){
+                    JSONObject newsObject=newsArray.getJSONObject(i);
+                    mNewsDetailModel=new NewsDetailsModel();
+                    mNewsDetailModel.setNewsID(newsObject.getString("ID"));
+                    mNewsDetailModel.setNewsTitle(newsObject.getString("NewsTitle"));
+                    mNewsDetailModel.setNewsDescription(newsObject.getString("NewsDescription"));
+                    mNewsDetailModel.setNewsVendor(newsObject.getString("NewsVendorName"));
+                    mNewsDetailModel.setNewsVendorLogo(newsObject.getString("NewsVendorLogo"));
+                    mNewsDetailModel.setNewsTimeline(newsObject.getString("NewsTime"));
+                    mNewsDetailModel.setNewsVendorLink(newsObject.getString("NewsVendorLink"));
+                    mNewsDetailModel.setNewsImage(newsObject.getString("NewsImage"));
+                    mNewsDetailModel.setNewsUpVote(newsObject.getInt("NewsUpVote"));
+                    mNewsDetailModel.setNewsDownVote(newsObject.getInt("NewsDownVote"));
+                    mNewsDetailModel.setNewsState(newsObject.getString("NewsState"));
+                    if(Integer.valueOf(mNewsDetailModel.getNewsID())>max){
+                        max=Integer.valueOf(mNewsDetailModel.getNewsID());
+                    }
+                    newsList.add(mNewsDetailModel);
+                }
+                editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsList));
+                editor.putInt(Constants.LAST_NEWS_UPDATE,max);
+                editor.commit();
+                gotoNextActivity();
+            }
+            else if(checkStatus.equals("1")){
+                Toast.makeText(this, "Error Loading News List", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+
+    }
 }
