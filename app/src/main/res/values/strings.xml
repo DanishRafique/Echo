@@ -128,4 +128,5 @@
     <string name="permission_required_toast">Location permission is required for this demo.</string>
     <string name="title_activity_development">Development in Progress</string>
     <string name="title_activity_document_upload">DocumentUpload</string>
+    <string name="title_activity_news">NewsActivity</string>
 </resources>

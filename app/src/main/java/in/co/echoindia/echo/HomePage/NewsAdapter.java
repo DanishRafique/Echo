@@ -1,11 +1,14 @@
 package in.co.echoindia.echo.HomePage;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +35,10 @@ public class NewsAdapter extends BaseAdapter {
     TextView newsVendor;
     ImageView newsVendorLogo;
     TextView newsTimeline;
+    TextView newsUpvote;
+    TextView newsDownvote;
+    LinearLayout newsFullStory;
+
 
     public NewsAdapter(Context activity, ArrayList<NewsDetailsModel> newsDetailsModels) {
         this.activity = activity;
@@ -70,12 +77,32 @@ public class NewsAdapter extends BaseAdapter {
         newsVendor=(TextView) convertView.findViewById(R.id.news_vendor_name);
         newsVendorLogo=(ImageView) convertView.findViewById(R.id.news_vendor_logo);
         newsTimeline=(TextView) convertView.findViewById(R.id.news_timeline);
+        newsUpvote=(TextView)convertView.findViewById(R.id.news_upvote_value);
+        newsDownvote=(TextView)convertView.findViewById(R.id.news_downvote_value);
+        newsFullStory=(LinearLayout)convertView.findViewById(R.id.news_full_story_link);
+
+        Log.e("NEWS ELEMENT",String.valueOf(newsObj.getNewsUpVote()));
+
         newsTitle.setText(newsObj.getNewsTitle());
         newsDescription.setText(newsObj.getNewsDescription());
         newsVendor.setText(newsObj.getNewsVendor());
         newsTimeline.setText(newsObj.getNewsTimeline());
         Glide.with(activity).load(newsObj.getNewsImage()).diskCacheStrategy(DiskCacheStrategy.ALL).into(newsImage);
         Glide.with(activity).load(newsObj.getNewsVendorLogo()).diskCacheStrategy(DiskCacheStrategy.ALL).into(newsVendorLogo);
+        newsUpvote.setText(String.valueOf(newsObj.getNewsUpVote()));
+        newsDownvote.setText(String.valueOf(newsObj.getNewsDownVote()));
+
+        newsFullStory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newsIntent=new Intent(activity,NewsActivity.class);
+                newsIntent.putExtra("Title",newsObj.getNewsTitle());
+                newsIntent.putExtra("Link",newsObj.getNewsVendorLink());
+                activity.startActivity(newsIntent);
+            }
+        });
+
+
         return convertView;
     }
 }

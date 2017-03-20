@@ -1,10 +1,12 @@
 package in.co.echoindia.echo.HomePage;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -22,8 +24,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.User.AboutUsActivity;
@@ -47,6 +61,7 @@ public class HomePageActivity extends AppCompatActivity
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
+            private ProgressDialog pDialog;
     private static final String LOG_TAG = "HomePageActivity";
 
     @Override
@@ -63,6 +78,7 @@ public class HomePageActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Echo");
         setSupportActionBar(toolbar);
+        pDialog = new ProgressDialog(this);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -169,7 +185,8 @@ public class HomePageActivity extends AppCompatActivity
             Intent i = new Intent(HomePageActivity.this,ContactUsActivity.class);
             startActivity(i);
         } else if(id == R.id.nav_log_out){
-            setWorkLogOut();
+            ExecuteLogout mExecuteLogout=new ExecuteLogout();
+            mExecuteLogout.execute();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -234,5 +251,83 @@ public class HomePageActivity extends AppCompatActivity
 
     }
 
+    class ExecuteLogout extends AsyncTask {
 
-}
+                String url_user_logout = "http://echoindia.co.in/php/UserLogout.php";
+                String userNameStr=sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,"");
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    pDialog.show();
+                    pDialog.setMessage("Please Wait");
+                    pDialog.setCancelable(true);
+                }
+
+                @Override
+                protected Object doInBackground(Object[] params) {
+
+                    BufferedReader bufferedReader = null;
+                    try {
+                        URL url = new URL(url_user_logout);
+                        JSONObject postDataParams = new JSONObject();
+                        postDataParams.put("username",userNameStr);
+                        Log.e(LOG_TAG,"URL"+ url_user_logout);
+                        Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setReadTimeout(15000 /* milliseconds */);
+                        conn.setConnectTimeout(15000 /* milliseconds */);
+                        conn.setRequestMethod("POST");
+                        conn.setDoInput(true);
+                        conn.setDoOutput(true);
+                        OutputStream os = conn.getOutputStream();
+                        BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                        writer.write(AppUtil.getPostDataString(postDataParams));
+                        writer.flush();
+                        writer.close();
+                        os.close();
+                        int responseCode = conn.getResponseCode();
+                        if (responseCode == HttpsURLConnection.HTTP_OK) {
+                            BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                            StringBuffer sb = new StringBuffer("");
+
+                            String line = "";
+                            while ((line = in.readLine()) != null) {
+                                sb.append(line);
+                                break;
+                            }
+                            in.close();
+                            Log.e(LOG_TAG,sb.toString());
+                            return sb.toString();
+
+                        } else {
+                            return new String("false : " + responseCode);
+                        }
+                    } catch (Exception ex) {
+                        return null;
+                    } finally {
+                        if (bufferedReader != null) {
+                            try {
+                                bufferedReader.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                    super.onPostExecute(o);
+                    pDialog.dismiss();
+                    Log.e(LOG_TAG,"Logout "+o.toString());
+                    setWorkLogOut();
+                }
+            }
+
+            @Override
+            protected void onPause() {
+                super.onPause();
+                if(pDialog!=null)
+                    pDialog.dismiss();
+            }
+        }
