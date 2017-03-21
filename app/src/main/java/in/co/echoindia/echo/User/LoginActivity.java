@@ -186,7 +186,8 @@ public class LoginActivity extends AppCompatActivity{
                 mUserDetailsModel.setEmailId(userObj.getString("EmailId"));
                 mUserDetailsModel.setPhoneNo(userObj.getString("PhoneNo"));
                 mUserDetailsModel.setAddress(userObj.getString("Address"));
-                mUserDetailsModel.setWard(userObj.getString("City"));
+                mUserDetailsModel.setCity(userObj.getString("City"));
+                mUserDetailsModel.setWard(userObj.getString("Ward"));
                 mUserDetailsModel.setPinCode(userObj.getString("PinCode"));
                 mUserDetailsModel.setDistrict(userObj.getString("District"));
                 mUserDetailsModel.setState(userObj.getString("State"));

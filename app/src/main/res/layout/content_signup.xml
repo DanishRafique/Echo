@@ -32,7 +32,7 @@
                     android:layout_marginBottom="10dp">
                     <ImageView
                         android:id="@+id/img_profile"
-                        android:layout_width="100dp"
+                        android:layout_width="150dp"
                         android:layout_height="100dp"
                         android:src="@drawable/img_profile_picture"/>
                 </LinearLayout>
