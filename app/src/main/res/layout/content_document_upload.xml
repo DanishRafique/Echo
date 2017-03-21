@@ -157,6 +157,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         <TextView
+            android:id="@+id/tv_skip_document_upload"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="SKIP"
@@ -166,6 +167,7 @@
             android:layout_marginLeft="15dp"
             />
         <TextView
+            android:id="@+id/tv_continue_document_upload"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"

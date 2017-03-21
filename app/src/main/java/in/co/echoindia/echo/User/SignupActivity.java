@@ -1,6 +1,7 @@
 package in.co.echoindia.echo.User;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ public class SignupActivity extends AppCompatActivity {
 
     EditText firstName,lastName, userName , emailAddress,phoneNumber,password, confirmPassword, address , city , ward , pinCode , district , state;
     LinearLayout llUserInformation , llUserAddress;
+    Button btnSignUp;
     TextView tvSignUpContinue;
     int randInt;
     Dialog checkOTPDialog;
@@ -60,6 +63,7 @@ public class SignupActivity extends AppCompatActivity {
         pinCode=(EditText)findViewById(R.id.edt_pin_code);
         district=(EditText)findViewById(R.id.edt_district);
         state=(EditText)findViewById(R.id.edt_state);
+        btnSignUp=(Button)findViewById(R.id.btn_sign_up);
 
         llUserInformation=(LinearLayout)findViewById(R.id.ll_user_information);
         llUserAddress=(LinearLayout)findViewById(R.id.ll_user_address);
@@ -73,7 +77,14 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentDocumentUpload=new Intent(SignupActivity.this,DocumentUploadActivity.class);
+                startActivity(intentDocumentUpload);
+                SignupActivity.this.finish();
+            }
+        });
     }
 
     private void workOnNextButtonClick() {

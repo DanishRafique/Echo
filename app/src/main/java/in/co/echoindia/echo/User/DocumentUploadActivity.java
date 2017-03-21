@@ -49,6 +49,7 @@ public class DocumentUploadActivity extends AppCompatActivity {
     byte[] byteArray;
     ImageView imageView;
     Button btnUpload;
+    TextView tvContinue,tvSkip;
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
@@ -67,6 +68,8 @@ public class DocumentUploadActivity extends AppCompatActivity {
         btnUploadVoterId=(Button)findViewById(R.id.btn_upload_voter_id);
         btnChooseAadhaarCard=(Button)findViewById(R.id.btn_choose_aadhaar_card);
         btnUploadAadhaarCard=(Button)findViewById(R.id.btn_upload_aadhaar_card);
+        tvContinue=(TextView)findViewById(R.id.tv_continue_document_upload);
+        tvSkip=(TextView)findViewById(R.id.tv_skip_document_upload);
         sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
 
@@ -84,6 +87,23 @@ public class DocumentUploadActivity extends AppCompatActivity {
                 openChooseImageDialog();
                 editor.putString("imageType","Aadhaar");
                 editor.commit();
+            }
+        });
+        tvContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentContinue=new Intent(DocumentUploadActivity.this,LoginActivity.class);
+                startActivity(intentContinue);
+                DocumentUploadActivity.this.finish();
+            }
+        });
+
+        tvSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentContinue=new Intent(DocumentUploadActivity.this,LoginActivity.class);
+                startActivity(intentContinue);
+                DocumentUploadActivity.this.finish();
             }
         });
 
