@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -35,9 +36,10 @@ public class NewsAdapter extends BaseAdapter {
     TextView newsVendor;
     ImageView newsVendorLogo;
     TextView newsTimeline;
-    TextView newsUpvote;
-    TextView newsDownvote;
+    TextView newsUpvoteValue;
+    TextView newsDownvoteValue;
     LinearLayout newsFullStory;
+    ToggleButton newsUpvote,newsDownvote;
 
 
     public NewsAdapter(Context activity, ArrayList<NewsDetailsModel> newsDetailsModels) {
@@ -77,9 +79,11 @@ public class NewsAdapter extends BaseAdapter {
         newsVendor=(TextView) convertView.findViewById(R.id.news_vendor_name);
         newsVendorLogo=(ImageView) convertView.findViewById(R.id.news_vendor_logo);
         newsTimeline=(TextView) convertView.findViewById(R.id.news_timeline);
-        newsUpvote=(TextView)convertView.findViewById(R.id.news_upvote_value);
-        newsDownvote=(TextView)convertView.findViewById(R.id.news_downvote_value);
+        newsUpvoteValue=(TextView)convertView.findViewById(R.id.news_upvote_value);
+        newsDownvoteValue=(TextView)convertView.findViewById(R.id.news_downvote_value);
         newsFullStory=(LinearLayout)convertView.findViewById(R.id.news_full_story_link);
+        newsUpvote=(ToggleButton)convertView.findViewById(R.id.news_upvote);
+        newsDownvote=(ToggleButton)convertView.findViewById(R.id.news_downvote);
 
         Log.e("NEWS ELEMENT",String.valueOf(newsObj.getNewsUpVote()));
 
@@ -89,8 +93,8 @@ public class NewsAdapter extends BaseAdapter {
         newsTimeline.setText(newsObj.getNewsTimeline());
         Glide.with(activity).load(newsObj.getNewsImage()).diskCacheStrategy(DiskCacheStrategy.ALL).into(newsImage);
         Glide.with(activity).load(newsObj.getNewsVendorLogo()).diskCacheStrategy(DiskCacheStrategy.ALL).into(newsVendorLogo);
-        newsUpvote.setText(String.valueOf(newsObj.getNewsUpVote()));
-        newsDownvote.setText(String.valueOf(newsObj.getNewsDownVote()));
+        newsUpvoteValue.setText(String.valueOf(newsObj.getNewsUpVote()));
+        newsDownvoteValue.setText(String.valueOf(newsObj.getNewsDownVote()));
 
         newsFullStory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +105,6 @@ public class NewsAdapter extends BaseAdapter {
                 activity.startActivity(newsIntent);
             }
         });
-
 
         return convertView;
     }

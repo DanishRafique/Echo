@@ -7,6 +7,10 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -39,14 +43,7 @@
             android:name=".User.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_splash"
-            android:theme="@style/FullscreenTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".User.SignupActivity" />
+            android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name=".User.LoginActivity"
             android:label="@string/title_activity_login" />
@@ -120,13 +117,14 @@
                 android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
         </activity>
         <activity
-            android:name=".User.DocumentUpload"
+            android:name=".User.DocumentUploadActivity"
             android:label="@string/title_activity_document_upload"
             android:parentActivityName=".User.SignupActivity"
             android:theme="@style/MyMaterialTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.User.SignupActivity" />
+
         </activity>
         <activity
             android:name=".HomePage.NewsActivity"
@@ -136,6 +134,20 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
+        </activity>
+        <activity
+            android:name=".User.SignupActivity"
+            android:label="@string/title_activity_signup"
+            android:parentActivityName=".User.LoginActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.co.echoindia.echo.User.LoginActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

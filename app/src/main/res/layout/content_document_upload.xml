@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="in.co.echoindia.echo.User.DocumentUpload"
+    tools:context="in.co.echoindia.echo.User.DocumentUploadActivity"
     tools:showIn="@layout/activity_document_upload"
-    android:weightSum="2"
+    android:weightSum="9"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:weightSum="2"
         android:orientation="horizontal">
         <LinearLayout
@@ -22,12 +22,12 @@
             android:layout_weight="1"
             android:layout_margin="10dp"
             >
+
             <ImageView
                 android:id="@+id/img_voter_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/img_voter_id"
-                />
+                android:src="@drawable/img_voter_id" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -49,21 +49,39 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:text="Upload"
-                android:background="@drawable/rounded_buttons"
-                android:shadowColor="@color/colorPrimaryDark"
-                android:textColor="#fff"
-                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_choose_voter_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/rounded_buttons"
+                    android:shadowColor="@color/colorPrimaryDark"
+                    android:text="CHOOSE"
+                    android:textColor="#fff" />
+
+                <Button
+                    android:id="@+id/btn_upload_voter_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="Upload"
+                    android:background="@drawable/rounded_buttons"
+                    android:shadowColor="@color/colorPrimaryDark"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:weightSum="2"
         android:orientation="horizontal">
 
@@ -90,14 +108,31 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:text="Upload"
-                android:background="@drawable/rounded_buttons"
-                android:shadowColor="@color/colorPrimaryDark"
-                android:textColor="#fff"
-                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/btn_choose_aadhaar_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="CHOOSE"
+                    android:background="@drawable/rounded_buttons"
+                    android:shadowColor="@color/colorPrimaryDark"
+                    android:textColor="#fff"
+                    />
+                <Button
+                    android:id="@+id/btn_upload_aadhaar_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="Upload"
+                    android:background="@drawable/rounded_buttons"
+                    android:shadowColor="@color/colorPrimaryDark"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    />
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -113,6 +148,34 @@
                 />
         </LinearLayout>
 
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="SKIP"
+            android:textStyle="normal"
+            android:gravity="center"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="CONTINUE"
+            android:textStyle="bold"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colorPrimaryDark"
+            />
+        </RelativeLayout>
     </LinearLayout>
 
 

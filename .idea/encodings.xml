@@ -21,6 +21,7 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/in/co/echoindia/echo/Utils/Clustering/algo/StaticCluster.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/in/co/echoindia/echo/Utils/Clustering/view/ClusterRenderer.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/in/co/echoindia/echo/Utils/Clustering/view/DefaultClusterRenderer.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/in/co/echoindia/echo/Utils/MarshMallowPermission.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-v21/amu_bubble_mask.9.png" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-v21/amu_bubble_shadow.9.png" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-v21/selector_wishlist_icon.xml" charset="UTF-8" />
@@ -29,6 +30,7 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/news_image.jpg" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/news_logo.png" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/amu_text_bubble.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_otp_check.xml" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/raw/radar_search.json" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values/ids.xml" charset="UTF-8" />
     <file url="PROJECT" charset="ISO-8859-1" />
