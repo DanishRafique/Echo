@@ -29,7 +29,7 @@ public class MyAccountActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     UserDetailsModel userDetailsModel;
 
-    TextView tvName,tvEmail,tvMobile,tvAddress, tvCity , tvWard , tvPinCode ,tvDistrict , tvState;
+    TextView tvName,tvUserName,tvEmail,tvMobile,tvAddress, tvCity , tvWard , tvPinCode ,tvDistrict , tvState;
     ImageView userPhoto;
     LinearLayout profileBackground;
 
@@ -45,6 +45,7 @@ public class MyAccountActivity extends AppCompatActivity {
         userDetailsModel = new Gson().fromJson(sharedpreferences.getString(Constants.SETTINGS_OBJ_USER, ""), UserDetailsModel.class);
 
         tvName=(TextView)findViewById(R.id.tv_name);
+        tvUserName=(TextView)findViewById(R.id.tv_user_name);
         tvEmail=(TextView)findViewById(R.id.tv_email);
         tvMobile=(TextView)findViewById(R.id.tv_mobile);
         tvAddress=(TextView)findViewById(R.id.tv_address);
@@ -57,6 +58,7 @@ public class MyAccountActivity extends AppCompatActivity {
         profileBackground=(LinearLayout)findViewById(R.id.profile_background);
 
         tvName.setText(userDetailsModel.getFirstName()+" "+userDetailsModel.getLastName());
+        tvUserName.setText(userDetailsModel.getUserName());
         tvEmail.setText(userDetailsModel.getEmailId());
         tvMobile.setText(userDetailsModel.getPhoneNo());
         tvAddress.setText(userDetailsModel.getAddress());

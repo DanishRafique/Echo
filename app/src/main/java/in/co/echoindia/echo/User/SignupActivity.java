@@ -70,7 +70,7 @@ public class SignupActivity extends AppCompatActivity {
     private static final String LOG_TAG = "SignUpActivity";
     private ProgressDialog pDialog;
 
-    TextView otpSubmit, resendOTP;
+    TextView otpSubmit, resendOTP , txtOTPNumber;
     EditText edtOtp;
     TextView txtTimer;
     ImageView imgProfile;
@@ -190,9 +190,12 @@ public class SignupActivity extends AppCompatActivity {
         checkOTPDialog.setContentView(R.layout.dialog_otp_check);
 
         otpSubmit = (TextView) checkOTPDialog.findViewById(R.id.otp_submit);
+
         edtOtp = (EditText) checkOTPDialog.findViewById(R.id.edt_otp);
         txtTimer = (TextView) checkOTPDialog.findViewById(R.id.timer);
         resendOTP = (TextView) checkOTPDialog.findViewById(R.id.resend_otp);
+        txtOTPNumber=(TextView)checkOTPDialog.findViewById(R.id.txt_otp_number);
+        txtOTPNumber.setText("THE OTP HAS BEEN SEND TO "+phoneNumber.getText().toString().trim());
         setOtpTimer();
         checkOTPDialog.show();
 
