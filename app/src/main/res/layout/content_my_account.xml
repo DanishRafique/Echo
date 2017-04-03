@@ -9,33 +9,37 @@
     tools:context="in.co.echoindia.echo.User.MyAccountActivity"
     tools:showIn="@layout/activity_my_account"
     android:background="#e9e9e9">
+
     <LinearLayout
         android:id="@+id/profile_background"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:background="@drawable/img_profile_picture">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#CC000000"
-            >
+            android:background="#CCFFFFFF">
+
             <ImageView
                 android:id="@+id/user_photo"
 
                 android:layout_width="180dp"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_height="match_parent"
-                android:src="@drawable/img_profile_picture"/>
+                android:src="@drawable/img_profile_picture" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_edit"
-                android:layout_marginTop="5dp"
+                android:layout_alignParentRight="true"
                 android:layout_marginRight="5dp"
-                android:layout_alignParentRight="true"/>
+                android:layout_marginTop="5dp"
+                app:srcCompat="@drawable/ic_edit" />
         </RelativeLayout>
     </LinearLayout>
+
     <android.support.v7.widget.CardView
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"

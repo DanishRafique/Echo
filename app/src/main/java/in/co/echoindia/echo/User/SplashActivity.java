@@ -93,7 +93,7 @@ public class SplashActivity extends AppCompatActivity {
             try {
                 URL url = new URL(url_news_update);
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("maxID",0);
+                postDataParams.put("maxID",maxID);
                 Log.e(LOG_TAG,"URL"+url_news_update);
                 Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -174,13 +174,14 @@ public class SplashActivity extends AppCompatActivity {
                 editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsList));
                 editor.putInt(Constants.LAST_NEWS_UPDATE,max);
                 editor.commit();
-                gotoNextActivity();
+
             }
             else if(checkStatus.equals("1")){
-                Toast.makeText(this, "Error Loading News List", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Error Loading News List", Toast.LENGTH_SHORT).show();
             }else {
                 Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
             }
+            gotoNextActivity();
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e(LOG_TAG,e.toString());

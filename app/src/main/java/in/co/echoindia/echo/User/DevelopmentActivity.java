@@ -61,7 +61,7 @@ public class DevelopmentActivity extends AppCompatActivity implements OnMapReady
 
         // Add a marker in Sydney and move the camera
         boolean success = googleMap.setMapStyle(new MapStyleOptions(getResources()
-                .getString(R.string.style_json)));
+                .getString(R.string.style_json_night)));
         LatLng kolkata = new LatLng(51.5584087,-0.0915169);
         CameraUpdate zoom= CameraUpdateFactory.zoomTo(13);
         //mMap.addMarker(new MarkerOptions().position(kolkata).title("Marker in Kolkata"));
