@@ -29,6 +29,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.Model.NewsDetailsModel;
+import in.co.echoindia.echo.Model.PollDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
@@ -44,7 +45,9 @@ public class SplashActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     private View mContentView;
     NewsDetailsModel mNewsDetailModel;
+    PollDetailsModel mPollDetailModel;
     ArrayList<NewsDetailsModel> newsList=new ArrayList<NewsDetailsModel>();
+    ArrayList<PollDetailsModel> pollList=new ArrayList<PollDetailsModel>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +150,7 @@ public class SplashActivity extends AppCompatActivity {
     private void setNewsData(Object o)  {
         int max=sharedpreferences.getInt(Constants.LAST_NEWS_UPDATE,0);
         Log.e(LOG_TAG,"MAX ID VALUE :"+max);
+        Log.e(LOG_TAG,"NEWS JSON : "+o.toString());
         try {
             JSONObject jObject=new JSONObject(o.toString());
             String checkStatus=jObject.getString("status");
@@ -177,6 +181,116 @@ public class SplashActivity extends AppCompatActivity {
 
             }
             else if(checkStatus.equals("1")){
+                //Toast.makeText(this, "Error Loading News List", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+            FetchPoll mFetchPoll=new FetchPoll();
+            mFetchPoll.execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+
+    }
+
+    class FetchPoll extends AsyncTask {
+
+        String url_poll_update = "http://echoindia.co.in/php/getPolls.php";
+        int maxID=sharedpreferences.getInt(Constants.LAST_POLL_UPDATE,0);
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_poll_update);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("maxID",maxID);
+                Log.e(LOG_TAG,"URL"+url_poll_update);
+                Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            Log.e(LOG_TAG,"POLL : "+o.toString());
+            setPollData(o);
+        }
+    }
+    private void setPollData(Object o)  {
+        int max=sharedpreferences.getInt(Constants.LAST_POLL_UPDATE,0);
+        try {
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&&o != null){
+                JSONArray newsArray=jObject.getJSONArray("polls");
+                for(int i =0 ; i<newsArray.length();i++){
+                    JSONObject pollObject=newsArray.getJSONObject(i);
+                    mPollDetailModel=new PollDetailsModel();
+                    mPollDetailModel.setPollId(pollObject.getString("PollId"));
+                    mPollDetailModel.setPollTitle(pollObject.getString("PollTitle"));
+                    mPollDetailModel.setPollImage(pollObject.getString("PollImage"));
+                    mPollDetailModel.setPollDescription(pollObject.getString("PollDescription"));
+                    mPollDetailModel.setPollOptionOneText(pollObject.getString("PollOptionOneText"));
+                    mPollDetailModel.setPollOptionOneVote(pollObject.getInt("PollOptionOneVote"));
+                    mPollDetailModel.setPollOptionTwoText(pollObject.getString("PollOptionTwoText"));
+                    mPollDetailModel.setPollOptionTwoVote(pollObject.getInt("PollOptionTwoVote"));
+                    mPollDetailModel.setPollVendor(pollObject.getString("PollVendor"));
+                    mPollDetailModel.setPollVendorLogo(pollObject.getString("PollVendorLogo"));
+                    mPollDetailModel.setPollStartDate(pollObject.getString("PollStartDate"));
+                    mPollDetailModel.setPollEndDate(pollObject.getString("PollEndData"));
+                    if(Integer.valueOf(mPollDetailModel.getPollId())>max){
+                        max=Integer.valueOf(mPollDetailModel.getPollId());
+                    }
+                    pollList.add(mPollDetailModel);
+                }
+                editor.putString(Constants.POLL_LIST, new Gson().toJson(pollList));
+                editor.putInt(Constants.LAST_POLL_UPDATE,max);
+                editor.commit();
+
+            }
+            else if(checkStatus.equals("0")){
                 //Toast.makeText(this, "Error Loading News List", Toast.LENGTH_SHORT).show();
             }else {
                 Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();

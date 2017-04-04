@@ -36,7 +36,7 @@
 
 
                 <TextView
-                    android:id="@+id/poll_topic"
+                    android:id="@+id/poll_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/poll_image"
@@ -53,7 +53,7 @@
                     android:id="@+id/poll_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/poll_topic"
+                    android:layout_below="@+id/poll_title"
                     android:layout_margin="10dp"
                     android:text="The idea of a maximum wage can be traced back to Aristotle who believed that no one person in Greece should have more than 5 times the wealth of the poorest person. Maximum wage is increasingly becoming a frequent subject of debate in the 21st century as more CEOs and top executives take home millions of dollars in earnings compared to the minimum wage earned by some of the employees in the same companies."
                     android:textColor="#2c3033"
@@ -69,12 +69,12 @@
                     android:weightSum="6">
 
                     <com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
-                        android:id="@+id/poll_bar_positive"
+                        android:id="@+id/poll_bar_one"
                         android:layout_width="0dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
                         android:layout_height="match_parent"
+                        android:layout_marginBottom="8dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginTop="8dp"
                         android:layout_weight="4"
                         android:gravity="center"
                         app:rcBackgroundColor="@color/background_content"
@@ -88,20 +88,22 @@
                         app:rcSecondaryProgressColor="@color/custom_progress_green_header"
                         app:rcTextProgress="54.72%"
                         app:rcTextProgressColor="#FFF"
-                        app:rcTextProgressMargin="10dp"
-                        app:rcTextProgressSize="14sp"
-                        />
+                        app:rcTextProgressMargin="1dp"
+                        app:rcTextProgressSize="14sp" />
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:layout_weight="2">
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
                         <TextView
+                            android:id="@+id/poll_option_one_vote"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:paddingLeft="5dp"
                             android:gravity="center"
+                            android:paddingLeft="5dp"
                             android:text="7485"
                             android:textColor="#000"
                             android:textSize="25sp" />
@@ -118,8 +120,6 @@
                     </LinearLayout>
 
 
-
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -132,12 +132,12 @@
                     android:weightSum="6">
 
                     <com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar
-                        android:id="@+id/poll_bar_negative"
+                        android:id="@+id/poll_bar_two"
                         android:layout_width="0dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
                         android:layout_height="match_parent"
+                        android:layout_marginBottom="8dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginTop="8dp"
                         android:layout_weight="4"
                         android:gravity="center"
                         app:rcBackgroundColor="@color/background_content"
@@ -146,24 +146,27 @@
                         app:rcProgress="6251"
                         app:rcProgressColor="@color/custom_progress_red_header"
                         app:rcRadius="30dp"
-                        app:rcReverse="true"
+                        app:rcReverse="false"
                         app:rcSecondaryProgress="6751"
                         app:rcSecondaryProgressColor="@color/custom_progress_red_progress"
                         app:rcTextProgress="45.28%"
                         app:rcTextProgressColor="#FFF"
-                        app:rcTextProgressMargin="10dp"
+                        app:rcTextProgressMargin="1dp"
                         app:rcTextProgressSize="14sp" />
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:layout_weight="2">
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
                         <TextView
+                            android:id="@+id/poll_option_two_vote"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:paddingLeft="5dp"
                             android:gravity="center"
+                            android:paddingLeft="5dp"
                             android:text="6251"
                             android:textColor="#000"
                             android:textSize="25sp" />
@@ -180,17 +183,15 @@
                     </LinearLayout>
 
 
-
-
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/poll_buttons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="10dp"
                     android:layout_below="@id/poll_number_negative"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
                     android:weightSum="2">
 
                     <LinearLayout
@@ -200,11 +201,12 @@
                         android:gravity="center">
 
                         <Button
+                            android:id="@+id/poll_option_one_text"
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
                             android:background="@drawable/rounded_buttons"
-                            android:text="Aye"
                             android:elevation="20dp"
+                            android:text="Aye"
                             android:textAlignment="center"
                             android:textColor="#fff">
 
@@ -218,12 +220,13 @@
                         android:gravity="center">
 
                         <Button
+                            android:id="@+id/poll_option_two_text"
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
                             android:background="@drawable/rounded_buttons"
 
                             android:text="Nay"
-                            android:textColor="#fff"/>
+                            android:textColor="#fff" />
                     </LinearLayout>
 
 
@@ -240,21 +243,21 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/poll_endorser"
+                        android:id="@+id/poll_vendor_logo"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignParentLeft="true"
                         android:src="@mipmap/icon" />
 
                     <TextView
-                        android:id="@+id/news_vendor_name"
+                        android:id="@+id/poll_vendor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBaseline="@+id/news_timeline"
 
                         android:layout_alignBottom="@+id/news_timeline"
                         android:layout_marginLeft="10dp"
-                        android:layout_toEndOf="@+id/poll_endorser"
+                        android:layout_toEndOf="@+id/poll_vendor_logo"
                         android:text="Echo"
                         android:textSize="12sp"
                         android:textStyle="italic" />
@@ -344,7 +347,7 @@
                                 android:id="@+id/news_full_story"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:layout_alignBottom="@+id/poll_topic"
+                                android:layout_alignBottom="@+id/poll_title"
                                 android:layout_alignParentEnd="true"
                                 android:background="@drawable/ic_news_full_story"
                                 android:textOff="@null"
@@ -368,7 +371,7 @@
                                 android:id="@+id/news_share"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:layout_alignBottom="@+id/poll_topic"
+                                android:layout_alignBottom="@+id/poll_title"
                                 android:layout_alignParentEnd="true"
                                 android:background="@drawable/ic_share"
                                 android:textOff="@null"

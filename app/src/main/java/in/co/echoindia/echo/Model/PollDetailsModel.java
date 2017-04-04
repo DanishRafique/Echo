@@ -5,7 +5,8 @@ package in.co.echoindia.echo.Model;
  */
 
 public class PollDetailsModel {
-    private int pollId;
+
+    private String pollId="";
     private String pollTitle="";
     private String pollImage="";
     private String pollDescription="";
@@ -18,11 +19,12 @@ public class PollDetailsModel {
     private String pollStartDate="";
     private String pollEndDate="";
 
-    public int getPollId() {
+
+    public String getPollId() {
         return pollId;
     }
 
-    public void setPollId(int pollId) {
+    public void setPollId(String pollId) {
         this.pollId = pollId;
     }
 

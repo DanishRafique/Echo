@@ -166,7 +166,7 @@ public class NewsFragment extends Fragment {
                     }
                     newsListArray.add(mNewsDetailModel);
                 }
-                editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsList));
+                editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsListArray));
                 editor.putInt(Constants.LAST_NEWS_UPDATE,max);
                 editor.commit();
                 Toast.makeText(getActivity(), "Echo News Updated", Toast.LENGTH_SHORT).show();
