@@ -17,5 +17,4 @@
             android:layout_marginBottom="50dp">
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
-
 </FrameLayout>
