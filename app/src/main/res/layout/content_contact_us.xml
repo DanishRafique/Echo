@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:contentDescription="@string/my_msg"
+        android:contentDescription="Contact us"
         android:src="@drawable/contact"
         android:scaleType = "centerCrop"
         android:alpha="0.8"/>
