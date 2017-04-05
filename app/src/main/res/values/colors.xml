@@ -18,6 +18,8 @@
     <color name="my_statusbar_color">#000</color>
     <color name="button_color">#ee9c9999</color>
 
+    <color name="light_grey">#e9e9e9</color>
+
 
     <!-- Screens background color-->
     <color name="bg_screen1">#02344b</color>
