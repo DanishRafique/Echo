@@ -134,9 +134,8 @@ public class SignupActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentDocumentUpload=new Intent(SignupActivity.this,DocumentUploadActivity.class);
-                startActivity(intentDocumentUpload);
-                SignupActivity.this.finish();
+                SignUpUser mSignUpUser=new SignUpUser();
+                mSignUpUser.execute();
             }
         });
 
@@ -323,26 +322,27 @@ public class SignupActivity extends AppCompatActivity {
                 imageStream = getContentResolver().openInputStream(selectedImage);
                 originBitmap = BitmapFactory.decodeStream(imageStream);
             } catch (FileNotFoundException e) {
-                Log.e("CatchActivityResult",e.getMessage().toString());
+                Log.e(LOG_TAG,"CatchActivityResult"+e.getMessage().toString());
 
             }
             if (originBitmap != null) {
                 this.imageView.setImageBitmap(originBitmap);
-                Log.e("ImageLoaded", "Done Loading Image");
+                Log.e(LOG_TAG,"ImageLoaded"+"Done Loading Image");
                 try {
                     Bitmap image = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     image.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
                     byteArray = byteArrayOutputStream.toByteArray();
                     Log.e("byteArray", byteArray.toString());
-                    btnUpload.setVisibility(View.VISIBLE);
+                    //btnUpload.setVisibility(View.VISIBLE);
                     encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                    //Log.e(LOG_TAG,"EncodedImage"+encodedImage);
                 } catch (Exception e) {
-                    Log.e("OnActivityResultEx", e.toString());
+                    Log.e(LOG_TAG,"OnActivityResultException : "+e.toString());
                 }
             }
         } else {
-            Log.e("ErrorOccurredActRes", "ErrorOnActRes");
+            Log.e(LOG_TAG,"ErrorOccurredActivityResult");
 
         }
 
@@ -433,6 +433,122 @@ public class SignupActivity extends AppCompatActivity {
                 }
                 else if(checkStatus.equals("0")){
                     Toast.makeText(SignupActivity.this, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+    class SignUpUser extends AsyncTask {
+
+        String url_user_sign_up = "http://echoindia.co.in/php/signup.php";
+        String userNameStr=userName.getText().toString().trim();
+        String passwordStr=password.getText().toString().trim();
+        String firstNameStr=firstName.getText().toString().trim();
+        String lastNameStr = lastName.getText().toString().trim();
+        String addressStr = address.getText().toString().trim();
+        String wardStr=ward.getText().toString().trim();
+        String cityStr=city.getText().toString().trim();
+        String pincodeStr=pinCode.getText().toString().trim();
+        String districtStr=district.getText().toString().trim();
+        String stateStr=state.getText().toString().trim();
+        String phoneNumberStr=phoneNumber.getText().toString().trim();
+        String emailStr=emailAddress.getText().toString().trim();
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog.show();
+            pDialog.setMessage("Please Wait");
+            pDialog.setCancelable(true);
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_user_sign_up);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("username",userNameStr);
+                postDataParams.put("password",passwordStr);
+                postDataParams.put("firstName",firstNameStr);
+                postDataParams.put("lastName",lastNameStr);
+                postDataParams.put("email",emailStr);
+                postDataParams.put("phone",phoneNumberStr);
+                postDataParams.put("address",addressStr);
+                postDataParams.put("ward",wardStr);
+                postDataParams.put("city",cityStr);
+                postDataParams.put("pincode",pincodeStr);
+                postDataParams.put("district",districtStr);
+                postDataParams.put("state",stateStr);
+                postDataParams.put("userPhoto",encodedImage);
+
+                Log.e(LOG_TAG,"URL"+url_user_sign_up);
+                Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            pDialog.dismiss();
+            JSONObject jObject= null;
+            try {
+                Log.e(LOG_TAG,"Registration JSON: "+o.toString());
+                jObject = new JSONObject(o.toString());
+                String checkStatus=jObject.getString("status");
+                if(checkStatus.equals("1")){
+                    Toast.makeText(SignupActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
+                    Intent intentDocumentUpload=new Intent(SignupActivity.this,DocumentUploadActivity.class);
+                    startActivity(intentDocumentUpload);
+                    SignupActivity.this.finish();
+                }
+                else if(checkStatus.equals("0")){
+                    Toast.makeText(SignupActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
