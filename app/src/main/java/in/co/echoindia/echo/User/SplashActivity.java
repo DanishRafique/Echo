@@ -255,8 +255,7 @@ public class SplashActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             Log.e(LOG_TAG,"POLL : "+o.toString());
-            gotoNextActivity();
-            //setPollData(o);
+            setPollData(o);
         }
     }
     private void setPollData(Object o)  {
@@ -280,7 +279,9 @@ public class SplashActivity extends AppCompatActivity {
                     mPollDetailModel.setPollVendor(pollObject.getString("PollVendor"));
                     mPollDetailModel.setPollVendorLogo(pollObject.getString("PollVendorLogo"));
                     mPollDetailModel.setPollStartDate(pollObject.getString("PollStartDate"));
-                    mPollDetailModel.setPollEndDate(pollObject.getString("PollEndData"));
+                    mPollDetailModel.setPollEndDate(pollObject.getString("PollEndDate"));
+                    mPollDetailModel.setPollOptionOneColor(pollObject.getInt("PollOptionOneColor"));
+                    mPollDetailModel.setPollOptionTwoColor(pollObject.getInt("PollOptionTwoColor"));
                     if(Integer.valueOf(mPollDetailModel.getPollId())>max){
                         max=Integer.valueOf(mPollDetailModel.getPollId());
                     }

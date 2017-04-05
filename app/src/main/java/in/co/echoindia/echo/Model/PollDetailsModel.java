@@ -18,7 +18,24 @@ public class PollDetailsModel {
     private String pollVendorLogo="";
     private String pollStartDate="";
     private String pollEndDate="";
+    private int pollOptionOneColor;
+    private int pollOptionTwoColor;
 
+    public int getPollOptionOneColor() {
+        return pollOptionOneColor;
+    }
+
+    public void setPollOptionOneColor(int pollOptionOneColor) {
+        this.pollOptionOneColor = pollOptionOneColor;
+    }
+
+    public int getPollOptionTwoColor() {
+        return pollOptionTwoColor;
+    }
+
+    public void setPollOptionTwoColor(int pollOptionTwoColor) {
+        this.pollOptionTwoColor = pollOptionTwoColor;
+    }
 
     public String getPollId() {
         return pollId;

@@ -40,6 +40,7 @@ public class PollAdapter extends BaseAdapter {
 
     int totalVote;
     float optionOnePercent, optionTwoPercent;
+    int pollOptionOneColor,pollOptionTwoColor;
 
     public PollAdapter(Context activity, ArrayList<PollDetailsModel> pollDetailModel) {
         this.activity = activity;
@@ -113,9 +114,35 @@ public class PollAdapter extends BaseAdapter {
         pollBarOne.setProgressText(df.format(optionOnePercent)+"%");
         pollBarTwo.setProgressText(df.format(optionTwoPercent)+"%");
 
+        pollOptionOneColor=pollObj.getPollOptionOneColor();
+        pollOptionTwoColor=pollObj.getPollOptionTwoColor();
 
-
+        setupProgressColor(pollOptionOneColor,pollBarOne);
+        setupProgressColor(pollOptionOneColor,pollBarTwo);
 
         return convertView;
+    }
+
+    void setupProgressColor(int pollOptionColor,TextRoundCornerProgressBar progressBar){
+        if (pollOptionColor==1){
+            progressBar.setProgressColor(R.color.custom_progress_green_header);
+            progressBar.setSecondaryProgressColor(R.color.custom_progress_green_progress);
+        }
+        else if(pollOptionColor==2){
+            progressBar.setProgressColor(R.color.custom_progress_orange_header);
+            progressBar.setSecondaryProgressColor(R.color.custom_progress_orange_progress);
+        }
+        else if(pollOptionColor==3){
+            progressBar.setProgressColor(R.color.custom_progress_blue_header);
+            progressBar.setSecondaryProgressColor(R.color.custom_progress_blue_progress);
+        }
+        else if(pollOptionColor==4){
+            progressBar.setProgressColor(R.color.custom_progress_purple_header);
+            progressBar.setSecondaryProgressColor(R.color.custom_progress_purple_progress);
+        }
+        else if(pollOptionColor==4){
+            progressBar.setProgressColor(R.color.custom_progress_red_header);
+            progressBar.setSecondaryProgressColor(R.color.custom_progress_red_progress);
+        }
     }
 }
