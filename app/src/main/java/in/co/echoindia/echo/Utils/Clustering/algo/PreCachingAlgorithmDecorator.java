@@ -32,7 +32,7 @@ import in.co.echoindia.echo.Utils.Clustering.ClusterItem;
 public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algorithm<T> {
     private final Algorithm<T> mAlgorithm;
 
-    // TODO: evaluate maxSize parameter for LruCache.
+    // ODO: evaluate maxSize parameter for LruCache.
     private final LruCache<Integer, Set<? extends Cluster<T>>> mCache = new LruCache<Integer, Set<? extends Cluster<T>>>(5);
     private final ReadWriteLock mCacheLock = new ReentrantReadWriteLock();
 
@@ -70,7 +70,7 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algo
     public Set<? extends Cluster<T>> getClusters(double zoom) {
         int discreteZoom = (int) zoom;
         Set<? extends Cluster<T>> results = getClustersInternal(discreteZoom);
-        // TODO: Check if requests are already in-flight.
+        // ODO: Check if requests are already in-flight.
         if (mCache.get(discreteZoom + 1) == null) {
             new Thread(new PrecacheRunnable(discreteZoom + 1)).start();
         }

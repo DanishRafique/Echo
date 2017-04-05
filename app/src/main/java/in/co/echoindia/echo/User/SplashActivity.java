@@ -154,10 +154,11 @@ public class SplashActivity extends AppCompatActivity {
         try {
             JSONObject jObject=new JSONObject(o.toString());
             String checkStatus=jObject.getString("status");
-            if(checkStatus.equals("0")&&o != null){
+            if(checkStatus.equals("0")&& o != null){
                 JSONArray newsArray=jObject.getJSONArray("news");
                 for(int i =0 ; i<newsArray.length();i++){
                     JSONObject newsObject=newsArray.getJSONObject(i);
+                    Log.d("newsPrint", newsObject.toString());
                     mNewsDetailModel=new NewsDetailsModel();
                     mNewsDetailModel.setNewsID(newsObject.getString("ID"));
                     mNewsDetailModel.setNewsTitle(newsObject.getString("NewsTitle"));

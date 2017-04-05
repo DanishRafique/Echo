@@ -165,7 +165,7 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
     }
 
     private Bounds createBoundsFromSpan(Point p, double span) {
-        // TODO: Use a span that takes into account the visual size of the marker, not just its
+        // ODO: Use a span that takes into account the visual size of the marker, not just its
         // LatLng.
         double halfSpan = span / 2;
         return new Bounds(
