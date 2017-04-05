@@ -81,11 +81,10 @@
                         app:rcBackgroundPadding="4dp"
                         app:rcMax="13736"
                         app:rcProgress="7485"
-                        app:rcProgressColor="@color/custom_progress_green_progress"
                         app:rcRadius="30dp"
                         app:rcReverse="false"
                         app:rcSecondaryProgress="7985"
-                        app:rcSecondaryProgressColor="@color/custom_progress_green_header"
+
                         app:rcTextProgress="54.72%"
                         app:rcTextProgressColor="#FFF"
                         app:rcTextProgressMargin="1dp"

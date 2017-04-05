@@ -1,6 +1,8 @@
 package in.co.echoindia.echo.HomePage;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,9 @@ public class PollAdapter extends BaseAdapter {
     TextView pollOptionOneVote, pollOptionTwoVote;
     Button pollOptionOneText, pollOptionTwoText;
     TextRoundCornerProgressBar pollBarOne , pollBarTwo;
+    int colorCodePrimary[]={R.color.custom_progress_green_header,R.color.custom_progress_orange_header,R.color.custom_progress_blue_header,R.color.custom_progress_purple_header,R.color.custom_progress_red_header};
+    int colorCodeSecondary[]={R.color.custom_progress_green_progress,R.color.custom_progress_orange_progress,R.color.custom_progress_blue_progress,R.color.custom_progress_purple_progress,R.color.custom_progress_red_progress};
+    private static final String LOG_TAG = "PollAdapter";
 
     int totalVote;
     float optionOnePercent, optionTwoPercent;
@@ -114,35 +119,13 @@ public class PollAdapter extends BaseAdapter {
         pollBarOne.setProgressText(df.format(optionOnePercent)+"%");
         pollBarTwo.setProgressText(df.format(optionTwoPercent)+"%");
 
-        pollOptionOneColor=pollObj.getPollOptionOneColor();
-        pollOptionTwoColor=pollObj.getPollOptionTwoColor();
-
-        setupProgressColor(pollOptionOneColor,pollBarOne);
-        setupProgressColor(pollOptionOneColor,pollBarTwo);
+        pollOptionOneColor=pollObj.getPollOptionOneColor()-1;
+        pollOptionTwoColor=pollObj.getPollOptionTwoColor()-1;
+        pollBarOne.setProgressColor(ContextCompat.getColor(activity,colorCodePrimary[pollOptionOneColor]));
+        pollBarTwo.setProgressColor(ContextCompat.getColor(activity,colorCodePrimary[pollOptionTwoColor]));
+        pollBarOne.setSecondaryProgressColor(ContextCompat.getColor(activity,colorCodeSecondary[pollOptionOneColor]));
+        pollBarTwo.setSecondaryProgressColor(ContextCompat.getColor(activity,colorCodeSecondary[pollOptionTwoColor]));
 
         return convertView;
-    }
-
-    void setupProgressColor(int pollOptionColor,TextRoundCornerProgressBar progressBar){
-        if (pollOptionColor==1){
-            progressBar.setProgressColor(R.color.custom_progress_green_header);
-            progressBar.setSecondaryProgressColor(R.color.custom_progress_green_progress);
-        }
-        else if(pollOptionColor==2){
-            progressBar.setProgressColor(R.color.custom_progress_orange_header);
-            progressBar.setSecondaryProgressColor(R.color.custom_progress_orange_progress);
-        }
-        else if(pollOptionColor==3){
-            progressBar.setProgressColor(R.color.custom_progress_blue_header);
-            progressBar.setSecondaryProgressColor(R.color.custom_progress_blue_progress);
-        }
-        else if(pollOptionColor==4){
-            progressBar.setProgressColor(R.color.custom_progress_purple_header);
-            progressBar.setSecondaryProgressColor(R.color.custom_progress_purple_progress);
-        }
-        else if(pollOptionColor==4){
-            progressBar.setProgressColor(R.color.custom_progress_red_header);
-            progressBar.setSecondaryProgressColor(R.color.custom_progress_red_progress);
-        }
     }
 }
