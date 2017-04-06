@@ -163,7 +163,7 @@ public class NewsAdapter extends BaseAdapter {
                 tempBtn = (ToggleButton) buttonView;
                 ViewGroup view = (ViewGroup) tempBtn.getParent();
                 textView = (TextView) view.findViewById(R.id.news_upvote_value);
-                Log.d("Voting...", textView.getText().toString());
+                Log.e("Voting...", textView.getText().toString());
                 int upvote = Integer.parseInt(textView.getText().toString());
 
                 ViewGroup rootParent = (ViewGroup) view.getParent();
@@ -172,7 +172,6 @@ public class NewsAdapter extends BaseAdapter {
                 if(!isChecked){
                     t.setEnabled(true);
                     upvote --;
-                    //@TODO Here the up vote is decreasing. Simply save the above upvote variable value in GSON.
                     newsObj.setNewsUpVoteValue(false);
                     newsObj.setNewsUpVote(upvote);
                     newsVote.execute("up", "none");
@@ -181,7 +180,6 @@ public class NewsAdapter extends BaseAdapter {
                 else {
                     t.setEnabled(false);
                     upvote ++;
-                    //@TODO Here the up vote is increasing. Simply save the above upvote variable value in GSON.
                     newsObj.setNewsUpVoteValue(true);
                     newsObj.setNewsUpVote(upvote);
                     newsVote.execute("up", "up");
@@ -201,16 +199,13 @@ public class NewsAdapter extends BaseAdapter {
                 tempBtn = (ToggleButton) buttonView;
                 ViewGroup view = (ViewGroup) tempBtn.getParent();
                 textView = (TextView) view.findViewById(R.id.news_downvote_value);
-                Log.d("Voting...", textView.getText().toString());
+                Log.e("Voting...", textView.getText().toString());
                 int downvote = Integer.parseInt(textView.getText().toString());
-
                 ViewGroup rootParent = (ViewGroup) view.getParent();
                 ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.news_upvote);
-
                 if(!isChecked){
                     t.setEnabled(true);
                     downvote --;
-                    //@TODO Here the down vote is decreasing. Simply save the above downvote variable value in GSON.
                     newsObj.setNewsDownVoteValue(false);
                     newsObj.setNewsDownVote(downvote);
                     newsVote.execute("down", "none");
@@ -219,7 +214,6 @@ public class NewsAdapter extends BaseAdapter {
                 else {
                     t.setEnabled(false);
                     downvote ++;
-                    //@TODO Here the up vote is increasing. Simply save the above downvote variable value in GSON.
                     newsObj.setNewsDownVoteValue(true);
                     newsObj.setNewsDownVote(downvote);
                     newsVote.execute("down", "down");
@@ -267,8 +261,9 @@ public class NewsAdapter extends BaseAdapter {
                 postDataParams.put("btn",btn);
                 postDataParams.put("voteType",voteType);
                 postDataParams.put("newsId",newsId);
+                postDataParams.put("username",sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""));
 
-                Log.d("Voting", "Params: " + postDataParams.toString());
+                Log.e("Voting", "Params: " + postDataParams.toString());
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000 /* milliseconds */);
@@ -310,7 +305,7 @@ public class NewsAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(String aVoid) {
             super.onPostExecute(aVoid);
-            Log.d("Voting", "Response : " + aVoid);
+            Log.e("Voting", "Response : " + aVoid);
         }
     }
 

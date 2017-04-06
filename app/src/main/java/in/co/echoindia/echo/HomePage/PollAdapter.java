@@ -1,12 +1,14 @@
 package in.co.echoindia.echo.HomePage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -40,6 +42,7 @@ public class PollAdapter extends BaseAdapter {
    // Button pollOptionOneText, pollOptionTwoText;
     RadioButton pollOptionOneText, pollOptionTwoText;
     TextRoundCornerProgressBar pollBarOne , pollBarTwo;
+    LinearLayout pollShareButton;
     TextView pollQuestion;
     int colorCodePrimary[]={R.color.custom_progress_green_header,R.color.custom_progress_orange_header,R.color.custom_progress_blue_header,R.color.custom_progress_purple_header,R.color.custom_progress_red_header};
     int colorCodeSecondary[]={R.color.custom_progress_green_progress,R.color.custom_progress_orange_progress,R.color.custom_progress_blue_progress,R.color.custom_progress_purple_progress,R.color.custom_progress_red_progress};
@@ -92,6 +95,8 @@ public class PollAdapter extends BaseAdapter {
         pollOptionTwoText = (RadioButton) convertView.findViewById(R.id.poll_option_two_text);
         pollQuestion = (TextView)convertView.findViewById(R.id.poll_question);
         segmentedPoll = (SegmentedGroup)convertView.findViewById(R.id.segmented_poll);
+        pollShareButton =(LinearLayout)convertView.findViewById(R.id.poll_share_button);
+
 
         pollTitle.setText(pollObj.getPollTitle());
         pollDescription.setText(pollObj.getPollDescription());
@@ -133,7 +138,17 @@ public class PollAdapter extends BaseAdapter {
         pollBarOne.setSecondaryProgressColor(ContextCompat.getColor(activity,colorCodeSecondary[pollOptionOneColor]));
         pollBarTwo.setSecondaryProgressColor(ContextCompat.getColor(activity,colorCodeSecondary[pollOptionTwoColor]));
 
-        segmentedPoll.setTintColor(ContextCompat.getColor(activity,R.color.colorPrimaryDark));
+        segmentedPoll.setTintColor(ContextCompat.getColor(activity,R.color.colorPrimary));
+        pollShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, pollObj.getPollDescription());
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, pollObj.getPollTitle());
+                activity.startActivity(Intent.createChooser(sharingIntent, "Share via"));
+            }
+        });
 
         return convertView;
     }

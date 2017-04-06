@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,12 +29,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.HomePage.HomePageActivity;
+import in.co.echoindia.echo.Model.NewsDetailsModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
@@ -196,6 +200,43 @@ public class LoginActivity extends AppCompatActivity{
                 mUserDetailsModel.setAadhaarPhoto(userObj.getString("AadharCard"));
                 mUserDetailsModel.setIssueMaker(userObj.getString("IssueMaker"));
                 mUserDetailsModel.setIsVerified(userObj.getString("isVerified"));
+                int noOfVotes= responseObject.getInt("NoOfVotes");
+                if(noOfVotes>0){
+                    JSONArray jArrayNewsVotes=responseObject.getJSONArray("Votes");
+                    ArrayList<NewsDetailsModel> newsList;
+                    ArrayList<NewsDetailsModel> newsListUpdated=new ArrayList<>();
+                    Type type = new TypeToken<ArrayList<NewsDetailsModel>>() {}.getType();
+                    newsList = new Gson().fromJson(sharedpreferences.getString(Constants.NEWS_LIST, ""), type);
+                    for(int j=0;j<noOfVotes;j++) {
+                        JSONObject voteObj=jArrayNewsVotes.getJSONObject(j);
+                        String newsIDVote=voteObj.getString("NewsId");
+                        String newsVote=voteObj.getString("NewsVoteType");
+                        for (int i = 0; i < newsList.size(); i++) {
+                            NewsDetailsModel newsObj = newsList.get(i);
+                            if(newsObj.getNewsID().equals(newsIDVote)){
+                                if(newsVote.equals(("1"))){
+                                    newsObj.setNewsUpVoteValue(true);
+                                }
+                                else if(newsVote.equals("-1")){
+                                    newsObj.setNewsDownVoteValue(true);
+                                }
+                            }
+                            newsListUpdated.add(newsObj);
+                        }
+                    }
+                    editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsListUpdated));
+                }
+
+
+
+
+
+
+
+
+
+
+
                 editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE,"USER");
                 editor.putBoolean(Constants.SETTINGS_IS_LOGGED,true);
                 editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, userObj.getString("UserCode"));
