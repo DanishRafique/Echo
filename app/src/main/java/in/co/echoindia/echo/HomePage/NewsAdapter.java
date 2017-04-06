@@ -1,5 +1,6 @@
 package in.co.echoindia.echo.HomePage;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -25,10 +26,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -43,9 +42,7 @@ import in.co.echoindia.echo.Utils.AppUtil;
 public class NewsAdapter extends BaseAdapter {
 
     ArrayList<NewsDetailsModel> newsDetailsModels = new ArrayList<>();
-    private Context activity;
-    private LayoutInflater inflater;
-
+    Activity activity;
     TextView newsTitle;
     ImageView newsImage;
     TextView newsDescription;
@@ -56,13 +53,12 @@ public class NewsAdapter extends BaseAdapter {
     TextView newsDownvoteValue;
     LinearLayout newsFullStory;
     ToggleButton newsUpvote,newsDownvote;
-
-    NewsDetailsModel newsObj;
+    LinearLayout newsShareButton;
 
     ToggleButton tempBtn;
 
 
-    public NewsAdapter(Context activity, ArrayList<NewsDetailsModel> newsDetailsModels) {
+    public NewsAdapter(Activity activity, ArrayList<NewsDetailsModel> newsDetailsModels) {
         this.activity = activity;
         this.newsDetailsModels = newsDetailsModels;
     }
@@ -87,12 +83,11 @@ public class NewsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
 
-        if (inflater == null)
-            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
+      if (convertView == null) {
+            LayoutInflater inflater=(LayoutInflater) this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_news_child, null);
         }
-        newsObj = newsDetailsModels.get(position);
+        final NewsDetailsModel newsObj = newsDetailsModels.get(position);
         newsTitle=(TextView) convertView.findViewById(R.id.news_title);
         newsImage=(ImageView) convertView.findViewById(R.id.news_image);
         newsDescription=(TextView) convertView.findViewById(R.id.news_description);
@@ -102,6 +97,7 @@ public class NewsAdapter extends BaseAdapter {
         newsUpvoteValue=(TextView)convertView.findViewById(R.id.news_upvote_value);
         newsDownvoteValue=(TextView)convertView.findViewById(R.id.news_downvote_value);
         newsFullStory=(LinearLayout)convertView.findViewById(R.id.news_full_story_link);
+        newsShareButton =(LinearLayout)convertView.findViewById(R.id.news_share_button);
 
         newsUpvote=(ToggleButton)convertView.findViewById(R.id.news_upvote);
         newsUpvote.setTag(String.valueOf(newsObj.getNewsID()));
@@ -109,7 +105,7 @@ public class NewsAdapter extends BaseAdapter {
         newsDownvote=(ToggleButton)convertView.findViewById(R.id.news_downvote);
         newsDownvote.setTag(String.valueOf(newsObj.getNewsID()));
 
-        Log.e("NEWS ELEMENT",String.valueOf(newsObj.getNewsUpVote()));
+        //Log.e("NEWS ELEMENT",String.valueOf(newsObj.getNewsUpVote()));
 
         newsTitle.setText(newsObj.getNewsTitle());
         newsDescription.setText(newsObj.getNewsDescription());
@@ -130,6 +126,17 @@ public class NewsAdapter extends BaseAdapter {
                 newsIntent.putExtra("Title",newsObj.getNewsTitle());
                 newsIntent.putExtra("Link",newsObj.getNewsVendorLink());
                 activity.startActivity(newsIntent);
+            }
+        });
+
+        newsShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, newsObj.getNewsDescription());
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, newsObj.getNewsTitle());
+                activity.startActivity(Intent.createChooser(sharingIntent, "Share via"));
             }
         });
 
