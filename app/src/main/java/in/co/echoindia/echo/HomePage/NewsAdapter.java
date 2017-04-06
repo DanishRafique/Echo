@@ -3,6 +3,7 @@ package in.co.echoindia.echo.HomePage;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -34,6 +36,7 @@ import javax.net.ssl.HttpsURLConnection;
 import in.co.echoindia.echo.Model.NewsDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
+import in.co.echoindia.echo.Utils.Constants;
 
 /**
  * Created by Danish Rafique on 12-03-2017.
@@ -52,8 +55,11 @@ public class NewsAdapter extends BaseAdapter {
     TextView newsUpvoteValue;
     TextView newsDownvoteValue;
     LinearLayout newsFullStory;
-    ToggleButton newsUpvote,newsDownvote;
+    ArrayList<NewsDetailsModel> newUpdatedNewsList=new ArrayList<>();
+   // ToggleButton newsUpvote,newsDownvote;
     LinearLayout newsShareButton;
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor editor;
 
     ToggleButton tempBtn;
 
@@ -81,12 +87,12 @@ public class NewsAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(final int position, View convertView, ViewGroup parent){
 
-      if (convertView == null) {
+     // if (convertView == null) {
             LayoutInflater inflater=(LayoutInflater) this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_news_child, null);
-        }
+      //  }
         final NewsDetailsModel newsObj = newsDetailsModels.get(position);
         newsTitle=(TextView) convertView.findViewById(R.id.news_title);
         newsImage=(ImageView) convertView.findViewById(R.id.news_image);
@@ -99,11 +105,13 @@ public class NewsAdapter extends BaseAdapter {
         newsFullStory=(LinearLayout)convertView.findViewById(R.id.news_full_story_link);
         newsShareButton =(LinearLayout)convertView.findViewById(R.id.news_share_button);
 
-        newsUpvote=(ToggleButton)convertView.findViewById(R.id.news_upvote);
+       final ToggleButton newsUpvote=(ToggleButton)convertView.findViewById(R.id.news_upvote);
         newsUpvote.setTag(String.valueOf(newsObj.getNewsID()));
 
-        newsDownvote=(ToggleButton)convertView.findViewById(R.id.news_downvote);
+        final ToggleButton newsDownvote=(ToggleButton)convertView.findViewById(R.id.news_downvote);
         newsDownvote.setTag(String.valueOf(newsObj.getNewsID()));
+        sharedpreferences = AppUtil.getAppPreferences(activity);
+        editor = sharedpreferences.edit();
 
         //Log.e("NEWS ELEMENT",String.valueOf(newsObj.getNewsUpVote()));
 
@@ -117,7 +125,14 @@ public class NewsAdapter extends BaseAdapter {
 
         newsDownvoteValue.setText(String.valueOf(newsObj.getNewsDownVote()));
 
-        setupNewsVote();
+        if(newsObj.isNewsUpVoteValue()){
+            newsUpvote.setChecked(true);
+        }
+        else if(newsObj.isNewsDownVoteValue()){
+            newsDownvote.setChecked(true);
+        }
+
+
 
         newsFullStory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,10 +155,6 @@ public class NewsAdapter extends BaseAdapter {
             }
         });
 
-        return convertView;
-    }
-
-    private void setupNewsVote(){
         newsUpvote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -162,6 +173,8 @@ public class NewsAdapter extends BaseAdapter {
                     t.setEnabled(true);
                     upvote --;
                     //@TODO Here the up vote is decreasing. Simply save the above upvote variable value in GSON.
+                    newsObj.setNewsUpVoteValue(false);
+                    newsObj.setNewsUpVote(upvote);
                     newsVote.execute("up", "none");
                     textView.setText(upvote + "");
                 }
@@ -169,6 +182,8 @@ public class NewsAdapter extends BaseAdapter {
                     t.setEnabled(false);
                     upvote ++;
                     //@TODO Here the up vote is increasing. Simply save the above upvote variable value in GSON.
+                    newsObj.setNewsUpVoteValue(true);
+                    newsObj.setNewsUpVote(upvote);
                     newsVote.execute("up", "up");
                     textView.setText(upvote + "");
                 }
@@ -196,6 +211,8 @@ public class NewsAdapter extends BaseAdapter {
                     t.setEnabled(true);
                     downvote --;
                     //@TODO Here the down vote is decreasing. Simply save the above downvote variable value in GSON.
+                    newsObj.setNewsDownVoteValue(false);
+                    newsObj.setNewsDownVote(downvote);
                     newsVote.execute("down", "none");
                     textView.setText(downvote + "");
                 }
@@ -203,12 +220,30 @@ public class NewsAdapter extends BaseAdapter {
                     t.setEnabled(false);
                     downvote ++;
                     //@TODO Here the up vote is increasing. Simply save the above downvote variable value in GSON.
+                    newsObj.setNewsDownVoteValue(true);
+                    newsObj.setNewsDownVote(downvote);
                     newsVote.execute("down", "down");
                     textView.setText(downvote + "");
                 }
             }
         });
+        newUpdatedNewsList.clear();
+
+        for(int i=0;i<newsDetailsModels.size();i++){
+            if(i!=position) {
+                newUpdatedNewsList.add(newsDetailsModels.get(i));
+            }
+            else if(i==position){
+                newUpdatedNewsList.add(newsObj);
+            }
+        }
+        editor.putString(Constants.NEWS_LIST, new Gson().toJson(newUpdatedNewsList));
+        editor.commit();
+
+        return convertView;
     }
+
+
 
     private class newsVote extends AsyncTask<String, Void, String> {
         String newsId;
@@ -278,4 +313,5 @@ public class NewsAdapter extends BaseAdapter {
             Log.d("Voting", "Response : " + aVoid);
         }
     }
+
 }
