@@ -171,6 +171,8 @@ public class SplashActivity extends AppCompatActivity {
                     mNewsDetailModel.setNewsUpVote(newsObject.getInt("NewsUpVote"));
                     mNewsDetailModel.setNewsDownVote(newsObject.getInt("NewsDownVote"));
                     mNewsDetailModel.setNewsState(newsObject.getString("NewsState"));
+                    mNewsDetailModel.setNewsUpVoteValue(false);
+                    mNewsDetailModel.setNewsDownVoteValue(false);
                     if(Integer.valueOf(mNewsDetailModel.getNewsID())>max){
                         max=Integer.valueOf(mNewsDetailModel.getNewsID());
                     }
@@ -283,6 +285,7 @@ public class SplashActivity extends AppCompatActivity {
                     mPollDetailModel.setPollEndDate(pollObject.getString("PollEndDate"));
                     mPollDetailModel.setPollOptionOneColor(pollObject.getInt("PollOptionOneColor"));
                     mPollDetailModel.setPollOptionTwoColor(pollObject.getInt("PollOptionTwoColor"));
+                    mPollDetailModel.setPollQuestion(pollObject.getString("PollQuestion"));
                     if(Integer.valueOf(mPollDetailModel.getPollId())>max){
                         max=Integer.valueOf(mPollDetailModel.getPollId());
                     }

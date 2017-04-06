@@ -2,13 +2,12 @@ package in.co.echoindia.echo.HomePage;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 
 import in.co.echoindia.echo.Model.PollDetailsModel;
 import in.co.echoindia.echo.R;
+import info.hoang8f.android.segmented.SegmentedGroup;
 
 /**
  * Created by Danish Rafique on 04-04-2017.
@@ -37,11 +37,14 @@ public class PollAdapter extends BaseAdapter {
     TextView pollVendor;
     ImageView pollVendorLogo;
     TextView pollOptionOneVote, pollOptionTwoVote;
-    Button pollOptionOneText, pollOptionTwoText;
+   // Button pollOptionOneText, pollOptionTwoText;
+    RadioButton pollOptionOneText, pollOptionTwoText;
     TextRoundCornerProgressBar pollBarOne , pollBarTwo;
+    TextView pollQuestion;
     int colorCodePrimary[]={R.color.custom_progress_green_header,R.color.custom_progress_orange_header,R.color.custom_progress_blue_header,R.color.custom_progress_purple_header,R.color.custom_progress_red_header};
     int colorCodeSecondary[]={R.color.custom_progress_green_progress,R.color.custom_progress_orange_progress,R.color.custom_progress_blue_progress,R.color.custom_progress_purple_progress,R.color.custom_progress_red_progress};
     private static final String LOG_TAG = "PollAdapter";
+    SegmentedGroup segmentedPoll;
 
     int totalVote;
     float optionOnePercent, optionTwoPercent;
@@ -85,18 +88,22 @@ public class PollAdapter extends BaseAdapter {
         pollVendorLogo = (ImageView) convertView.findViewById(R.id.poll_vendor_logo);
         pollOptionOneVote = (TextView) convertView.findViewById(R.id.poll_option_one_vote);
         pollOptionTwoVote = (TextView) convertView.findViewById(R.id.poll_option_two_vote);
-        pollOptionOneText = (Button) convertView.findViewById(R.id.poll_option_one_text);
-        pollOptionTwoText = (Button) convertView.findViewById(R.id.poll_option_two_text);
+        pollOptionOneText = (RadioButton) convertView.findViewById(R.id.poll_option_one_text);
+        pollOptionTwoText = (RadioButton) convertView.findViewById(R.id.poll_option_two_text);
+        pollQuestion = (TextView)convertView.findViewById(R.id.poll_question);
+        segmentedPoll = (SegmentedGroup)convertView.findViewById(R.id.segmented_poll);
 
         pollTitle.setText(pollObj.getPollTitle());
         pollDescription.setText(pollObj.getPollDescription());
         pollVendor.setText(pollObj.getPollVendor());
         Glide.with(activity).load(pollObj.getPollImage()).diskCacheStrategy(DiskCacheStrategy.ALL).into(pollImage);
-        //Glide.with(activity).load(pollObj.getPollVendorLogo()).diskCacheStrategy(DiskCacheStrategy.ALL).into(pollVendorLogo);
+        Glide.with(activity).load(pollObj.getPollVendorLogo()).diskCacheStrategy(DiskCacheStrategy.ALL).into(pollVendorLogo);
         pollOptionOneVote.setText(String.valueOf(pollObj.getPollOptionOneVote()));
         pollOptionTwoVote.setText(String.valueOf(pollObj.getPollOptionTwoVote()));
         pollOptionOneText.setText(pollObj.getPollOptionOneText());
         pollOptionTwoText.setText(pollObj.getPollOptionTwoText());
+
+        pollQuestion.setText(pollObj.getPollQuestion());
 
         totalVote=pollObj.getPollOptionOneVote()+pollObj.getPollOptionTwoVote();
 
@@ -125,6 +132,8 @@ public class PollAdapter extends BaseAdapter {
         pollBarTwo.setProgressColor(ContextCompat.getColor(activity,colorCodePrimary[pollOptionTwoColor]));
         pollBarOne.setSecondaryProgressColor(ContextCompat.getColor(activity,colorCodeSecondary[pollOptionOneColor]));
         pollBarTwo.setSecondaryProgressColor(ContextCompat.getColor(activity,colorCodeSecondary[pollOptionTwoColor]));
+
+        segmentedPoll.setTintColor(ContextCompat.getColor(activity,R.color.colorPrimaryDark));
 
         return convertView;
     }

@@ -1,10 +1,12 @@
 package in.co.echoindia.echo.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Danish Rafique on 03-04-2017.
  */
 
-public class PollDetailsModel {
+public class PollDetailsModel implements Serializable {
 
     private String pollId="";
     private String pollTitle="";
@@ -20,6 +22,17 @@ public class PollDetailsModel {
     private String pollEndDate="";
     private int pollOptionOneColor;
     private int pollOptionTwoColor;
+    private String pollQuestion="";
+
+    public String getPollQuestion() {
+        return pollQuestion;
+    }
+
+    public void setPollQuestion(String pollQuestion) {
+        this.pollQuestion = pollQuestion;
+    }
+
+
 
     public int getPollOptionOneColor() {
         return pollOptionOneColor;

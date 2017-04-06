@@ -19,6 +19,24 @@ public class NewsDetailsModel implements Serializable {
     private String newsState="";
     private int newsUpVote;
     private int newsDownVote;
+    private boolean newsUpVoteValue;
+    private boolean newsDownVoteValue;
+
+    public boolean isNewsUpVoteValue() {
+        return newsUpVoteValue;
+    }
+
+    public void setNewsUpVoteValue(boolean newsUpVoteValue) {
+        this.newsUpVoteValue = newsUpVoteValue;
+    }
+
+    public boolean isNewsDownVoteValue() {
+        return newsDownVoteValue;
+    }
+
+    public void setNewsDownVoteValue(boolean newsDownVoteValue) {
+        this.newsDownVoteValue = newsDownVoteValue;
+    }
 
     public String getNewsID() {
         return newsID;
