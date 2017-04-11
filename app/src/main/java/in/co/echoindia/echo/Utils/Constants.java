@@ -15,4 +15,5 @@ public class Constants {
     public static final String LAST_POLL_UPDATE="LAST_POLL_UPDATE";
     public static final String NEWS_LIST="NEWS_LIST";
     public static final String POLL_LIST="POLL_LIST";
+    public static final String POLL_LIST_COMMENT="POLL_LIST_COMMENT";
 }

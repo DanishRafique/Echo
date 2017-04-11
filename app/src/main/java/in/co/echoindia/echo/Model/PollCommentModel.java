@@ -11,6 +11,15 @@ public class PollCommentModel {
     private String pollCommentUserName="";
     private String pollCommentTime="";
     private String pollCommentDate="";
+    private String pollCommentUserPhoto ="";
+
+    public String getPollCommentUserPhoto() {
+        return pollCommentUserPhoto;
+    }
+
+    public void setPollCommentUserPhoto(String pollCommentUserPhoto) {
+        this.pollCommentUserPhoto = pollCommentUserPhoto;
+    }
 
     public int getPollCommentId() {
         return pollCommentId;
