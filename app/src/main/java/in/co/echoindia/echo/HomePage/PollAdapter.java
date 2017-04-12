@@ -97,7 +97,6 @@ public class PollAdapter extends BaseAdapter {
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
-    String pollId;
 
     public PollAdapter(Context activity, ArrayList<PollDetailsModel> pollDetailModel) {
         this.activity = activity;
@@ -125,8 +124,8 @@ public class PollAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
 
-            LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_poll_child, null);
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.list_poll_child, null);
         sharedpreferences = AppUtil.getAppPreferences(activity);
 
         final PollDetailsModel pollObj = pollDetailModel.get(position);
@@ -154,7 +153,7 @@ public class PollAdapter extends BaseAdapter {
         pollOptionTwoVote.setText(String.valueOf(pollObj.getPollOptionTwoVote()));
         pollOptionOneText.setText(pollObj.getPollOptionOneText());
         pollOptionTwoText.setText(pollObj.getPollOptionTwoText());
-        pollId=pollObj.getPollId();
+        final String pollId=pollObj.getPollId();
 
         pollQuestion.setText(pollObj.getPollQuestion());
 
@@ -201,8 +200,7 @@ public class PollAdapter extends BaseAdapter {
         pollCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e(LOG_TAG,"Comment Button Clicked");
-                FetchPollComment fetchPollComment=new FetchPollComment();
+                FetchPollComment fetchPollComment=new FetchPollComment(pollId);
                 fetchPollComment.execute();
             }
         });
@@ -210,7 +208,7 @@ public class PollAdapter extends BaseAdapter {
         return convertView;
     }
 
-    void openPollCommentDialog() {
+    void openPollCommentDialog(final String pollId) {
         commentDialog = new Dialog(activity);
         commentDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         commentDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -224,8 +222,8 @@ public class PollAdapter extends BaseAdapter {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        Log.e(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
-                        FetchPollComment fetchPollComment=new FetchPollComment();
+
+                        FetchPollComment fetchPollComment=new FetchPollComment(pollId);
                         fetchPollComment.execute();
                     }
                 }
@@ -234,7 +232,7 @@ public class PollAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Log.e(LOG_TAG,"Send Button Clicked");
-                InsertPollComment insertPollComment=new InsertPollComment(pollCommentEdit.getText().toString());
+                InsertPollComment insertPollComment=new InsertPollComment(pollCommentEdit.getText().toString(),pollId);
                 insertPollComment.execute();
 
             }
@@ -244,6 +242,11 @@ public class PollAdapter extends BaseAdapter {
     class FetchPollComment extends AsyncTask {
 
         String url_poll_comment = "http://echoindia.co.in/php/getComment.php";
+        String pollId="";
+
+        public FetchPollComment(String pollId){
+            this.pollId=pollId;
+        }
 
         @Override
         protected Object doInBackground(Object[] params) {
@@ -254,7 +257,7 @@ public class PollAdapter extends BaseAdapter {
                 JSONObject postDataParams = new JSONObject();
                 postDataParams.put("pollId",pollId);
                 Log.e(LOG_TAG,"URL"+url_poll_comment);
-                Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
+                Log.e(LOG_TAG,"PollId "+pollId);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);
@@ -300,15 +303,14 @@ public class PollAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            Log.e(LOG_TAG,"POLL : "+o.toString());
-            setPollCommentData(o);
+            setPollCommentData(o,pollId);
 
         }
     }
 
-    void setPollCommentData(Object o){
+    void setPollCommentData(Object o,final String pollId){
         if(commentDialog==null || !commentDialog.isShowing()) {
-            openPollCommentDialog();
+            openPollCommentDialog(pollId);
         }
         try {
             JSONObject jObject=new JSONObject(o.toString());
@@ -361,14 +363,15 @@ public class PollAdapter extends BaseAdapter {
 
         String url_poll_comment = "http://echoindia.co.in/php/insertComment.php";
         String pollCommentEditText="";
+        String pollId="";
 
-        public InsertPollComment(String pollCommentEditText){
+        public InsertPollComment(String pollCommentEditText,String pollId){
             this.pollCommentEditText=pollCommentEditText;
+            this.pollId=pollId;
         }
 
         @Override
         protected Object doInBackground(Object[] params) {
-            Log.e(LOG_TAG,"INSIDE INSERT COMMENT");
             BufferedReader bufferedReader = null;
             try {
                 URL url = new URL(url_poll_comment);
@@ -378,13 +381,11 @@ public class PollAdapter extends BaseAdapter {
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                 String timeNow = sdf.format(new Date());
                 Log.e(LOG_TAG,"POLLID"+pollId);
-                Log.e(LOG_TAG,"username"+sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""));
                 postDataParams.put("pollId",pollId);
                 postDataParams.put("username",sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""));
                 postDataParams.put("comment",pollCommentEditText);
                 postDataParams.put("time",timeNow);
                 postDataParams.put("date",dateToday);
-
                 Log.e(LOG_TAG,"URL"+url_poll_comment);
                 Log.e(LOG_TAG,"PostParam Insert Comment "+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -433,12 +434,11 @@ public class PollAdapter extends BaseAdapter {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             try {
-            Log.e(LOG_TAG,"POLL INSERT COMMENT : "+o.toString());
             JSONObject jObject=new JSONObject(o.toString());
             String checkStatus=jObject.getString("status");
             if(checkStatus.equals("1")&&o != null) {
                 pollCommentEdit.setText("");
-                FetchPollComment fetchPollComment=new FetchPollComment();
+                FetchPollComment fetchPollComment=new FetchPollComment(pollId);
                 fetchPollComment.execute();
 
             }
