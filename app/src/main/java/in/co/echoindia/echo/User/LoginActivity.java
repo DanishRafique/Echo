@@ -207,12 +207,12 @@ public class LoginActivity extends AppCompatActivity{
                     ArrayList<NewsDetailsModel> newsListUpdated=new ArrayList<>();
                     Type type = new TypeToken<ArrayList<NewsDetailsModel>>() {}.getType();
                     newsList = new Gson().fromJson(sharedpreferences.getString(Constants.NEWS_LIST, ""), type);
-                    for(int j=0;j<noOfVotes;j++) {
-                        JSONObject voteObj=jArrayNewsVotes.getJSONObject(j);
-                        String newsIDVote=voteObj.getString("NewsId");
-                        String newsVote=voteObj.getString("NewsVoteType");
-                        for (int i = 0; i < newsList.size(); i++) {
-                            NewsDetailsModel newsObj = newsList.get(i);
+                    for(int i = 0; i < newsList.size(); i++) {
+                        NewsDetailsModel newsObj = newsList.get(i);
+                        for (int j=0;j<noOfVotes;j++) {
+                            JSONObject voteObj=jArrayNewsVotes.getJSONObject(j);
+                            String newsIDVote=voteObj.getString("NewsId");
+                            String newsVote=voteObj.getString("NewsVoteType");
                             if(newsObj.getNewsID().equals(newsIDVote)){
                                 if(newsVote.equals(("1"))){
                                     newsObj.setNewsUpVoteValue(true);
@@ -221,21 +221,12 @@ public class LoginActivity extends AppCompatActivity{
                                     newsObj.setNewsDownVoteValue(true);
                                 }
                             }
-                            newsListUpdated.add(newsObj);
                         }
+                        newsListUpdated.add(newsObj);
                     }
+                    Log.e(LOG_TAG,"NEWS ELEMENT SIZE"+newsListUpdated.size());
                     editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsListUpdated));
                 }
-
-
-
-
-
-
-
-
-
-
 
                 editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE,"USER");
                 editor.putBoolean(Constants.SETTINGS_IS_LOGGED,true);

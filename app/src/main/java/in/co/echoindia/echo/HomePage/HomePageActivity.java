@@ -248,7 +248,6 @@ public class HomePageActivity extends AppCompatActivity
         loginPathIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(loginPathIntent);
         HomePageActivity.this.finish();
-
     }
 
     class ExecuteLogout extends AsyncTask {

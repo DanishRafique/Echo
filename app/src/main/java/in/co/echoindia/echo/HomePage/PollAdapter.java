@@ -325,7 +325,7 @@ public class PollAdapter extends BaseAdapter {
                     mPollCommentModel.setPollId(pollCommentObject.getInt("PollId"));
                     mPollCommentModel.setPollCommentId(pollCommentObject.getInt("PollCommentId"));
                     mPollCommentModel.setPollCommentText(pollCommentObject.getString("PollCommentText"));
-                   // mPollCommentModel.setPollCommentUserPhoto(pollCommentObject.getString("PollCommentUserPhoto"));
+                    mPollCommentModel.setPollCommentUserPhoto(pollCommentObject.getString("UserPhoto"));
                     mPollCommentModel.setPollCommentUserName(pollCommentObject.getString("PollCommentUserName"));
                     mPollCommentModel.setPollCommentTime(pollCommentObject.getString("PollCommentTime"));
                     mPollCommentModel.setPollCommentDate(pollCommentObject.getString("PollCommentDate"));

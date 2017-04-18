@@ -60,6 +60,7 @@ public class NewsFragment extends Fragment {
         editor = sharedpreferences.edit();
         Type type = new TypeToken<ArrayList<NewsDetailsModel>>() {}.getType();
         newsListArray = new Gson().fromJson(sharedpreferences.getString(Constants.NEWS_LIST, ""), type);
+        Log.e(LOG_TAG,"News Element Count "+newsListArray.size());
         mNewsAdapter = new NewsAdapter(getActivity(), newsListArray);
         newsListView.setAdapter(mNewsAdapter);
         mNewsAdapter.notifyDataSetChanged();
