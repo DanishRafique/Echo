@@ -1,33 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="in.co.echoindia.echo.User.ElectedRepresentativeActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/MyMaterialTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:background="@color/light_grey">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_elected_representative"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/MyMaterialTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
 
-    </android.support.design.widget.AppBarLayout>
+            app:elevation="0dp"
+            android:background="@android:color/transparent"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <include layout="@layout/content_elected_representative" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_rep"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/MyMaterialTheme.PopupOverlay" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:orientation="vertical" >
 
-</android.support.design.widget.CoordinatorLayout>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/rep_tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    app:tabMode="fixed"
+                    app:tabGravity="fill"
+                    app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
+                    app:tabSelectedTextColor="#ffffff"
+                    app:tabTextColor="#81d6fe" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:background="@drawable/toolbar_dropshadow" />
+
+
+            </LinearLayout>
+
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:layout_marginTop="-5dp"
+            android:id="@+id/rep_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </android.support.design.widget.CoordinatorLayout>
+
