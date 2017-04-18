@@ -8,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
         app:cardCornerRadius="2dp"
         app:cardElevation="10dp">
 
@@ -54,7 +54,6 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
-                            android:layout_marginBottom="5dp"
                             android:layout_marginRight="16dp"
                             android:text="Mamata Banerjee"
                             android:textColor="#000"
@@ -80,15 +79,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:layout_marginBottom="5dp"
+
                         android:layout_marginRight="16dp"
                         android:layout_below="@+id/buzz_name_time"
                         android:text="Mamata Banerjee"
                         android:textColor="#000"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
-
-
 
                     <TextView
                         android:id="@+id/buzz_user_designation"
@@ -96,10 +93,9 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/buzz_user_name"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="5dp"
                         android:text="MP , Trinamool Congress Party"
                         android:textColor="#000"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
 
                 </RelativeLayout>
@@ -115,7 +111,7 @@
                 android:layout_margin="10dp"
                 android:text="Description goes here . Description goes here ok fine go. Description goes here . Description goes here."
                 android:textColor="#2c3033"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:id="@+id/buzz_image_list"

@@ -32,6 +32,8 @@ public class BuzzAdapter extends BaseAdapter {
     ArrayList<PostDetailModel> buzzDetailsModels = new ArrayList<>();
     Activity activity;
 
+    TextView buzzFullName;
+
     CircleImageView buzzUserImage;
     TextView buzzUserName;
     TextView buzzUserDesignation;
@@ -88,6 +90,7 @@ public class BuzzAdapter extends BaseAdapter {
         LayoutInflater inflater=(LayoutInflater) this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.list_buzz_child, null);
         final PostDetailModel buzzObj = buzzDetailsModels.get(position);
+        buzzFullName=(TextView)convertView.findViewById(R.id.buzz_full_name);
         buzzUserImage=(CircleImageView) convertView.findViewById(R.id.buzz_user_image);
         buzzUserName=(TextView) convertView.findViewById(R.id.buzz_user_name);
         buzzUserDesignation=(TextView)convertView.findViewById(R.id.buzz_user_designation);
@@ -108,9 +111,11 @@ public class BuzzAdapter extends BaseAdapter {
         sharedpreferences = AppUtil.getAppPreferences(activity);
         editor = sharedpreferences.edit();
 
+        buzzFullName.setText(buzzObj.getPostFirstName()+" "+buzzObj.getPostLastName());
+
         Glide.with(activity).load(buzzObj.getPostUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(buzzUserImage);
         buzzUserName.setText(buzzObj.getPostUserName());
-        buzzUserDesignation.setText(buzzObj.getPostRepDesignation());
+        buzzUserDesignation.setText(buzzObj.getPostRepDesignation()+" , "+buzzObj.getPostRepParty());
         buzzTime.setText(buzzObj.getPostTime());
         buzzText.setText(buzzObj.getPostText());
         buzzUpvoteValue.setText(String.valueOf(buzzObj.getPostUpVote()));

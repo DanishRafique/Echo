@@ -1,6 +1,7 @@
 package in.co.echoindia.echo.HomePage;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,12 +10,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.Model.PostDetailModel;
 import in.co.echoindia.echo.R;
@@ -23,6 +39,7 @@ import in.co.echoindia.echo.Utils.Constants;
 
 
 public class BuzzFragment extends Fragment {
+    private static final String LOG_TAG = "BuzzFragment";
     BuzzAdapter mBuzzAdapter;
     ArrayList<PostDetailModel> buzzListArray = new ArrayList<>();
     SharedPreferences sharedpreferences;
@@ -31,7 +48,7 @@ public class BuzzFragment extends Fragment {
     ArrayList<PostDetailModel> buzzList=new ArrayList<PostDetailModel>();
     PostDetailModel mPostDetailModel;
     SwipeRefreshLayout buzzSwipeRefresh;
-    private static final String LOG_TAG = "BuzzFragment";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,9 +69,134 @@ public class BuzzFragment extends Fragment {
                     @Override
                     public void onRefresh() {
                         Log.e(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
+                        FetchBuzz mFetchBuzz=new FetchBuzz();
+                        mFetchBuzz.execute();
                     }
                 }
         );
         return v;
+    }
+
+    private void setBuzzData(Object o)  {
+        try {
+            JSONObject jObject=new JSONObject(o.toString());
+            Log.e(LOG_TAG,"Poll Details :"+o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&&o != null){
+                buzzList.clear();
+                JSONArray newsArray=jObject.getJSONArray("posts");
+                for(int i =0 ; i<newsArray.length();i++){
+                    JSONObject buzzObject=newsArray.getJSONObject(i);
+                    mPostDetailModel=new PostDetailModel();
+                    mPostDetailModel.setPostId(buzzObject.getString("PostId"));
+                    mPostDetailModel.setPostUserName(buzzObject.getString("PostUserName"));
+                    mPostDetailModel.setPostFirstName(buzzObject.getString("FirstName"));
+                    mPostDetailModel.setPostLastName(buzzObject.getString("LastName"));
+                    mPostDetailModel.setPostText(buzzObject.getString("PostText"));
+                    mPostDetailModel.setPostTime(buzzObject.getString("PostTime"));
+                    mPostDetailModel.setPostDate(buzzObject.getString("PostDate"));
+                    mPostDetailModel.setPostUpVote(buzzObject.getInt("PostUpVote"));
+                    mPostDetailModel.setPostDownVote(buzzObject.getInt("PostDownVote"));
+                    mPostDetailModel.setPostType(buzzObject.getString("PostType"));
+                    mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
+                    mPostDetailModel.setPostRepParty(buzzObject.getString("RepParty"));
+                    mPostDetailModel.setPostRepDesignation(buzzObject.getString("RepDesignation"));
+                    mPostDetailModel.setPostRepDetail(buzzObject.getString("RepDetail"));
+                    JSONArray postImageArray=buzzObject.getJSONArray("images");
+                    ArrayList<String>postImageArrayList = new ArrayList<>();
+                    for(int j =0 ; j<postImageArray.length();j++) {
+                        postImageArrayList.add(postImageArray.getString(j));
+                    }
+                    if(postImageArray.length()>0) {
+                        mPostDetailModel.setPostImages(postImageArrayList);
+                    }
+                    else{
+                        mPostDetailModel.setPostImages(null);
+                    }
+                    buzzList.add(mPostDetailModel);
+                }
+                editor.putString(Constants.BUZZ_LIST, new Gson().toJson(buzzList));
+                editor.commit();
+                Toast.makeText(getActivity(), "Echo Buzz Updated", Toast.LENGTH_SHORT).show();
+            }
+            else if(checkStatus.equals("0")){
+                //Toast.makeText(this, "Error Loading News List", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(getActivity(), "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+        onRefreshComplete(buzzList);
+
+    }
+
+    void onRefreshComplete(ArrayList<PostDetailModel> buzzListRefresh){
+        BuzzAdapter mBuzzAdapterRefreshed = new BuzzAdapter(getActivity(), buzzListRefresh);
+        buzzListView.setAdapter(mBuzzAdapterRefreshed);
+        mBuzzAdapterRefreshed.notifyDataSetChanged();
+        buzzSwipeRefresh.setRefreshing(false);
+    }
+
+    class FetchBuzz extends AsyncTask {
+
+        String url_poll_update = "http://echoindia.co.in/php/posts.php";
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_poll_update);
+                Log.e(LOG_TAG,"URL"+url_poll_update);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            Log.e(LOG_TAG,"POLL : "+o.toString());
+            setBuzzData(o);
+        }
     }
 }
