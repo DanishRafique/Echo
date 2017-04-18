@@ -1,0 +1,181 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="in.co.echoindia.echo.HomePage.RepCentralFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8sp"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200sp" >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/news_image"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/gradient_bg" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10sp"
+                        android:textColor="@color/white"
+                        android:layout_gravity="bottom"
+                        android:paddingStart="10sp"
+                        android:paddingEnd="10sp"
+                        android:textStyle="bold"
+                        android:textSize="15pt"
+                        android:layout_marginBottom="15sp"
+                        android:text="Narendra Modi"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10sp"
+                        android:paddingEnd="10sp"
+                        android:layout_marginBottom="2sp"
+                        android:textColor="@color/white"
+                        android:layout_gravity="bottom"
+                        android:text="Prime Minister"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10sp"
+                        android:paddingEnd="10sp"
+                        android:textColor="@color/white"
+                        android:layout_gravity="bottom|end"
+                        android:textAlignment="viewEnd"
+                        android:layout_marginTop="12sp"
+                        android:textSize="10pt"
+                        android:textStyle="bold"
+                        android:text="BJP"/>
+                </FrameLayout>
+
+                <!--
+
+                Texts
+
+                -->
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/top_border"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_right"
+                    android:background="@drawable/rep_btn"
+                    android:text="View Info"/>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5sp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200sp" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/news_image"/>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/gradient_bg" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10sp"
+                        android:textColor="@color/white"
+                        android:layout_gravity="bottom"
+                        android:paddingStart="10sp"
+                        android:paddingEnd="10sp"
+                        android:textStyle="bold"
+                        android:textSize="15pt"
+                        android:layout_marginBottom="15sp"
+                        android:text="Sudip Banerjee"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10sp"
+                        android:paddingEnd="10sp"
+                        android:layout_marginBottom="2sp"
+                        android:textColor="@color/white"
+                        android:layout_gravity="bottom"
+                        android:text="MP, Ballygaunge"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="10sp"
+                        android:paddingEnd="10sp"
+                        android:textColor="@color/white"
+                        android:layout_gravity="bottom|end"
+                        android:textAlignment="viewEnd"
+                        android:layout_marginTop="12sp"
+                        android:textSize="10pt"
+                        android:textStyle="bold"
+                        android:text="TMC"/>
+                </FrameLayout>
+
+                <!--
+
+                Texts
+
+                -->
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/top_border"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_right"
+                    android:background="@drawable/rep_btn"
+                    android:text="View Info"/>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+    </ScrollView>
+</FrameLayout>
