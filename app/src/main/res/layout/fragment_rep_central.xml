@@ -61,6 +61,14 @@
                         android:layout_gravity="bottom"
                         android:text="Prime Minister"/>
 
+                    <ImageView
+                        android:layout_width="50sp"
+                        android:layout_height="50sp"
+                        android:layout_gravity="bottom|end"
+                        android:src="@drawable/img_profile_picture"
+                        android:layout_marginBottom="32sp"
+                        android:layout_marginEnd="10sp" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -141,6 +149,14 @@
                         android:textColor="@color/white"
                         android:layout_gravity="bottom"
                         android:text="MP, Ballygaunge"/>
+
+                    <ImageView
+                        android:layout_width="50sp"
+                        android:layout_height="50sp"
+                        android:layout_gravity="bottom|end"
+                        android:src="@drawable/img_profile_picture"
+                        android:layout_marginBottom="32sp"
+                        android:layout_marginEnd="10sp" />
 
                     <TextView
                         android:layout_width="match_parent"
