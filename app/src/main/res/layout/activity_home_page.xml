@@ -10,25 +10,97 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     android:overScrollMode="always">
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/rootLayout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             app:elevation="0dp"
-            android:background="@android:color/transparent"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:orientation="vertical"
+            android:animateLayoutChanges="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            >
 
-            <LinearLayout
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:orientation="vertical" >
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 
+                >
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="115dp"
+
+                    >
+                    <RelativeLayout
+                        android:id="@+id/rl_message"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="20dp">
+
+                        <ImageView
+                            android:id="@+id/img_message"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginTop="-10dp"
+                            android:src="@drawable/ic_message" />
+
+                        <TextView
+                            android:id="@+id/tv_message"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            android:layout_above="@+id/img_message"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/shape_batch"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textSize="10sp" />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/rl_notification"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp">
+
+                        <ImageView
+                            android:id="@+id/img_notification"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginTop="-10dp"
+                            android:src="@drawable/ic_notifications_white" />
+
+                        <TextView
+                            android:id="@+id/tv_cart_list_count"
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            android:layout_above="@+id/img_notification"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/shape_batch"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textSize="10sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.Toolbar>
 
                 <android.support.design.widget.TabLayout
                     android:id="@+id/tabs"
@@ -39,14 +111,8 @@
                     app:tabGravity="fill"
                     app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
                     app:tabSelectedTextColor="#ffffff"
+                    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     app:tabTextColor="#81d6fe" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:background="@drawable/toolbar_dropshadow" />
-
-
-            </LinearLayout>
 
 
         </android.support.design.widget.AppBarLayout>
@@ -55,14 +121,12 @@
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+            />
+
     </android.support.design.widget.CoordinatorLayout>
 
-
-    <include
-        layout="@layout/app_bar_home_page"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

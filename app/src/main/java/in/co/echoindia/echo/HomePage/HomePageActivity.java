@@ -79,7 +79,8 @@ public class HomePageActivity extends AppCompatActivity
         toolbar.setTitle("Echo");
         setSupportActionBar(toolbar);
         pDialog = new ProgressDialog(this);
-
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
