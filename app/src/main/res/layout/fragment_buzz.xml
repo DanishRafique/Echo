@@ -2,12 +2,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="in.co.echoindia.echo.HomePage.BuzzFragment">
+    tools:context="in.co.echoindia.echo.HomePage.BuzzFragment"
+    android:orientation="vertical">
 
     <!-- ODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/buzz_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginBottom="50dp">
+        <ListView
+            android:id="@+id/buzz_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="50dp">
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

@@ -53,7 +53,7 @@ import in.co.echoindia.echo.Utils.Constants;
 
 public class HomePageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-         HomeFragment.OnFragmentInteractionListener,BuzzFragment.OnFragmentInteractionListener
+         HomeFragment.OnFragmentInteractionListener
         {
 
     private TabLayout tabLayout;

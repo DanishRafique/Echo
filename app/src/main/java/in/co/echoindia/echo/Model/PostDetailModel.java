@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public class PostDetailModel {
     private String postId = "";
+    private String postFirstName="";
+    private String postLastName="";
     private String postUserName = "";
     private String postText = "";
     private String postTime = "";
@@ -19,6 +21,31 @@ public class PostDetailModel {
     private String postRepParty="";
     private String postRepDesignation="";
     private ArrayList<String> postImages;
+    private String postRepDetail="";
+
+    public String getPostRepDetail() {
+        return postRepDetail;
+    }
+
+    public void setPostRepDetail(String postRepDetail) {
+        this.postRepDetail = postRepDetail;
+    }
+
+    public String getPostFirstName() {
+        return postFirstName;
+    }
+
+    public void setPostFirstName(String postFirstName) {
+        this.postFirstName = postFirstName;
+    }
+
+    public String getPostLastName() {
+        return postLastName;
+    }
+
+    public void setPostLastName(String postLastName) {
+        this.postLastName = postLastName;
+    }
 
     public String getPostType() {
         return postType;

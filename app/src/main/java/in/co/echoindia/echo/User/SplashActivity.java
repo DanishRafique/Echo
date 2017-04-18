@@ -55,7 +55,7 @@ public class SplashActivity extends AppCompatActivity {
     ArrayList<NewsDetailsModel> newsListArray = new ArrayList<>();
     ArrayList<PostDetailModel> buzzListArray = new ArrayList<>();
     ArrayList<PostDetailModel> buzzList = new ArrayList<>();
-    ArrayList<String> postImageArrayList=new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -395,6 +395,8 @@ public class SplashActivity extends AppCompatActivity {
                     mPostDetailModel=new PostDetailModel();
                     mPostDetailModel.setPostId(buzzObject.getString("PostId"));
                     mPostDetailModel.setPostUserName(buzzObject.getString("PostUserName"));
+                    mPostDetailModel.setPostFirstName(buzzObject.getString("FirstName"));
+                    mPostDetailModel.setPostLastName(buzzObject.getString("LastName"));
                     mPostDetailModel.setPostText(buzzObject.getString("PostText"));
                     mPostDetailModel.setPostTime(buzzObject.getString("PostTime"));
                     mPostDetailModel.setPostDate(buzzObject.getString("PostDate"));
@@ -404,11 +406,18 @@ public class SplashActivity extends AppCompatActivity {
                     mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
                     mPostDetailModel.setPostRepParty(buzzObject.getString("RepParty"));
                     mPostDetailModel.setPostRepDesignation(buzzObject.getString("RepDesignation"));
+                    mPostDetailModel.setPostRepDetail(buzzObject.getString("RepDetail"));
                     JSONArray postImageArray=buzzObject.getJSONArray("images");
+                    ArrayList<String>postImageArrayList = new ArrayList<>();
                     for(int j =0 ; j<postImageArray.length();j++) {
                         postImageArrayList.add(postImageArray.getString(j));
                     }
-                    mPostDetailModel.setPostImages(postImageArrayList);
+                    if(postImageArray.length()>0) {
+                        mPostDetailModel.setPostImages(postImageArrayList);
+                    }
+                    else{
+                        mPostDetailModel.setPostImages(null);
+                    }
                     buzzList.add(mPostDetailModel);
                 }
                 editor.putString(Constants.BUZZ_LIST, new Gson().toJson(buzzList));
