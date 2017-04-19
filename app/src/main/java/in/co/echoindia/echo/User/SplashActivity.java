@@ -2,13 +2,19 @@ package in.co.echoindia.echo.User;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -26,6 +32,8 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -36,6 +44,7 @@ import in.co.echoindia.echo.Model.PostDetailModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
+import in.co.echoindia.echo.Utils.GPSTracker;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -56,6 +65,15 @@ public class SplashActivity extends AppCompatActivity {
     ArrayList<PostDetailModel> buzzListArray = new ArrayList<>();
     ArrayList<PostDetailModel> buzzList = new ArrayList<>();
 
+    Double latitude = 0.0, longitude = 0.0;
+    Geocoder geocoder;
+    String currentLocationAddress = "";
+    private static final int REQUEST_PERMISSIONS = 100;
+    boolean boolean_permission;
+    List<Address> addresses;
+    GPSTracker gps;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +86,90 @@ public class SplashActivity extends AppCompatActivity {
         editor = sharedpreferences.edit();
 
 
+        Intent intent = new Intent(getApplicationContext(), GPSTracker.class);
+        this.startService(intent);
+
+
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        fn_permission();
+        gps = new GPSTracker(SplashActivity.this);
+
+        // check if GPS enabled
+        if(gps.canGetLocation()){
+
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+            LatLng mLatLng = new LatLng(latitude, longitude);
+            String errorMessage = "";
+            geocoder = new Geocoder(SplashActivity.this, Locale.getDefault());
+            try {
+                addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            } catch (IOException ioException) {
+                errorMessage = "Service Not Available " + ioException.toString();
+                Log.e("My Test", errorMessage, ioException);
+            } catch (IllegalArgumentException illegalArgumentException) {
+                errorMessage = "Invalid Latitude or Longitude Used";
+                Log.e("My test ", errorMessage + ". " + "Latitude = " + latitude + ", Longitude = " + longitude, illegalArgumentException);
+            }
+
+            if (addresses != null && addresses.size() > 0) {
+                String address = addresses.get(0).getAddressLine(0);
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                currentLocationAddress = address + "," + city + "," + state + "," + country + "," + postalCode;
+                editor.putString(Constants.CURRENT_CITY,city);
+                editor.putString(Constants.CURRENT_STATE,state);
+                editor.commit();
+            }
+            Log.e(LOG_TAG,"My Test currentLocationAddress " + currentLocationAddress);
+        }else{
+            gps.showSettingsAlert();
+        }
+
+
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        FetchNews mFetchNews=new FetchNews();
+
+        FetchNews mFetchNews =new FetchNews();
         mFetchNews.execute();
+
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+
+    private void fn_permission() {
+        if ((ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(SplashActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION))) {
+
+
+            } else {
+                ActivityCompat.requestPermissions(SplashActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
+
+                        },
+                        REQUEST_PERMISSIONS);
+
+
+            }
+        } else {
+
+            boolean_permission = true;
+        }
+
+    }
+
+
 
     void gotoNextActivity(){
         if(sharedpreferences.getBoolean(Constants.SETTINGS_IS_LOGGED,false)) {
@@ -433,6 +526,12 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.e(LOG_TAG,e.toString());
         }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
 
     }
 }

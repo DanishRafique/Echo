@@ -33,6 +33,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,13 +51,18 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import in.co.echoindia.echo.Model.LokSabhaModel;
+import in.co.echoindia.echo.Model.MunicipalCorporationModel;
+import in.co.echoindia.echo.Model.VidhanSabhaModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
+import in.co.echoindia.echo.Utils.Constants;
 import in.co.echoindia.echo.Utils.MarshMallowPermission;
 
 public class SignupActivity extends AppCompatActivity {
@@ -84,6 +92,13 @@ public class SignupActivity extends AppCompatActivity {
     public static final int RESULT_LOAD_IMAGE = 1;
     private static final int CAMERA_REQUEST = 1888;
     private Uri imageToUploadUri;
+
+    VidhanSabhaModel mVidhanSabhaModel;
+    LokSabhaModel mLokSabhaModel;
+    MunicipalCorporationModel mMunicipalCorporationModel;
+    ArrayList<VidhanSabhaModel> mVidhanSabhaDetail=new ArrayList<>();
+    ArrayList<LokSabhaModel> mLokSabhaDetail=new ArrayList<>();
+    ArrayList<MunicipalCorporationModel> mMunicipalCorporationModelDetail=new ArrayList<>();
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
@@ -138,6 +153,8 @@ public class SignupActivity extends AppCompatActivity {
                 mSignUpUser.execute();
             }
         });
+        FetchVidhanSabha mFetchVidhanSabha=new FetchVidhanSabha();
+        mFetchVidhanSabha.execute();
 
     }
 
@@ -567,5 +584,299 @@ public class SignupActivity extends AppCompatActivity {
             chooseImage.dismiss();
         if(pDialog!=null)
             pDialog.dismiss();
+    }
+
+
+
+
+    class FetchVidhanSabha extends AsyncTask {
+
+        String url_vidhan_sabha = "http://echoindia.co.in/php/vidhansabha.php";
+
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_vidhan_sabha);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("state",sharedpreferences.getString(Constants.CURRENT_STATE,""));
+                Log.e(LOG_TAG,"URL"+url_vidhan_sabha);
+                Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            setVidhanData(o);
+        }
+    }
+    private void setVidhanData(Object o)  {
+        Log.e(LOG_TAG,"VIDHAN SABHA JSON : "+o.toString());
+        try {
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&& o != null){
+                JSONArray vidhanArray=jObject.getJSONArray("data");
+                Log.e(LOG_TAG,"News Element Count "+vidhanArray.length());
+                for(int i =0 ; i<vidhanArray.length();i++){
+                    JSONObject vidhanObject=vidhanArray.getJSONObject(i);
+
+                    mVidhanSabhaModel=new VidhanSabhaModel();
+                    mVidhanSabhaModel.setConstituencyId(vidhanObject.getString("ConstituencyId"));
+                    mVidhanSabhaModel.setConstituencyName(vidhanObject.getString("ConstituencyName"));
+                    mVidhanSabhaModel.setConstituencyDistrict(vidhanObject.getString("ConstituencyDistrict"));
+                    mVidhanSabhaModel.setConstituencyState(vidhanObject.getString("ConstituencyState"));
+                    mVidhanSabhaDetail.add(mVidhanSabhaModel);
+                }
+                editor.putString(Constants.VIDHAN_SABHA_LIST, new Gson().toJson(mVidhanSabhaDetail));
+                editor.commit();
+            }
+            else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+        FetchLokSabha mFetchLokSabha=new FetchLokSabha();
+        mFetchLokSabha.execute();
+
+    }
+
+
+
+    class FetchMunicipalCorporationWard extends AsyncTask {
+
+        String url_ward = "http://echoindia.co.in/php/ward.php";
+
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_ward);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("city",sharedpreferences.getString(Constants.CURRENT_CITY,""));
+                Log.e(LOG_TAG,"URL"+url_ward);
+                Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            setMunicipalCorporationWardData(o);
+        }
+    }
+    private void setMunicipalCorporationWardData(Object o)  {
+        Log.e(LOG_TAG,"WARD JSON : "+o.toString());
+        try {
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&& o != null){
+                JSONArray wardArray=jObject.getJSONArray("data");
+                Log.e(LOG_TAG,"News Element Count "+wardArray.length());
+                for(int i =0 ; i<wardArray.length();i++){
+                    JSONObject wardObject=wardArray.getJSONObject(i);
+                    mMunicipalCorporationModel=new MunicipalCorporationModel();
+                    mMunicipalCorporationModel.setWardId(wardObject.getString("WardId"));
+                    mMunicipalCorporationModel.setWardState(wardObject.getString("WardState"));
+                    mMunicipalCorporationModel.setWardCity(wardObject.getString("WardCity"));
+                    mMunicipalCorporationModel.setWardCityRegion(wardObject.getString("WardCityRegion"));
+                    mMunicipalCorporationModel.setWardStartNumber(wardObject.getInt("WardStartNumber"));
+                    mMunicipalCorporationModel.setWardEndNumber(wardObject.getInt("WardEndNumber"));
+                    mMunicipalCorporationModelDetail.add(mMunicipalCorporationModel);
+                }
+                editor.putString(Constants.MUNICIPAL_CORPORATION_LIST, new Gson().toJson(mMunicipalCorporationModelDetail));
+                editor.commit();
+            }
+            else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+
+    }
+
+    class FetchLokSabha extends AsyncTask {
+
+        String url_lok_sabha = "http://echoindia.co.in/php/loksabha.php";
+
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_lok_sabha);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("state",sharedpreferences.getString(Constants.CURRENT_STATE,""));
+                Log.e(LOG_TAG,"URL"+url_lok_sabha);
+                Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            setLokSabhaData(o);
+        }
+    }
+    private void setLokSabhaData(Object o)  {
+        Log.e(LOG_TAG,"LOK SABHA JSON : "+o.toString());
+        try {
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&& o != null){
+                JSONArray lokArray=jObject.getJSONArray("data");
+                Log.e(LOG_TAG,"News Element Count "+lokArray.length());
+                for(int i =0 ; i<lokArray.length();i++){
+                    JSONObject lokObject=lokArray.getJSONObject(i);
+                    mLokSabhaModel=new LokSabhaModel();
+                    mLokSabhaModel.setConstituencyId(lokObject.getString("ConstituencyId"));
+                    mLokSabhaModel.setConstituencyName(lokObject.getString("ConstituencyName"));
+                    mLokSabhaModel.setConstituencyReserved(lokObject.getString("ConstituencyReserved"));
+                    mLokSabhaModel.setConstituencyState(lokObject.getString("ConstituencyState"));
+                    mLokSabhaDetail.add(mLokSabhaModel);
+                }
+                editor.putString(Constants.LOK_SABHA_LIST, new Gson().toJson(mLokSabhaDetail));
+                editor.commit();
+            }
+            else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+        FetchMunicipalCorporationWard mFetchMunicipalCorporationWard=new FetchMunicipalCorporationWard();
+        mFetchMunicipalCorporationWard.execute();
+
     }
 }

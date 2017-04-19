@@ -17,4 +17,9 @@ public class Constants {
     public static final String POLL_LIST="POLL_LIST";
     public static final String POLL_LIST_COMMENT="POLL_LIST_COMMENT";
     public static final String BUZZ_LIST="BUZZ_LIST";
+    public static final String CURRENT_CITY="CURRENT_CITY";
+    public static final String CURRENT_STATE="CURRENT_STATE";
+    public static final String VIDHAN_SABHA_LIST="VIDHAN_SABHA_LIST";
+    public static final String LOK_SABHA_LIST="LOK_SABHA_LIST";
+    public static final String MUNICIPAL_CORPORATION_LIST="MUNICIPAL_CORPORATION_LIST";
 }

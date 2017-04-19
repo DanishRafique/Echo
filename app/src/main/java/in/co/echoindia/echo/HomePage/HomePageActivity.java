@@ -243,7 +243,6 @@ public class HomePageActivity extends AppCompatActivity
         editor.putBoolean(Constants.SETTINGS_IS_LOGGED, false);
         editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, "");
         editor.putString(Constants.SETTINGS_OBJ_USER,"");
-        editor.clear();
         editor.commit();
         Intent loginPathIntent = new Intent(HomePageActivity.this, LoginActivity.class);
         loginPathIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
