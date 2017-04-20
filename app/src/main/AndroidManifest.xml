@@ -22,7 +22,9 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <service android:name="in.co.echoindia.echo.Utils.GPSTracker" />
+
+    <service android:name=".Utils.GPSTracker" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon"
@@ -137,7 +139,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.User.SignupActivity" />
-
         </activity>
         <activity
             android:name=".HomePage.NewsActivity"
@@ -156,7 +157,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.User.LoginActivity" />
-
+        </activity>
+        <activity
+            android:name=".User.ElectedRepresentativeDetailActivity"
+            android:label="@string/title_activity_elected_representative_detail"
+            android:parentActivityName=".User.ElectedRepresentativeActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.co.echoindia.echo.User.ElectedRepresentativeActivity" />
         </activity>
     </application>
 

@@ -10,7 +10,6 @@ public class RepInfoModel implements Serializable{
     private String RepId="";
     private String RepCode="";
     private String fullName="";
-    private String lastName="";
     private String emailId="";
     private String oficeAddress="";
     private String repParty="";
@@ -56,14 +55,6 @@ public class RepInfoModel implements Serializable{
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public String getEmailId() {

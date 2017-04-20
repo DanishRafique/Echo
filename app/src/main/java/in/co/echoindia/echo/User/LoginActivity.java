@@ -323,7 +323,6 @@ public class LoginActivity extends AppCompatActivity{
         tempRepModel.setRepId(obj.getString("RepId"));
         tempRepModel.setRepCode(obj.getString("RepCode"));
         tempRepModel.setFullName(obj.getString("Full Name"));
-        tempRepModel.setLastName(obj.getString("LastName"));
         tempRepModel.setEmailId(obj.getString("EmailId"));
 
         tempRepModel.setOficeAddress(obj.getString("OfficeAddress"));
@@ -341,6 +340,7 @@ public class LoginActivity extends AppCompatActivity{
         tempRepModel.setRepState(obj.getString("RepState"));
         tempRepModel.setRepDistrict(obj.getString("RepDistrict"));
         tempRepModel.setRepCity(obj.getString("RepCity"));
+        tempRepModel.setRepWard(obj.getString("RepWard"));
         tempRepModel.setRepVidhanSabha(obj.getString("RepVidhanSabha"));
         tempRepModel.setRepLokSabha(obj.getString("RepLokSabha"));
 

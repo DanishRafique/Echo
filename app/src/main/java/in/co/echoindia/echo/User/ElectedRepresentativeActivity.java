@@ -1,33 +1,21 @@
 package in.co.echoindia.echo.User;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import in.co.echoindia.echo.HomePage.RepCentralFragment;
-import in.co.echoindia.echo.HomePage.RepLocalFragment;
-import in.co.echoindia.echo.HomePage.RepStateFragment;
 import in.co.echoindia.echo.R;
 
 public class ElectedRepresentativeActivity extends AppCompatActivity
-        implements RepCentralFragment.OnFragmentInteractionListener,
-        RepStateFragment.OnFragmentInteractionListener,
-        RepLocalFragment.OnFragmentInteractionListener{
+       {
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -68,12 +56,6 @@ public class ElectedRepresentativeActivity extends AppCompatActivity
         });*/
     }
 
-    private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_poll_blue);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_buzz_blue);
-    }
-
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         RepCentralFragment repCentralFragment = new RepCentralFragment();
@@ -87,10 +69,7 @@ public class ElectedRepresentativeActivity extends AppCompatActivity
         viewPager.setAdapter(adapter);
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
