@@ -200,6 +200,8 @@ public class LoginActivity extends AppCompatActivity{
                 mUserDetailsModel.setAadhaarPhoto(userObj.getString("AadharCard"));
                 mUserDetailsModel.setIssueMaker(userObj.getString("IssueMaker"));
                 mUserDetailsModel.setIsVerified(userObj.getString("isVerified"));
+                mUserDetailsModel.setLokSabha(userObj.getString("LokSabha"));
+                mUserDetailsModel.setVidhanSabha(userObj.getString("VidhanSabha"));
                 int noOfVotes= responseObject.getInt("NoOfVotes");
                 if(noOfVotes>0){
                     JSONArray jArrayNewsVotes=responseObject.getJSONArray("Votes");
@@ -236,7 +238,7 @@ public class LoginActivity extends AppCompatActivity{
                 Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
                 Intent i=new Intent(LoginActivity.this, HomePageActivity.class);
                 startActivity(i);
-                LoginActivity.this.finish();
+
             }
             else if(checkStatus.equals("1")){
                 Toast.makeText(this, "Please Check Your Username and Password", Toast.LENGTH_SHORT).show();

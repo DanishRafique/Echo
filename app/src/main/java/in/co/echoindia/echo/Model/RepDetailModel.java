@@ -3,71 +3,40 @@ package in.co.echoindia.echo.Model;
 import java.io.Serializable;
 
 /**
- * Created by Danish Rafique on 09-03-2017.
+ * Created by Danish Rafique on 20-04-2017.
  */
 
-public class UserDetailsModel implements Serializable{
-    private String userName="";
+public class RepDetailModel implements Serializable{
+    private String repName="";
     private String password="";
     private String firstName="";
     private String lastName="";
     private String emailId="";
     private String phoneNo="";
-    private String address="";
+    private String lokSabha="";
+    private String vidhanSabha="";
     private String ward="";
     private String city="";
     private String pinCode="";
-    private String district="";
     private String state="";
     private String userPhoto="";
     private String aadhaarPhoto="";
     private String voterIdPhoto="";
     private String isVerified="";
     private String issueMaker="";
-    private String lokSabha="";
-    private String vidhanSabha="";
+    private String repParty="";
+    private String repDesignation="";
+    private String repLocation="";
+    private String repQualification="";
+    private String repHomePage="";
+    private String repTwitter="";
 
-    public String getLokSabha() {
-        return lokSabha;
+    public String getRepName() {
+        return repName;
     }
 
-    public void setLokSabha(String lokSabha) {
-        this.lokSabha = lokSabha;
-    }
-
-    public String getVidhanSabha() {
-        return vidhanSabha;
-    }
-
-    public void setVidhanSabha(String vidhanSabha) {
-        this.vidhanSabha = vidhanSabha;
-    }
-
-    public String getIsVerified() {
-        return isVerified;
-    }
-
-    public void setIsVerified(String isVerified) {
-        this.isVerified = isVerified;
-    }
-
-
-
-    public String getIssueMaker() {
-        return issueMaker;
-    }
-
-    public void setIssueMaker(String issueMaker) {
-        this.issueMaker = issueMaker;
-    }
-
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setRepName(String repName) {
+        this.repName = repName;
     }
 
     public String getPassword() {
@@ -110,12 +79,20 @@ public class UserDetailsModel implements Serializable{
         this.phoneNo = phoneNo;
     }
 
-    public String getAddress() {
-        return address;
+    public String getLokSabha() {
+        return lokSabha;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setLokSabha(String lokSabha) {
+        this.lokSabha = lokSabha;
+    }
+
+    public String getVidhanSabha() {
+        return vidhanSabha;
+    }
+
+    public void setVidhanSabha(String vidhanSabha) {
+        this.vidhanSabha = vidhanSabha;
     }
 
     public String getWard() {
@@ -140,14 +117,6 @@ public class UserDetailsModel implements Serializable{
 
     public void setPinCode(String pinCode) {
         this.pinCode = pinCode;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
     }
 
     public String getState() {
@@ -182,6 +151,67 @@ public class UserDetailsModel implements Serializable{
         this.voterIdPhoto = voterIdPhoto;
     }
 
+    public String getIsVerified() {
+        return isVerified;
+    }
 
+    public void setIsVerified(String isVerified) {
+        this.isVerified = isVerified;
+    }
 
+    public String getIssueMaker() {
+        return issueMaker;
+    }
+
+    public void setIssueMaker(String issueMaker) {
+        this.issueMaker = issueMaker;
+    }
+
+    public String getRepParty() {
+        return repParty;
+    }
+
+    public void setRepParty(String repParty) {
+        this.repParty = repParty;
+    }
+
+    public String getRepDesignation() {
+        return repDesignation;
+    }
+
+    public void setRepDesignation(String repDesignation) {
+        this.repDesignation = repDesignation;
+    }
+
+    public String getRepLocation() {
+        return repLocation;
+    }
+
+    public void setRepLocation(String repLocation) {
+        this.repLocation = repLocation;
+    }
+
+    public String getRepQualification() {
+        return repQualification;
+    }
+
+    public void setRepQualification(String repQualification) {
+        this.repQualification = repQualification;
+    }
+
+    public String getRepHomePage() {
+        return repHomePage;
+    }
+
+    public void setRepHomePage(String repHomePage) {
+        this.repHomePage = repHomePage;
+    }
+
+    public String getRepTwitter() {
+        return repTwitter;
+    }
+
+    public void setRepTwitter(String repTwitter) {
+        this.repTwitter = repTwitter;
+    }
 }

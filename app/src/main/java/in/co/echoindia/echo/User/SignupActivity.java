@@ -71,6 +71,10 @@ import in.co.echoindia.echo.Utils.MarshMallowPermission;
 
 public class SignupActivity extends AppCompatActivity {
 
+    public static final int RESULT_LOAD_IMAGE = 1;
+    private static final Random rand = new Random();
+    private static final String LOG_TAG = "SignUpActivity";
+    private static final int CAMERA_REQUEST = 1888;
     EditText firstName,lastName, userName , emailAddress,phoneNumber,password, confirmPassword,city , pinCode , district , state;
     LinearLayout llUserInformation , llUserAddress,llUserPolitic;
     Button btnSignUp;
@@ -78,15 +82,10 @@ public class SignupActivity extends AppCompatActivity {
     int randInt;
     Dialog checkOTPDialog;
     CountDownTimer otpTimer;
-    private static final Random rand = new Random();
-    private static final String LOG_TAG = "SignUpActivity";
-    private ProgressDialog pDialog;
-
     TextView otpSubmit, resendOTP , txtOTPNumber;
     EditText edtOtp;
     TextView txtTimer;
     CircleImageView imgProfile;
-
     String encodedImage;
     byte[] byteArray;
     ImageView imageView;
@@ -94,38 +93,31 @@ public class SignupActivity extends AppCompatActivity {
     TextView chooseImageCamera , chooseImageGallery;
     Button btnUpload;
     AutoCompleteTextView lokSabha,vidhanSabha , ward;
-    public static final int RESULT_LOAD_IMAGE = 1;
-    private static final int CAMERA_REQUEST = 1888;
-    private Uri imageToUploadUri;
-
     VidhanSabhaModel mVidhanSabhaModel;
     LokSabhaModel mLokSabhaModel;
     MunicipalCorporationModel mMunicipalCorporationModel;
     ArrayList<VidhanSabhaModel> mVidhanSabhaDetail=new ArrayList<>();
     ArrayList<LokSabhaModel> mLokSabhaDetail=new ArrayList<>();
-
-
     ArrayList<String> lokSabhaList = new ArrayList<>();
     ArrayList<String> vidhanSabhaList = new ArrayList<>();
     ArrayList<String> wardList = new ArrayList<>();
+    ArrayList<String> politicalPartyList=new ArrayList<>();
+    ArrayList<String> designationList=new ArrayList<>();
     ArrayAdapter<String> mLokSabhaArrayAdapter;
     ArrayAdapter<String> mVidhanSabhaArrayAdapter;
     ArrayAdapter<String> mWardArrayAdapter;
-
+    ArrayAdapter<String> mDesignationArrayAdapter;
+    ArrayAdapter<String> mPoliticalPartyArrayAdapter;
     ArrayList<MunicipalCorporationModel> mMunicipalCorporationModelDetail=new ArrayList<>();
-
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
-
-
-
-
     AutoCompleteTextView repParty,repDesignation;
     EditText repLocation,repQualification,repHomePage,repTwitter;
     CheckBox checkboxPolitics;
     TextView tvPoliticContinue;
-
     boolean isPolitician=false;
+    private ProgressDialog pDialog;
+    private Uri imageToUploadUri;
 
 
     @Override
@@ -150,14 +142,10 @@ public class SignupActivity extends AppCompatActivity {
         city=(EditText)findViewById(R.id.edt_city);
         ward=(AutoCompleteTextView) findViewById(R.id.auto_ward);
         pinCode=(EditText)findViewById(R.id.edt_pin_code);
-
         state=(EditText)findViewById(R.id.edt_state);
         btnSignUp=(Button)findViewById(R.id.btn_sign_up);
         imgProfile=(CircleImageView)findViewById(R.id.img_profile);
-
         checkboxPolitics=(CheckBox)findViewById(R.id.checkbox_politic);
-
-
         repParty=(AutoCompleteTextView)findViewById(R.id.auto_rep_party);
         repDesignation=(AutoCompleteTextView)findViewById(R.id.auto_rep_designation);
         repLocation=(EditText)findViewById(R.id.edt_rep_location);
@@ -166,7 +154,6 @@ public class SignupActivity extends AppCompatActivity {
         repTwitter=(EditText)findViewById(R.id.edt_twitter);
         llUserPolitic=(LinearLayout)findViewById(R.id.ll_user_politic);
         tvPoliticContinue=(TextView)findViewById(R.id.tv_politic_continue);
-
         city.setText(sharedpreferences.getString(Constants.CURRENT_CITY,""));
         state.setText(sharedpreferences.getString(Constants.CURRENT_STATE,""));
         pinCode.setText(sharedpreferences.getString(Constants.CURRENT_PIN_CODE,""));
@@ -176,18 +163,23 @@ public class SignupActivity extends AppCompatActivity {
                 openChooseImageDialog();
             }
         });
-
         llUserInformation=(LinearLayout)findViewById(R.id.ll_user_information);
         llUserAddress=(LinearLayout)findViewById(R.id.ll_user_address);
         tvSignUpContinue=(TextView)findViewById(R.id.tv_sign_up_continue);
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent homeClick=new Intent(SignupActivity.this,LoginActivity.class);
+                startActivity(homeClick);
+                finish();
+            }});
         tvSignUpContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                workOnNextButtonClick();
             }
         });
-
         tvPoliticContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -226,6 +218,14 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent homeClick=new Intent(SignupActivity.this,LoginActivity.class);
+        startActivity(homeClick);
+        finish();
+    }
+
     void makeRoundCorners(ImageView imgView , int drawable){
         Bitmap mBitmap = ((BitmapDrawable) getResources().getDrawable(drawable)).getBitmap();
         Bitmap imageRounded = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), mBitmap.getConfig());
@@ -246,7 +246,6 @@ public class SignupActivity extends AppCompatActivity {
           isPolitician=true;
        }
     }
-
 
     private void workOnNextButtonClick() {
 
@@ -273,7 +272,6 @@ public class SignupActivity extends AppCompatActivity {
             existenceTest.execute();
         }
     }
-
 
     void openOTPDialog() {
         editor.putString("OTP","0000");
@@ -446,6 +444,193 @@ public class SignupActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(checkOTPDialog!=null)
+            checkOTPDialog.dismiss();
+        if(chooseImage!=null)
+            chooseImage.dismiss();
+        if(pDialog!=null)
+            pDialog.dismiss();
+    }
+
+    private void setVidhanData(Object o)  {
+        Log.e(LOG_TAG,"VIDHAN SABHA JSON : "+o.toString());
+        try {
+            vidhanSabhaList.clear();
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&& o != null){
+                JSONArray vidhanArray=jObject.getJSONArray("data");
+                Log.e(LOG_TAG,"Vidhan Sabha Element Count "+vidhanArray.length());
+                for(int i =0 ; i<vidhanArray.length();i++){
+                    JSONObject vidhanObject=vidhanArray.getJSONObject(i);
+
+                    mVidhanSabhaModel=new VidhanSabhaModel();
+                    mVidhanSabhaModel.setConstituencyId(vidhanObject.getString("ConstituencyId"));
+                    mVidhanSabhaModel.setConstituencyName(vidhanObject.getString("ConstituencyName"));
+                    mVidhanSabhaModel.setConstituencyDistrict(vidhanObject.getString("ConstituencyDistrict"));
+                    mVidhanSabhaModel.setConstituencyState(vidhanObject.getString("ConstituencyState"));
+                    mVidhanSabhaDetail.add(mVidhanSabhaModel);
+                    vidhanSabhaList.add(mVidhanSabhaModel.getConstituencyName());
+                }
+                mVidhanSabhaArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, vidhanSabhaList);
+                vidhanSabha.setAdapter(mVidhanSabhaArrayAdapter);
+                vidhanSabha.setThreshold(1);
+                editor.putString(Constants.VIDHAN_SABHA_LIST, new Gson().toJson(mVidhanSabhaDetail));
+                editor.commit();
+            }
+            else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+        FetchLokSabha mFetchLokSabha=new FetchLokSabha();
+        mFetchLokSabha.execute();
+
+    }
+
+    private void setMunicipalCorporationWardData(Object o)  {
+        Log.e(LOG_TAG,"WARD JSON : "+o.toString());
+        try {
+            wardList.clear();
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&& o != null){
+                JSONArray wardArray=jObject.getJSONArray("data");
+                Log.e(LOG_TAG,"Ward Element Count "+wardArray.length());
+                for(int i =0 ; i<wardArray.length();i++){
+                    JSONObject wardObject=wardArray.getJSONObject(i);
+                    mMunicipalCorporationModel=new MunicipalCorporationModel();
+                    mMunicipalCorporationModel.setWardId(wardObject.getString("WardId"));
+                    mMunicipalCorporationModel.setWardState(wardObject.getString("WardState"));
+                    mMunicipalCorporationModel.setWardCity(wardObject.getString("WardCity"));
+                    mMunicipalCorporationModel.setWardCityRegion(wardObject.getString("WardCityRegion"));
+                    mMunicipalCorporationModel.setWardStartNumber(wardObject.getInt("WardStartNumber"));
+                    mMunicipalCorporationModel.setWardEndNumber(wardObject.getInt("WardEndNumber"));
+                    mMunicipalCorporationModelDetail.add(mMunicipalCorporationModel);
+
+                }
+                for(int i=mMunicipalCorporationModel.getWardStartNumber();i<=mMunicipalCorporationModel.getWardEndNumber();i++){
+                    wardList.add(String.valueOf(i));
+                }
+                mWardArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, wardList);
+                ward.setAdapter(mWardArrayAdapter);
+                ward.setThreshold(1);
+                editor.putString(Constants.MUNICIPAL_CORPORATION_LIST, new Gson().toJson(mMunicipalCorporationModelDetail));
+                editor.commit();
+            }
+            else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+        FetchPoliticalParty mFetchPoliticalParty=new FetchPoliticalParty();
+        mFetchPoliticalParty.execute();
+
+    }
+
+    private void setLokSabhaData(Object o)  {
+        Log.e(LOG_TAG,"LOK SABHA JSON : "+o.toString());
+        try {
+            lokSabhaList.clear();
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&& o != null){
+                JSONArray lokArray=jObject.getJSONArray("data");
+                Log.e(LOG_TAG,"Lok Sabha Element Count "+lokArray.length());
+                for(int i =0 ; i<lokArray.length();i++){
+                    JSONObject lokObject=lokArray.getJSONObject(i);
+                    mLokSabhaModel=new LokSabhaModel();
+                    mLokSabhaModel.setConstituencyId(lokObject.getString("ConstituencyId"));
+                    mLokSabhaModel.setConstituencyName(lokObject.getString("ConstituencyName"));
+                    mLokSabhaModel.setConstituencyReserved(lokObject.getString("ConstituencyReserved"));
+                    mLokSabhaModel.setConstituencyState(lokObject.getString("ConstituencyState"));
+                    mLokSabhaDetail.add(mLokSabhaModel);
+                    lokSabhaList.add(mLokSabhaModel.getConstituencyName());
+                }
+                mLokSabhaArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, lokSabhaList);
+                lokSabha.setAdapter(mLokSabhaArrayAdapter);
+                lokSabha.setThreshold(1);
+                editor.putString(Constants.LOK_SABHA_LIST, new Gson().toJson(mLokSabhaDetail));
+                editor.commit();
+            }
+            else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+        FetchMunicipalCorporationWard mFetchMunicipalCorporationWard=new FetchMunicipalCorporationWard();
+        mFetchMunicipalCorporationWard.execute();
+
+    }
+
+    private void setPoliticalPartyData(Object o)  {
+        Log.e(LOG_TAG,"POLITICAL PARTY JSON : "+o.toString());
+        try {
+            politicalPartyList.clear();
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&& o != null){
+                JSONArray politicalPartyArray=jObject.getJSONArray("party");
+                Log.e(LOG_TAG,"POLITICAL PARTY Element Count "+politicalPartyArray.length());
+                for(int i =0 ; i<politicalPartyArray.length();i++){
+                    JSONObject politicalPartyObject=politicalPartyArray.getJSONObject(i);
+                    politicalPartyList.add(politicalPartyObject.getString("PartyName"));
+                }
+                mPoliticalPartyArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, politicalPartyList);
+                repParty.setAdapter(mPoliticalPartyArrayAdapter);
+                repParty.setThreshold(1);
+            }
+            else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+        FetchDesignation mFetchDesignation=new FetchDesignation();
+        mFetchDesignation.execute();
+    }
+
+    private void setDesignationData(Object o)  {
+        Log.e(LOG_TAG,"DESIGNATION JSON : "+o.toString());
+        try {
+            designationList.clear();
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&& o != null){
+                JSONArray designationArray=jObject.getJSONArray("designation");
+                Log.e(LOG_TAG,"DESIGNATION Element Count "+designationArray.length());
+                for(int i =0 ; i<designationArray.length();i++){
+                    JSONObject designationObject=designationArray.getJSONObject(i);
+                    designationList.add(designationObject.getString("DesignationName"));
+                }
+                mDesignationArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, designationList);
+                repDesignation.setAdapter(mDesignationArrayAdapter);
+                repDesignation.setThreshold(1);
+            }
+            else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
     }
 
     class ExistenceTest extends AsyncTask {
@@ -658,7 +843,6 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-
     class SignUpRep extends AsyncTask {
 
         String url_rep_sign_up = "http://echoindia.co.in/php/repSignup.php";
@@ -792,21 +976,6 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(checkOTPDialog!=null)
-            checkOTPDialog.dismiss();
-        if(chooseImage!=null)
-            chooseImage.dismiss();
-        if(pDialog!=null)
-            pDialog.dismiss();
-    }
-
-
-
-
     class FetchVidhanSabha extends AsyncTask {
 
         String url_vidhan_sabha = "http://echoindia.co.in/php/vidhansabha.php";
@@ -870,46 +1039,6 @@ public class SignupActivity extends AppCompatActivity {
             setVidhanData(o);
         }
     }
-    private void setVidhanData(Object o)  {
-        Log.e(LOG_TAG,"VIDHAN SABHA JSON : "+o.toString());
-        try {
-            vidhanSabhaList.clear();
-            JSONObject jObject=new JSONObject(o.toString());
-            String checkStatus=jObject.getString("status");
-            if(checkStatus.equals("1")&& o != null){
-                JSONArray vidhanArray=jObject.getJSONArray("data");
-                Log.e(LOG_TAG,"Vidhan Sabha Element Count "+vidhanArray.length());
-                for(int i =0 ; i<vidhanArray.length();i++){
-                    JSONObject vidhanObject=vidhanArray.getJSONObject(i);
-
-                    mVidhanSabhaModel=new VidhanSabhaModel();
-                    mVidhanSabhaModel.setConstituencyId(vidhanObject.getString("ConstituencyId"));
-                    mVidhanSabhaModel.setConstituencyName(vidhanObject.getString("ConstituencyName"));
-                    mVidhanSabhaModel.setConstituencyDistrict(vidhanObject.getString("ConstituencyDistrict"));
-                    mVidhanSabhaModel.setConstituencyState(vidhanObject.getString("ConstituencyState"));
-                    mVidhanSabhaDetail.add(mVidhanSabhaModel);
-                    vidhanSabhaList.add(mVidhanSabhaModel.getConstituencyName());
-                }
-                mVidhanSabhaArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, vidhanSabhaList);
-                vidhanSabha.setAdapter(mVidhanSabhaArrayAdapter);
-                vidhanSabha.setThreshold(1);
-                editor.putString(Constants.VIDHAN_SABHA_LIST, new Gson().toJson(mVidhanSabhaDetail));
-                editor.commit();
-            }
-            else {
-                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG,e.toString());
-        }
-        FetchLokSabha mFetchLokSabha=new FetchLokSabha();
-        mFetchLokSabha.execute();
-
-    }
-
-
 
     class FetchMunicipalCorporationWard extends AsyncTask {
 
@@ -973,46 +1102,6 @@ public class SignupActivity extends AppCompatActivity {
             super.onPostExecute(o);
             setMunicipalCorporationWardData(o);
         }
-    }
-    private void setMunicipalCorporationWardData(Object o)  {
-        Log.e(LOG_TAG,"WARD JSON : "+o.toString());
-        try {
-            wardList.clear();
-            JSONObject jObject=new JSONObject(o.toString());
-            String checkStatus=jObject.getString("status");
-            if(checkStatus.equals("1")&& o != null){
-                JSONArray wardArray=jObject.getJSONArray("data");
-                Log.e(LOG_TAG,"Ward Element Count "+wardArray.length());
-                for(int i =0 ; i<wardArray.length();i++){
-                    JSONObject wardObject=wardArray.getJSONObject(i);
-                    mMunicipalCorporationModel=new MunicipalCorporationModel();
-                    mMunicipalCorporationModel.setWardId(wardObject.getString("WardId"));
-                    mMunicipalCorporationModel.setWardState(wardObject.getString("WardState"));
-                    mMunicipalCorporationModel.setWardCity(wardObject.getString("WardCity"));
-                    mMunicipalCorporationModel.setWardCityRegion(wardObject.getString("WardCityRegion"));
-                    mMunicipalCorporationModel.setWardStartNumber(wardObject.getInt("WardStartNumber"));
-                    mMunicipalCorporationModel.setWardEndNumber(wardObject.getInt("WardEndNumber"));
-                    mMunicipalCorporationModelDetail.add(mMunicipalCorporationModel);
-
-                }
-                for(int i=mMunicipalCorporationModel.getWardStartNumber();i<=mMunicipalCorporationModel.getWardEndNumber();i++){
-                    wardList.add(String.valueOf(i));
-                }
-                mWardArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, wardList);
-                ward.setAdapter(mWardArrayAdapter);
-                ward.setThreshold(1);
-                editor.putString(Constants.MUNICIPAL_CORPORATION_LIST, new Gson().toJson(mMunicipalCorporationModelDetail));
-                editor.commit();
-            }
-            else {
-                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG,e.toString());
-        }
-
     }
 
     class FetchLokSabha extends AsyncTask {
@@ -1078,41 +1167,128 @@ public class SignupActivity extends AppCompatActivity {
             setLokSabhaData(o);
         }
     }
-    private void setLokSabhaData(Object o)  {
-        Log.e(LOG_TAG,"LOK SABHA JSON : "+o.toString());
-        try {
-            lokSabhaList.clear();
-            JSONObject jObject=new JSONObject(o.toString());
-            String checkStatus=jObject.getString("status");
-            if(checkStatus.equals("1")&& o != null){
-                JSONArray lokArray=jObject.getJSONArray("data");
-                Log.e(LOG_TAG,"Lok Sabha Element Count "+lokArray.length());
-                for(int i =0 ; i<lokArray.length();i++){
-                    JSONObject lokObject=lokArray.getJSONObject(i);
-                    mLokSabhaModel=new LokSabhaModel();
-                    mLokSabhaModel.setConstituencyId(lokObject.getString("ConstituencyId"));
-                    mLokSabhaModel.setConstituencyName(lokObject.getString("ConstituencyName"));
-                    mLokSabhaModel.setConstituencyReserved(lokObject.getString("ConstituencyReserved"));
-                    mLokSabhaModel.setConstituencyState(lokObject.getString("ConstituencyState"));
-                    mLokSabhaDetail.add(mLokSabhaModel);
-                    lokSabhaList.add(mLokSabhaModel.getConstituencyName());
+
+    class FetchPoliticalParty extends AsyncTask {
+
+        String url_political_party = "http://echoindia.co.in/php/getParty.php";
+
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_political_party);
+
+                Log.e(LOG_TAG,"URL"+url_political_party);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
                 }
-                mLokSabhaArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, lokSabhaList);
-                lokSabha.setAdapter(mLokSabhaArrayAdapter);
-                lokSabha.setThreshold(1);
-                editor.putString(Constants.LOK_SABHA_LIST, new Gson().toJson(mLokSabhaDetail));
-                editor.commit();
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            else {
-                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG,e.toString());
         }
-        FetchMunicipalCorporationWard mFetchMunicipalCorporationWard=new FetchMunicipalCorporationWard();
-        mFetchMunicipalCorporationWard.execute();
 
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            setPoliticalPartyData(o);
+        }
     }
+
+    class FetchDesignation extends AsyncTask {
+
+        String url_designation = "http://echoindia.co.in/php/getDesignation.php";
+
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_designation);
+
+                Log.e(LOG_TAG,"URL"+url_designation);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            setDesignationData(o);
+        }
+    }
+
+
 }

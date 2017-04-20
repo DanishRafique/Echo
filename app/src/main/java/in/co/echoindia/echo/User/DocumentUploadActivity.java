@@ -107,9 +107,24 @@ public class DocumentUploadActivity extends AppCompatActivity {
             }
         });
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent homeClick=new Intent(DocumentUploadActivity.this,LoginActivity.class);
+                startActivity(homeClick);
+                finish();
+            }});
+
         makeRoundCorners(imgVoterId,R.drawable.img_voter_id);
         makeRoundCorners(imgAadhaarCard,R.drawable.img_aadhaar_card);
 
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent homeClick=new Intent(DocumentUploadActivity.this,LoginActivity.class);
+        startActivity(homeClick);
+        finish();
     }
     void makeRoundCorners(ImageView imgView , int drawable){
         Bitmap mBitmap = ((BitmapDrawable) getResources().getDrawable(drawable)).getBitmap();

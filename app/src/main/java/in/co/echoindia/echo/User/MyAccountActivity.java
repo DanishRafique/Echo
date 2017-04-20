@@ -8,7 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.ImageView;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +18,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
@@ -30,8 +31,12 @@ public class MyAccountActivity extends AppCompatActivity {
     UserDetailsModel userDetailsModel;
 
     TextView tvName,tvUserName,tvEmail,tvMobile,tvAddress, tvCity , tvWard , tvPinCode ,tvDistrict , tvState;
-    ImageView userPhoto;
+    TextView tvLokSabha,tvVidhanSabha;
+
+    CircleImageView userPhoto;
     LinearLayout profileBackground;
+
+    LinearLayout llLokSabha,llVidhanSabha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,24 +53,36 @@ public class MyAccountActivity extends AppCompatActivity {
         tvUserName=(TextView)findViewById(R.id.tv_user_name);
         tvEmail=(TextView)findViewById(R.id.tv_email);
         tvMobile=(TextView)findViewById(R.id.tv_mobile);
-        tvAddress=(TextView)findViewById(R.id.tv_address);
         tvCity=(TextView)findViewById(R.id.tv_city);
         tvWard=(TextView)findViewById(R.id.tv_ward);
         tvPinCode=(TextView)findViewById(R.id.tv_pin_code);
-        tvDistrict=(TextView)findViewById(R.id.tv_district);
+        tvLokSabha=(TextView)findViewById(R.id.tv_lok_sabha);
+        tvVidhanSabha=(TextView)findViewById(R.id.tv_vidhan_sabha);
         tvState=(TextView)findViewById(R.id.tv_state);
-        userPhoto=(ImageView)findViewById(R.id.user_photo);
+        userPhoto=(CircleImageView)findViewById(R.id.user_photo);
         profileBackground=(LinearLayout)findViewById(R.id.profile_background);
+        llLokSabha=(LinearLayout)findViewById(R.id.ll_lok_sabha);
+        llVidhanSabha=(LinearLayout)findViewById(R.id.ll_vidhan_sabha);
 
         tvName.setText(userDetailsModel.getFirstName()+" "+userDetailsModel.getLastName());
         tvUserName.setText(userDetailsModel.getUserName());
         tvEmail.setText(userDetailsModel.getEmailId());
         tvMobile.setText(userDetailsModel.getPhoneNo());
-        tvAddress.setText(userDetailsModel.getAddress());
+        if(!userDetailsModel.getLokSabha().equals("")) {
+            tvLokSabha.setText(userDetailsModel.getLokSabha());
+        }
+        else{
+            llLokSabha.setVisibility(View.GONE);
+        }
         tvCity.setText(userDetailsModel.getCity());
         tvWard.setText(userDetailsModel.getWard());
         tvPinCode.setText(userDetailsModel.getPinCode());
-        tvDistrict.setText(userDetailsModel.getDistrict());
+        if(!userDetailsModel.getVidhanSabha().equals("")) {
+            tvVidhanSabha.setText(userDetailsModel.getVidhanSabha());
+        }
+        else{
+            llVidhanSabha.setVisibility(View.GONE);
+        }
         tvState.setText(userDetailsModel.getState());
 
         Glide.with(this).load("http://www.filmibeat.com/img/220x90x275/popcorn/profile_photos/hrithik-roshan-20150105095244-131.jpg").diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
