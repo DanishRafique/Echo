@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +23,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -98,6 +101,8 @@ public class BuzzAdapter extends BaseAdapter {
     PollCommentAdapter mPollCommentAdapter;
     PollCommentModel mPollCommentModel;
 
+
+    Button tempBtn;
 
 
 
@@ -203,7 +208,147 @@ public class BuzzAdapter extends BaseAdapter {
             }
         });
 
+
+        final ToggleButton buzz_upVote = (ToggleButton) convertView.findViewById(R.id.buzz_upvote);
+        buzz_upVote.setTag(String.valueOf(buzzObj.getPostId()));
+        final ToggleButton buzz_downVote = (ToggleButton) convertView.findViewById(R.id.buzz_downvote);
+        buzz_downVote.setTag(String.valueOf(buzzObj.getPostId()));
+
+
+        buzz_upVote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                postVote postVote = new postVote();
+                TextView textView = null;
+                tempBtn = (ToggleButton) buttonView;
+                ViewGroup view = (ViewGroup) tempBtn.getParent();
+                textView = (TextView) view.findViewById(R.id.buzz_upvote_value);
+                Log.e("Voting...", textView.getText().toString());
+                int upvote = Integer.parseInt(textView.getText().toString());
+
+                ViewGroup rootParent = (ViewGroup) view.getParent();
+                ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.buzz_downvote);
+
+                if(!isChecked){
+                    t.setEnabled(true);
+                    upvote --;
+                    // @TODO store upvote value
+                    postVote.execute("up", "none");
+                    textView.setText(upvote + "");
+                }
+                else {
+                    t.setEnabled(false);
+                    upvote ++;
+                    // @TODO store upvote value
+                    postVote.execute("up", "up");
+                    textView.setText(upvote + "");
+                }
+            }
+        });
+
+        buzz_downVote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                postVote postVote = new postVote();
+                TextView textView = null;
+                tempBtn = (ToggleButton) buttonView;
+                ViewGroup view = (ViewGroup) tempBtn.getParent();
+                textView = (TextView) view.findViewById(R.id.buzz_downvote_value);
+                Log.e("Voting...", textView.getText().toString());
+                int downvote = Integer.parseInt(textView.getText().toString());
+                ViewGroup rootParent = (ViewGroup) view.getParent();
+                ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.buzz_upvote);
+                if(!isChecked){
+                    t.setEnabled(true);
+                    downvote --;
+                    // @TODO store downvote value
+                    postVote.execute("down", "none");
+                    textView.setText(downvote + "");
+                }
+                else {
+                    t.setEnabled(false);
+                    downvote ++;
+                    // @TODO store downvote value
+                    postVote.execute("down", "down");
+                    textView.setText(downvote + "");
+                }
+            }
+        });
+
+
+
         return convertView;
+    }
+
+
+    private class postVote extends AsyncTask<String, Void, String> {
+        String postId;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d("Voting...", "Post Id: " + tempBtn.getTag().toString());
+            postId = tempBtn.getTag().toString();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String btn = params[0].toString();
+            String voteType = params[1].toString();
+
+            String voteUrl = "http://echoindia.co.in/php/postVote.php";
+
+            try {
+                URL url = new URL(voteUrl);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("btn",btn);
+                postDataParams.put("voteType",voteType);
+                postDataParams.put("postId",postId);
+                postDataParams.put("username",sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""));
+
+                Log.e("Voting", "Params: " + postDataParams.toString());
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String aVoid) {
+            super.onPostExecute(aVoid);
+            Log.e("Voting", "Response : " + aVoid);
+        }
     }
 
 
