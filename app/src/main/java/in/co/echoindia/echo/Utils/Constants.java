@@ -22,4 +22,5 @@ public class Constants {
     public static final String VIDHAN_SABHA_LIST="VIDHAN_SABHA_LIST";
     public static final String LOK_SABHA_LIST="LOK_SABHA_LIST";
     public static final String MUNICIPAL_CORPORATION_LIST="MUNICIPAL_CORPORATION_LIST";
+    public static final String CURRENT_PIN_CODE="CURRENT_PIN_CODE";
 }

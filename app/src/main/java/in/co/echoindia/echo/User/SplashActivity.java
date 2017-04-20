@@ -122,6 +122,7 @@ public class SplashActivity extends AppCompatActivity {
                 currentLocationAddress = address + "," + city + "," + state + "," + country + "," + postalCode;
                 editor.putString(Constants.CURRENT_CITY,city);
                 editor.putString(Constants.CURRENT_STATE,state);
+                editor.putString(Constants.CURRENT_PIN_CODE,postalCode);
                 editor.commit();
             }
             Log.e(LOG_TAG,"My Test currentLocationAddress " + currentLocationAddress);

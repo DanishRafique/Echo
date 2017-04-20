@@ -26,7 +26,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -57,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.echoindia.echo.Model.LokSabhaModel;
 import in.co.echoindia.echo.Model.MunicipalCorporationModel;
 import in.co.echoindia.echo.Model.VidhanSabhaModel;
@@ -67,8 +71,8 @@ import in.co.echoindia.echo.Utils.MarshMallowPermission;
 
 public class SignupActivity extends AppCompatActivity {
 
-    EditText firstName,lastName, userName , emailAddress,phoneNumber,password, confirmPassword, address , city , ward , pinCode , district , state;
-    LinearLayout llUserInformation , llUserAddress;
+    EditText firstName,lastName, userName , emailAddress,phoneNumber,password, confirmPassword,city , pinCode , district , state;
+    LinearLayout llUserInformation , llUserAddress,llUserPolitic;
     Button btnSignUp;
     TextView tvSignUpContinue;
     int randInt;
@@ -81,7 +85,7 @@ public class SignupActivity extends AppCompatActivity {
     TextView otpSubmit, resendOTP , txtOTPNumber;
     EditText edtOtp;
     TextView txtTimer;
-    ImageView imgProfile;
+    CircleImageView imgProfile;
 
     String encodedImage;
     byte[] byteArray;
@@ -89,6 +93,7 @@ public class SignupActivity extends AppCompatActivity {
     Dialog chooseImage;
     TextView chooseImageCamera , chooseImageGallery;
     Button btnUpload;
+    AutoCompleteTextView lokSabha,vidhanSabha , ward;
     public static final int RESULT_LOAD_IMAGE = 1;
     private static final int CAMERA_REQUEST = 1888;
     private Uri imageToUploadUri;
@@ -98,16 +103,37 @@ public class SignupActivity extends AppCompatActivity {
     MunicipalCorporationModel mMunicipalCorporationModel;
     ArrayList<VidhanSabhaModel> mVidhanSabhaDetail=new ArrayList<>();
     ArrayList<LokSabhaModel> mLokSabhaDetail=new ArrayList<>();
+
+
+    ArrayList<String> lokSabhaList = new ArrayList<>();
+    ArrayList<String> vidhanSabhaList = new ArrayList<>();
+    ArrayList<String> wardList = new ArrayList<>();
+    ArrayAdapter<String> mLokSabhaArrayAdapter;
+    ArrayAdapter<String> mVidhanSabhaArrayAdapter;
+    ArrayAdapter<String> mWardArrayAdapter;
+
     ArrayList<MunicipalCorporationModel> mMunicipalCorporationModelDetail=new ArrayList<>();
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
 
 
+
+
+    AutoCompleteTextView repParty,repDesignation;
+    EditText repLocation,repQualification,repHomePage,repTwitter;
+    CheckBox checkboxPolitics;
+    TextView tvPoliticContinue;
+
+    boolean isPolitician=false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        sharedpreferences = AppUtil.getAppPreferences(this);
+        editor = sharedpreferences.edit();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -119,14 +145,31 @@ public class SignupActivity extends AppCompatActivity {
         phoneNumber=(EditText)findViewById(R.id.edt_phone_number);
         password=(EditText)findViewById(R.id.edt_password);
         confirmPassword=(EditText)findViewById(R.id.edt_confirm_passowrd);
-        address=(EditText)findViewById(R.id.edt_address);
+        lokSabha=(AutoCompleteTextView) findViewById(R.id.auto_lok_sabha);
+        vidhanSabha=(AutoCompleteTextView) findViewById(R.id.auto_vidhan_sabha);
         city=(EditText)findViewById(R.id.edt_city);
-        ward=(EditText)findViewById(R.id.edt_ward);
+        ward=(AutoCompleteTextView) findViewById(R.id.auto_ward);
         pinCode=(EditText)findViewById(R.id.edt_pin_code);
-        district=(EditText)findViewById(R.id.edt_district);
+
         state=(EditText)findViewById(R.id.edt_state);
         btnSignUp=(Button)findViewById(R.id.btn_sign_up);
-        imgProfile=(ImageView)findViewById(R.id.img_profile);
+        imgProfile=(CircleImageView)findViewById(R.id.img_profile);
+
+        checkboxPolitics=(CheckBox)findViewById(R.id.checkbox_politic);
+
+
+        repParty=(AutoCompleteTextView)findViewById(R.id.auto_rep_party);
+        repDesignation=(AutoCompleteTextView)findViewById(R.id.auto_rep_designation);
+        repLocation=(EditText)findViewById(R.id.edt_rep_location);
+        repQualification=(EditText)findViewById(R.id.edt_rep_qualification);
+        repHomePage=(EditText)findViewById(R.id.edt_home_page);
+        repTwitter=(EditText)findViewById(R.id.edt_twitter);
+        llUserPolitic=(LinearLayout)findViewById(R.id.ll_user_politic);
+        tvPoliticContinue=(TextView)findViewById(R.id.tv_politic_continue);
+
+        city.setText(sharedpreferences.getString(Constants.CURRENT_CITY,""));
+        state.setText(sharedpreferences.getString(Constants.CURRENT_STATE,""));
+        pinCode.setText(sharedpreferences.getString(Constants.CURRENT_PIN_CODE,""));
         imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,8 +180,7 @@ public class SignupActivity extends AppCompatActivity {
         llUserInformation=(LinearLayout)findViewById(R.id.ll_user_information);
         llUserAddress=(LinearLayout)findViewById(R.id.ll_user_address);
         tvSignUpContinue=(TextView)findViewById(R.id.tv_sign_up_continue);
-        sharedpreferences = AppUtil.getAppPreferences(this);
-        editor = sharedpreferences.edit();
+
         tvSignUpContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,11 +188,37 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+        tvPoliticContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                llUserPolitic.setVisibility(View.GONE);
+                llUserAddress.setVisibility(View.VISIBLE);
+            }
+        });
+
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SignUpUser mSignUpUser=new SignUpUser();
-                mSignUpUser.execute();
+
+                if(!lokSabha.getText().toString().equals("")&&!lokSabhaList.contains(lokSabha.getText().toString())){
+                    Toast.makeText(SignupActivity.this, "Please Choose the Lok Sabha Constituency from the list.", Toast.LENGTH_SHORT).show();
+                }
+                else if(!vidhanSabha.getText().toString().equals("")&&!vidhanSabhaList.contains(vidhanSabha.getText().toString())){
+                    Toast.makeText(SignupActivity.this, "Please Choose the Vidhan Sabha Constituency from the list.", Toast.LENGTH_SHORT).show();
+                }
+                else if(!ward.getText().toString().equals("")&&!wardList.contains(ward.getText().toString().trim())){
+                    Toast.makeText(SignupActivity.this, "Please Choose Ward Number from the list.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if(isPolitician){
+                        SignUpRep mSignUpRep=new SignUpRep();
+                        mSignUpRep.execute();
+                    }
+                    else {
+                        SignUpUser mSignUpUser = new SignUpUser();
+                        mSignUpUser.execute();
+                    }
+                }
             }
         });
         FetchVidhanSabha mFetchVidhanSabha=new FetchVidhanSabha();
@@ -167,6 +235,16 @@ public class SignupActivity extends AppCompatActivity {
         mPaint.setShader(new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
         canvas.drawRoundRect((new RectF(0, 0, mBitmap.getWidth(), mBitmap.getHeight())), 25, 25, mPaint);// Round Image Corner 100 100 100 100
         imgView.setImageBitmap(imageRounded);
+    }
+
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+       if(checked){
+          isPolitician=true;
+       }
     }
 
 
@@ -257,7 +335,12 @@ public class SignupActivity extends AppCompatActivity {
         if (enteredText.equals(otpGiven)) {
             Toast.makeText(SignupActivity.this, "OTP Matched Successfully", Toast.LENGTH_SHORT).show();
             llUserInformation.setVisibility(View.GONE);
-            llUserAddress.setVisibility(View.VISIBLE);
+            if(checkboxPolitics.isChecked()){
+                llUserPolitic.setVisibility(View.VISIBLE);
+            }
+            else{
+                llUserAddress.setVisibility(View.VISIBLE);
+            }
             checkOTPDialog.dismiss();
 
         } else {
@@ -466,11 +549,11 @@ public class SignupActivity extends AppCompatActivity {
         String passwordStr=password.getText().toString().trim();
         String firstNameStr=firstName.getText().toString().trim();
         String lastNameStr = lastName.getText().toString().trim();
-        String addressStr = address.getText().toString().trim();
         String wardStr=ward.getText().toString().trim();
         String cityStr=city.getText().toString().trim();
+        String lokSabhaStr=lokSabha.getText().toString().trim();
+        String vidhanSabhaStr=vidhanSabha.getText().toString().trim();
         String pincodeStr=pinCode.getText().toString().trim();
-        String districtStr=district.getText().toString().trim();
         String stateStr=state.getText().toString().trim();
         String phoneNumberStr=phoneNumber.getText().toString().trim();
         String emailStr=emailAddress.getText().toString().trim();
@@ -497,11 +580,11 @@ public class SignupActivity extends AppCompatActivity {
                 postDataParams.put("lastName",lastNameStr);
                 postDataParams.put("email",emailStr);
                 postDataParams.put("phone",phoneNumberStr);
-                postDataParams.put("address",addressStr);
+                postDataParams.put("loksabha",lokSabhaStr);
+                postDataParams.put("vidhansabha",vidhanSabhaStr);
                 postDataParams.put("ward",wardStr);
                 postDataParams.put("city",cityStr);
                 postDataParams.put("pincode",pincodeStr);
-                postDataParams.put("district",districtStr);
                 postDataParams.put("state",stateStr);
                 postDataParams.put("userPhoto",encodedImage);
 
@@ -574,6 +657,141 @@ public class SignupActivity extends AppCompatActivity {
 
         }
     }
+
+
+    class SignUpRep extends AsyncTask {
+
+        String url_rep_sign_up = "http://echoindia.co.in/php/repSignup.php";
+        String userNameStr=userName.getText().toString().trim();
+        String passwordStr=password.getText().toString().trim();
+        String firstNameStr=firstName.getText().toString().trim();
+        String lastNameStr = lastName.getText().toString().trim();
+        String wardStr=ward.getText().toString().trim();
+        String cityStr=city.getText().toString().trim();
+        String lokSabhaStr=lokSabha.getText().toString().trim();
+        String vidhanSabhaStr=vidhanSabha.getText().toString().trim();
+        String pincodeStr=pinCode.getText().toString().trim();
+        String stateStr=state.getText().toString().trim();
+        String phoneNumberStr=phoneNumber.getText().toString().trim();
+        String emailStr=emailAddress.getText().toString().trim();
+
+
+        String repPartyStr=repParty.getText().toString();
+        String repDesignationStr=repDesignation.getText().toString();
+        String repLocationStr=repLocation.getText().toString();
+        String repQualificationStr=repQualification.getText().toString();
+        String repHomePageStr=repHomePage.getText().toString();
+        String repTwitterStr=repTwitter.getText().toString();
+
+
+
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog.show();
+            pDialog.setMessage("Please Wait");
+            pDialog.setCancelable(true);
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_rep_sign_up);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("username",userNameStr);
+                postDataParams.put("password",passwordStr);
+                postDataParams.put("firstName",firstNameStr);
+                postDataParams.put("lastName",lastNameStr);
+                postDataParams.put("email",emailStr);
+                postDataParams.put("phone",phoneNumberStr);
+                postDataParams.put("loksabha",lokSabhaStr);
+                postDataParams.put("vidhansabha",vidhanSabhaStr);
+                postDataParams.put("ward",wardStr);
+                postDataParams.put("city",cityStr);
+                postDataParams.put("pincode",pincodeStr);
+                postDataParams.put("state",stateStr);
+                postDataParams.put("userPhoto",encodedImage);
+                postDataParams.put("repParty",repPartyStr);
+                postDataParams.put("repDesignation",repDesignationStr);
+                postDataParams.put("repLocation",repLocationStr);
+                postDataParams.put("repQualification",repQualificationStr);
+                postDataParams.put("repHomePage",repHomePageStr);
+                postDataParams.put("repTwitter",repTwitterStr);
+
+                Log.e(LOG_TAG,"URL"+url_rep_sign_up);
+                Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            pDialog.dismiss();
+            JSONObject jObject= null;
+            try {
+                Log.e(LOG_TAG,"Registration JSON: "+o.toString());
+                jObject = new JSONObject(o.toString());
+                String checkStatus=jObject.getString("status");
+                if(checkStatus.equals("1")){
+                    Toast.makeText(SignupActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
+                    Intent intentDocumentUpload=new Intent(SignupActivity.this,DocumentUploadActivity.class);
+                    startActivity(intentDocumentUpload);
+                    SignupActivity.this.finish();
+                }
+                else if(checkStatus.equals("0")){
+                    Toast.makeText(SignupActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
 
     @Override
     protected void onPause() {
@@ -655,11 +873,12 @@ public class SignupActivity extends AppCompatActivity {
     private void setVidhanData(Object o)  {
         Log.e(LOG_TAG,"VIDHAN SABHA JSON : "+o.toString());
         try {
+            vidhanSabhaList.clear();
             JSONObject jObject=new JSONObject(o.toString());
             String checkStatus=jObject.getString("status");
             if(checkStatus.equals("1")&& o != null){
                 JSONArray vidhanArray=jObject.getJSONArray("data");
-                Log.e(LOG_TAG,"News Element Count "+vidhanArray.length());
+                Log.e(LOG_TAG,"Vidhan Sabha Element Count "+vidhanArray.length());
                 for(int i =0 ; i<vidhanArray.length();i++){
                     JSONObject vidhanObject=vidhanArray.getJSONObject(i);
 
@@ -669,7 +888,11 @@ public class SignupActivity extends AppCompatActivity {
                     mVidhanSabhaModel.setConstituencyDistrict(vidhanObject.getString("ConstituencyDistrict"));
                     mVidhanSabhaModel.setConstituencyState(vidhanObject.getString("ConstituencyState"));
                     mVidhanSabhaDetail.add(mVidhanSabhaModel);
+                    vidhanSabhaList.add(mVidhanSabhaModel.getConstituencyName());
                 }
+                mVidhanSabhaArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, vidhanSabhaList);
+                vidhanSabha.setAdapter(mVidhanSabhaArrayAdapter);
+                vidhanSabha.setThreshold(1);
                 editor.putString(Constants.VIDHAN_SABHA_LIST, new Gson().toJson(mVidhanSabhaDetail));
                 editor.commit();
             }
@@ -754,11 +977,12 @@ public class SignupActivity extends AppCompatActivity {
     private void setMunicipalCorporationWardData(Object o)  {
         Log.e(LOG_TAG,"WARD JSON : "+o.toString());
         try {
+            wardList.clear();
             JSONObject jObject=new JSONObject(o.toString());
             String checkStatus=jObject.getString("status");
             if(checkStatus.equals("1")&& o != null){
                 JSONArray wardArray=jObject.getJSONArray("data");
-                Log.e(LOG_TAG,"News Element Count "+wardArray.length());
+                Log.e(LOG_TAG,"Ward Element Count "+wardArray.length());
                 for(int i =0 ; i<wardArray.length();i++){
                     JSONObject wardObject=wardArray.getJSONObject(i);
                     mMunicipalCorporationModel=new MunicipalCorporationModel();
@@ -769,7 +993,14 @@ public class SignupActivity extends AppCompatActivity {
                     mMunicipalCorporationModel.setWardStartNumber(wardObject.getInt("WardStartNumber"));
                     mMunicipalCorporationModel.setWardEndNumber(wardObject.getInt("WardEndNumber"));
                     mMunicipalCorporationModelDetail.add(mMunicipalCorporationModel);
+
                 }
+                for(int i=mMunicipalCorporationModel.getWardStartNumber();i<=mMunicipalCorporationModel.getWardEndNumber();i++){
+                    wardList.add(String.valueOf(i));
+                }
+                mWardArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, wardList);
+                ward.setAdapter(mWardArrayAdapter);
+                ward.setThreshold(1);
                 editor.putString(Constants.MUNICIPAL_CORPORATION_LIST, new Gson().toJson(mMunicipalCorporationModelDetail));
                 editor.commit();
             }
@@ -850,11 +1081,12 @@ public class SignupActivity extends AppCompatActivity {
     private void setLokSabhaData(Object o)  {
         Log.e(LOG_TAG,"LOK SABHA JSON : "+o.toString());
         try {
+            lokSabhaList.clear();
             JSONObject jObject=new JSONObject(o.toString());
             String checkStatus=jObject.getString("status");
             if(checkStatus.equals("1")&& o != null){
                 JSONArray lokArray=jObject.getJSONArray("data");
-                Log.e(LOG_TAG,"News Element Count "+lokArray.length());
+                Log.e(LOG_TAG,"Lok Sabha Element Count "+lokArray.length());
                 for(int i =0 ; i<lokArray.length();i++){
                     JSONObject lokObject=lokArray.getJSONObject(i);
                     mLokSabhaModel=new LokSabhaModel();
@@ -863,7 +1095,11 @@ public class SignupActivity extends AppCompatActivity {
                     mLokSabhaModel.setConstituencyReserved(lokObject.getString("ConstituencyReserved"));
                     mLokSabhaModel.setConstituencyState(lokObject.getString("ConstituencyState"));
                     mLokSabhaDetail.add(mLokSabhaModel);
+                    lokSabhaList.add(mLokSabhaModel.getConstituencyName());
                 }
+                mLokSabhaArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, lokSabhaList);
+                lokSabha.setAdapter(mLokSabhaArrayAdapter);
+                lokSabha.setThreshold(1);
                 editor.putString(Constants.LOK_SABHA_LIST, new Gson().toJson(mLokSabhaDetail));
                 editor.commit();
             }
