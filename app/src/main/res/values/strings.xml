@@ -131,6 +131,6 @@
     <string name="title_activity_news">NewsActivity</string>
     <string name="title_activity_signup">Sign Up</string>
     <string name="title_activity_elected_representative_detail">
-        ElectedRepresentativeDetailActivity
+       Representative Info
     </string>
 </resources>

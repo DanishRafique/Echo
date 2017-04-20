@@ -2,7 +2,9 @@ package in.co.echoindia.echo.User;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +117,20 @@ public class ElectedRepresentativeAdapter extends BaseAdapter {
                 Glide.with(activity).load(politicalList.get(i).getPartyLogo()).diskCacheStrategy(DiskCacheStrategy.ALL).into(repPartyLogo);
             }
         }
+
+        repInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent detailIntent=new Intent(activity,ElectedRepresentativeDetailActivity.class);
+                Bundle mBundle = new Bundle();
+                mBundle.putSerializable("RepObj", repObj);
+                detailIntent.putExtra("RepObj",mBundle);
+                activity.startActivity(detailIntent);
+            }
+        });
+
+
+
         return convertView;
     }
 }
