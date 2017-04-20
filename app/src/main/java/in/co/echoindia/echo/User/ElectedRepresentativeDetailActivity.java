@@ -32,7 +32,7 @@ public class ElectedRepresentativeDetailActivity extends AppCompatActivity {
     CircleImageView partyLogo;
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
-    CardView introduction,cardControversy,cardCareer;
+    CardView introduction,cardControversy,cardCareer,cardInfo,cardAddress;
     LinearLayout llState, llCity,llParty,llDesignation,llAssumedOffice,llQualification,llEcho,llWebsite,llTwitter;
 
 
@@ -71,6 +71,8 @@ public class ElectedRepresentativeDetailActivity extends AppCompatActivity {
         llEcho=(LinearLayout)findViewById(R.id.rep_detail_ll_echo);
         llWebsite=(LinearLayout)findViewById(R.id.rep_detail_ll_website);
         llTwitter=(LinearLayout)findViewById(R.id.rep_detail_ll_twitter);
+        cardInfo=(CardView)findViewById(R.id.rep_detail_card_info);
+        cardAddress=(CardView)findViewById(R.id.rep_detail_card_address);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle mBundle=getIntent().getExtras();
         Bundle repBundle=mBundle.getBundle("RepObj");
@@ -108,6 +110,7 @@ public class ElectedRepresentativeDetailActivity extends AppCompatActivity {
         city.setText(repInfoModel.getRepCity());
         career.setText(repInfoModel.getRepCareer());
         controversy.setText(repInfoModel.getRepControversy());
+        assumedOffice.setText(repInfoModel.getRepAssumedOffice());
 
         Type type = new TypeToken<ArrayList<PoliticalPartyModel>>() {}.getType();
         ArrayList<PoliticalPartyModel> politicalList= new Gson().fromJson(sharedpreferences.getString(Constants.POLITICAL_PARTY_LIST, ""), type);
@@ -160,6 +163,18 @@ public class ElectedRepresentativeDetailActivity extends AppCompatActivity {
 
         if(repInfoModel.getRepTwitterId().equals("")){
             llTwitter.setVisibility(View.GONE);
+        }
+
+        if(repInfoModel.getRepTwitterId().equals("")&&repInfoModel.getRepHomePage().equals("")&&
+                repInfoModel.getRepCode().equals("")&& repInfoModel.getRepQualification().equals("")
+                &&repInfoModel.getRepAssumedOffice().equals("")&&repInfoModel.getRepDesignation().equals("")
+                &&repInfoModel.getRepParty().equals("")){
+            cardInfo.setVisibility(View.GONE);
+
+        }
+
+        if(repInfoModel.getRepCity().equals("") && repInfoModel.getRepState().equals("")){
+            cardAddress.setVisibility(View.GONE);
         }
 
 

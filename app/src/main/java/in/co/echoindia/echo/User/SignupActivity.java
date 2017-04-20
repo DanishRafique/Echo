@@ -723,8 +723,8 @@ public class SignupActivity extends AppCompatActivity {
         String lastNameStr = lastName.getText().toString().trim();
         String wardStr=ward.getText().toString().trim();
         String cityStr=city.getText().toString().trim();
-        String lokSabhaStr=lokSabha.getText().toString().trim();
-        String vidhanSabhaStr=vidhanSabha.getText().toString().trim();
+        String lokSabhaStr=lokSabha.getText().toString();
+        String vidhanSabhaStr=vidhanSabha.getText().toString();
         String pincodeStr=pinCode.getText().toString().trim();
         String stateStr=state.getText().toString().trim();
         String phoneNumberStr=phoneNumber.getText().toString().trim();
@@ -839,8 +839,8 @@ public class SignupActivity extends AppCompatActivity {
         String lastNameStr = lastName.getText().toString().trim();
         String wardStr=ward.getText().toString().trim();
         String cityStr=city.getText().toString().trim();
-        String lokSabhaStr=lokSabha.getText().toString().trim();
-        String vidhanSabhaStr=vidhanSabha.getText().toString().trim();
+        String lokSabhaStr=lokSabha.getText().toString();
+        String vidhanSabhaStr=vidhanSabha.getText().toString();
         String pincodeStr=pinCode.getText().toString().trim();
         String stateStr=state.getText().toString().trim();
         String phoneNumberStr=phoneNumber.getText().toString().trim();
