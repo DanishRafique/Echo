@@ -85,9 +85,9 @@ public class MyAccountActivity extends AppCompatActivity {
         }
         tvState.setText(userDetailsModel.getState());
 
-        Glide.with(this).load("http://www.filmibeat.com/img/220x90x275/popcorn/profile_photos/hrithik-roshan-20150105095244-131.jpg").diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
+        Glide.with(this).load(userDetailsModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
 
-        Glide.with(this).load("http://www.filmibeat.com/img/220x90x275/popcorn/profile_photos/hrithik-roshan-20150105095244-131.jpg").asBitmap().into(new SimpleTarget<Bitmap>(500, 200) {
+        Glide.with(this).load(userDetailsModel.getUserPhoto()).asBitmap().into(new SimpleTarget<Bitmap>(500, 200) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 Drawable drawable = new BitmapDrawable(resource);

@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +53,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -63,6 +65,7 @@ import javax.net.ssl.HttpsURLConnection;
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.echoindia.echo.Model.LokSabhaModel;
 import in.co.echoindia.echo.Model.MunicipalCorporationModel;
+import in.co.echoindia.echo.Model.PoliticalPartyModel;
 import in.co.echoindia.echo.Model.VidhanSabhaModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
@@ -213,6 +216,17 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
+
+        politicalPartyList.clear();
+
+        Type type = new TypeToken<ArrayList<PoliticalPartyModel>>() {}.getType();
+        ArrayList<PoliticalPartyModel> politicalList= new Gson().fromJson(sharedpreferences.getString(Constants.POLITICAL_PARTY_LIST, ""), type);
+        for(int i=0;i<politicalList.size();i++){
+            politicalPartyList.add(politicalList.get(i).getPartyNameShort());
+        }
+        mPoliticalPartyArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, politicalPartyList);
+        repParty.setAdapter(mPoliticalPartyArrayAdapter);
+        repParty.setThreshold(1);
         FetchVidhanSabha mFetchVidhanSabha=new FetchVidhanSabha();
         mFetchVidhanSabha.execute();
 
@@ -534,8 +548,8 @@ public class SignupActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.e(LOG_TAG,e.toString());
         }
-        FetchPoliticalParty mFetchPoliticalParty=new FetchPoliticalParty();
-        mFetchPoliticalParty.execute();
+        FetchDesignation mFetchDesignation=new FetchDesignation();
+        mFetchDesignation.execute();
 
     }
 
@@ -577,34 +591,7 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    private void setPoliticalPartyData(Object o)  {
-        Log.e(LOG_TAG,"POLITICAL PARTY JSON : "+o.toString());
-        try {
-            politicalPartyList.clear();
-            JSONObject jObject=new JSONObject(o.toString());
-            String checkStatus=jObject.getString("status");
-            if(checkStatus.equals("1")&& o != null){
-                JSONArray politicalPartyArray=jObject.getJSONArray("party");
-                Log.e(LOG_TAG,"POLITICAL PARTY Element Count "+politicalPartyArray.length());
-                for(int i =0 ; i<politicalPartyArray.length();i++){
-                    JSONObject politicalPartyObject=politicalPartyArray.getJSONObject(i);
-                    politicalPartyList.add(politicalPartyObject.getString("PartyName"));
-                }
-                mPoliticalPartyArrayAdapter = new ArrayAdapter(SignupActivity.this, R.layout.item_spinner_textview, politicalPartyList);
-                repParty.setAdapter(mPoliticalPartyArrayAdapter);
-                repParty.setThreshold(1);
-            }
-            else {
-                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
-            }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG,e.toString());
-        }
-        FetchDesignation mFetchDesignation=new FetchDesignation();
-        mFetchDesignation.execute();
-    }
 
     private void setDesignationData(Object o)  {
         Log.e(LOG_TAG,"DESIGNATION JSON : "+o.toString());
@@ -971,8 +958,6 @@ public class SignupActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 
@@ -1168,66 +1153,7 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-    class FetchPoliticalParty extends AsyncTask {
 
-        String url_political_party = "http://echoindia.co.in/php/getParty.php";
-
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-
-            BufferedReader bufferedReader = null;
-            try {
-                URL url = new URL(url_political_party);
-
-                Log.e(LOG_TAG,"URL"+url_political_party);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(15000 /* milliseconds */);
-                conn.setConnectTimeout(15000 /* milliseconds */);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
-                writer.flush();
-                writer.close();
-                os.close();
-                int responseCode = conn.getResponseCode();
-                if (responseCode == HttpsURLConnection.HTTP_OK) {
-                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
-                    StringBuffer sb = new StringBuffer("");
-
-                    String line = "";
-                    while ((line = in.readLine()) != null) {
-                        sb.append(line);
-                        break;
-                    }
-                    in.close();
-                    Log.e(LOG_TAG,sb.toString());
-                    return sb.toString();
-
-                } else {
-                    return new String("false : " + responseCode);
-                }
-            } catch (Exception ex) {
-                return null;
-            } finally {
-                if (bufferedReader != null) {
-                    try {
-                        bufferedReader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            setPoliticalPartyData(o);
-        }
-    }
 
     class FetchDesignation extends AsyncTask {
 

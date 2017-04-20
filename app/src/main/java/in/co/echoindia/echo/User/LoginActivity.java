@@ -38,6 +38,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.Model.NewsDetailsModel;
+import in.co.echoindia.echo.Model.RepInfoModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
@@ -54,7 +55,10 @@ public class LoginActivity extends AppCompatActivity{
     LinearLayout signUp;
 
     UserDetailsModel mUserDetailsModel;
-
+    ArrayList<RepInfoModel> centralList=new ArrayList<RepInfoModel>();
+    ArrayList<RepInfoModel> stateList=new ArrayList<RepInfoModel>();
+    ArrayList<RepInfoModel> localList=new ArrayList<RepInfoModel>();
+    RepInfoModel mRepInfoModel;
     private static final String LOG_TAG = "LoginActivity";
 
     @Override
@@ -202,6 +206,7 @@ public class LoginActivity extends AppCompatActivity{
                 mUserDetailsModel.setIsVerified(userObj.getString("isVerified"));
                 mUserDetailsModel.setLokSabha(userObj.getString("LokSabha"));
                 mUserDetailsModel.setVidhanSabha(userObj.getString("VidhanSabha"));
+                mUserDetailsModel.setUserPhoto(userObj.getString("UserPhoto"));
                 int noOfVotes= responseObject.getInt("NoOfVotes");
                 if(noOfVotes>0){
                     JSONArray jArrayNewsVotes=responseObject.getJSONArray("Votes");
@@ -230,10 +235,70 @@ public class LoginActivity extends AppCompatActivity{
                     editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsListUpdated));
                 }
 
+                centralList.clear();
+                String hasPM=jObject.getString("hasPM");
+                if(hasPM.equals("1")){
+                    JSONArray pmArray=jObject.getJSONArray("PM");
+                    JSONObject pmObj=pmArray.getJSONObject(0);
+                    mRepInfoModel=new RepInfoModel();
+                    mRepInfoModel=extractRepresentativeData(pmObj);
+                    centralList.add(mRepInfoModel);
+                }
+                String hasMP=jObject.getString("hasMP");
+                if(hasMP.equals("1")){
+                    JSONArray mpArray=jObject.getJSONArray("MP");
+                    JSONObject mpObj=mpArray.getJSONObject(0);
+                    mRepInfoModel=new RepInfoModel();
+                    mRepInfoModel=extractRepresentativeData(mpObj);
+                    centralList.add(mRepInfoModel);
+                }
+
+                stateList.clear();
+                String hasCM=jObject.getString("hasCM");
+                if(hasCM.equals("1")){
+                    JSONArray cmArray=jObject.getJSONArray("CM");
+                    JSONObject cmObj=cmArray.getJSONObject(0);
+                    mRepInfoModel=new RepInfoModel();
+                    mRepInfoModel=extractRepresentativeData(cmObj);
+                    stateList.add(mRepInfoModel);
+                }
+                String hasMLA=jObject.getString("hasMLA");
+                if(hasMLA.equals("1")){
+                    JSONArray mlaArray=jObject.getJSONArray("MLA");
+                    JSONObject mlaObj=mlaArray.getJSONObject(0);
+                    mRepInfoModel=new RepInfoModel();
+                    mRepInfoModel=extractRepresentativeData(mlaObj);
+                    stateList.add(mRepInfoModel);
+                }
+
+                localList.clear();
+                String hasMayor=jObject.getString("hasMayor");
+                if(hasMayor.equals("1")){
+                    JSONArray mayorArray=jObject.getJSONArray("Mayor");
+                    JSONObject mayorObj=mayorArray.getJSONObject(0);
+                    mRepInfoModel=new RepInfoModel();
+                    mRepInfoModel=extractRepresentativeData(mayorObj);
+                    localList.add(mRepInfoModel);
+                }
+                String hasCouncillor=jObject.getString("hasCouncillor");
+                if(hasCouncillor.equals("1")){
+                    JSONArray councillorArray=jObject.getJSONArray("Councillor");
+                    JSONObject councillorObj=councillorArray.getJSONObject(0);
+                    mRepInfoModel=new RepInfoModel();
+                    mRepInfoModel=extractRepresentativeData(councillorObj);
+                    localList.add(mRepInfoModel);
+                }
+
+
+
                 editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE,"USER");
                 editor.putBoolean(Constants.SETTINGS_IS_LOGGED,true);
                 editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, userObj.getString("UserCode"));
                 editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(mUserDetailsModel));
+                editor.putString(Constants.CENTRAL_ELECTED_MEMBERS, new Gson().toJson(centralList));
+                editor.putString(Constants.STATE_ELECTED_MEMBERS, new Gson().toJson(stateList));
+                editor.putString(Constants.LOCAL_ELECTED_MEMBERS, new Gson().toJson(localList));
+
                 editor.commit();
                 Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
                 Intent i=new Intent(LoginActivity.this, HomePageActivity.class);
@@ -251,6 +316,45 @@ public class LoginActivity extends AppCompatActivity{
         }
 
     }
+
+    public RepInfoModel extractRepresentativeData(JSONObject obj) throws JSONException {
+        RepInfoModel tempRepModel=new RepInfoModel();
+
+        tempRepModel.setRepId(obj.getString("RepId"));
+        tempRepModel.setRepCode(obj.getString("RepCode"));
+        tempRepModel.setFullName(obj.getString("Full Name"));
+        tempRepModel.setLastName(obj.getString("LastName"));
+        tempRepModel.setEmailId(obj.getString("EmailId"));
+
+        tempRepModel.setOficeAddress(obj.getString("OfficeAddress"));
+        tempRepModel.setRepParty(obj.getString("RepParty"));
+        tempRepModel.setRepDesignation(obj.getString("RepDesignation"));
+        tempRepModel.setIsCM(obj.getString("IsCM"));
+        tempRepModel.setIsPM(obj.getString("IsPM"));
+
+        tempRepModel.setIsMayor(obj.getString("IsMayor"));
+        tempRepModel.setRepDetail(obj.getString("RepDetail"));
+        tempRepModel.setRepQualification(obj.getString("RepQualification"));
+        tempRepModel.setRepHomePage(obj.getString("RepHomePage"));
+        tempRepModel.setRepTwitterId(obj.getString("RepTwitterId"));
+
+        tempRepModel.setRepState(obj.getString("RepState"));
+        tempRepModel.setRepDistrict(obj.getString("RepDistrict"));
+        tempRepModel.setRepCity(obj.getString("RepCity"));
+        tempRepModel.setRepVidhanSabha(obj.getString("RepVidhanSabha"));
+        tempRepModel.setRepLokSabha(obj.getString("RepLokSabha"));
+
+        tempRepModel.setRepPinCode(obj.getString("RepPinCode"));
+        tempRepModel.setRepAssumedOffice(obj.getString("RepAssumedOffice"));
+        tempRepModel.setRepCareer(obj.getString("RepCareer"));
+        tempRepModel.setRepControversy(obj.getString("RepControversy"));
+        tempRepModel.setUserPhoto(obj.getString("UserPhoto"));
+
+
+
+        return tempRepModel;
+    }
+
 
     @Override
     protected void onPause() {

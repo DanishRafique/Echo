@@ -39,6 +39,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.Model.NewsDetailsModel;
+import in.co.echoindia.echo.Model.PoliticalPartyModel;
 import in.co.echoindia.echo.Model.PollDetailsModel;
 import in.co.echoindia.echo.Model.PostDetailModel;
 import in.co.echoindia.echo.R;
@@ -64,7 +65,8 @@ public class SplashActivity extends AppCompatActivity {
     ArrayList<NewsDetailsModel> newsListArray = new ArrayList<>();
     ArrayList<PostDetailModel> buzzListArray = new ArrayList<>();
     ArrayList<PostDetailModel> buzzList = new ArrayList<>();
-
+    ArrayList<PoliticalPartyModel> politicalPartyList=new ArrayList<>();
+    PoliticalPartyModel politicalPartyModel;
     Double latitude = 0.0, longitude = 0.0;
     Geocoder geocoder;
     String currentLocationAddress = "";
@@ -522,7 +524,8 @@ public class SplashActivity extends AppCompatActivity {
             }else {
                 Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
             }
-            gotoNextActivity();
+            FetchPoliticalParty mFetchPoliticalParty=new FetchPoliticalParty();
+            mFetchPoliticalParty.execute();
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e(LOG_TAG,e.toString());
@@ -530,6 +533,98 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
+    class FetchPoliticalParty extends AsyncTask {
+
+        String url_political_party = "http://echoindia.co.in/php/getParty.php";
+
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_political_party);
+
+                Log.e(LOG_TAG,"URL"+url_political_party);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            setPoliticalPartyData(o);
+        }
+    }
+    private void setPoliticalPartyData(Object o)  {
+        Log.e(LOG_TAG,"POLITICAL PARTY JSON : "+o.toString());
+        try {
+            politicalPartyList.clear();
+            JSONObject jObject=new JSONObject(o.toString());
+            String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("1")&& o != null){
+                JSONArray politicalPartyArray=jObject.getJSONArray("party");
+                Log.e(LOG_TAG,"POLITICAL PARTY Element Count "+politicalPartyArray.length());
+                for(int i =0 ; i<politicalPartyArray.length();i++){
+                    JSONObject politicalPartyObject=politicalPartyArray.getJSONObject(i);
+                    politicalPartyModel=new PoliticalPartyModel();
+                    politicalPartyModel.setPartyId(politicalPartyObject.getString("PartyId"));
+                    politicalPartyModel.setPartyName(politicalPartyObject.getString("PartyName"));
+                    politicalPartyModel.setPartyNameShort(politicalPartyObject.getString("PartyNameShort"));
+                    politicalPartyModel.setPartyLogo(politicalPartyObject.getString("PartyLogo"));
+                    politicalPartyList.add(politicalPartyModel);
+                }
+                editor.putString(Constants.POLITICAL_PARTY_LIST, new Gson().toJson(politicalPartyList));
+                editor.commit();
+            }
+            else {
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG,e.toString());
+        }
+        gotoNextActivity();
+
+    }
     @Override
     protected void onPause() {
         super.onPause();
