@@ -60,7 +60,7 @@ public class BuzzFragment extends Fragment {
         editor = sharedpreferences.edit();
         Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
         buzzListArray = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
-        Log.e(LOG_TAG,"News Element Count "+buzzListArray.size());
+        Log.e(LOG_TAG,"Buzz Element Count "+buzzListArray.size());
         mBuzzAdapter = new BuzzAdapter(getActivity(), buzzListArray);
         buzzListView.setAdapter(mBuzzAdapter);
         mBuzzAdapter.notifyDataSetChanged();
@@ -78,12 +78,13 @@ public class BuzzFragment extends Fragment {
     }
 
     private void setBuzzData(Object o)  {
+        int max=sharedpreferences.getInt(Constants.LAST_BUZZ_UPDATE,0);
         try {
             JSONObject jObject=new JSONObject(o.toString());
-            Log.e(LOG_TAG,"Poll Details :"+o.toString());
+            Log.e(LOG_TAG,"Buzz Details :"+o.toString());
             String checkStatus=jObject.getString("status");
             if(checkStatus.equals("1")&&o != null){
-                buzzList.clear();
+
                 JSONArray newsArray=jObject.getJSONArray("posts");
                 for(int i =0 ; i<newsArray.length();i++){
                     JSONObject buzzObject=newsArray.getJSONObject(i);
@@ -113,14 +114,18 @@ public class BuzzFragment extends Fragment {
                     else{
                         mPostDetailModel.setPostImages(null);
                     }
-                    buzzList.add(mPostDetailModel);
+                    if(Integer.valueOf(mPostDetailModel.getPostId())>max){
+                        max=Integer.valueOf(mPostDetailModel.getPostId());
+                    }
+                    buzzListArray.add(mPostDetailModel);
                 }
-                editor.putString(Constants.BUZZ_LIST, new Gson().toJson(buzzList));
+                editor.putString(Constants.BUZZ_LIST, new Gson().toJson(buzzListArray));
+                editor.putInt(Constants.LAST_BUZZ_UPDATE,max);
                 editor.commit();
                 Toast.makeText(getActivity(), "Echo Buzz Updated", Toast.LENGTH_SHORT).show();
             }
             else if(checkStatus.equals("0")){
-                //Toast.makeText(this, "Error Loading News List", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Echo Buzz Updated", Toast.LENGTH_SHORT).show();
             }else {
                 Toast.makeText(getActivity(), "Server Connection Error", Toast.LENGTH_SHORT).show();
             }
@@ -129,7 +134,7 @@ public class BuzzFragment extends Fragment {
             e.printStackTrace();
             Log.e(LOG_TAG,e.toString());
         }
-        onRefreshComplete(buzzList);
+        onRefreshComplete(buzzListArray);
 
     }
 
@@ -142,15 +147,19 @@ public class BuzzFragment extends Fragment {
 
     class FetchBuzz extends AsyncTask {
 
-        String url_poll_update = "http://echoindia.co.in/php/posts.php";
+        String url_buzz_update = "http://echoindia.co.in/php/posts.php";
+        int maxID=sharedpreferences.getInt(Constants.LAST_BUZZ_UPDATE,0);
 
         @Override
         protected Object doInBackground(Object[] params) {
 
             BufferedReader bufferedReader = null;
             try {
-                URL url = new URL(url_poll_update);
-                Log.e(LOG_TAG,"URL"+url_poll_update);
+                URL url = new URL(url_buzz_update);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("maxID",maxID);
+                Log.e(LOG_TAG,"URL"+url_buzz_update);
+                Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);
@@ -159,6 +168,7 @@ public class BuzzFragment extends Fragment {
                 conn.setDoOutput(true);
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
                 writer.flush();
                 writer.close();
                 os.close();
@@ -195,7 +205,7 @@ public class BuzzFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            Log.e(LOG_TAG,"POLL : "+o.toString());
+            Log.e(LOG_TAG,"BUZZ : "+o.toString());
             setBuzzData(o);
         }
     }

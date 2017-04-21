@@ -8,42 +8,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_marginTop="50dp"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
 
-            <ImageView
-                android:id="@+id/rep_detail_profile_image"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/news_image"/>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/gradient_bg" />
-
-            <TextView
-                android:id="@+id/rep_detail_full_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:text="Mamata Banerjee"
-                android:padding="10dp"
-                android:textColor="@color/white"
-                android:textSize="30sp"
-                android:textStyle="bold"/>
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/rep_detail_party_logo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/img_profile_picture" />
-
-        </FrameLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"

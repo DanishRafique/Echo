@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,8 +51,7 @@ import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
 
 public class HomePageActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-         HomeFragment.OnFragmentInteractionListener
+        implements NavigationView.OnNavigationItemSelectedListener
         {
 
     private TabLayout tabLayout;
@@ -194,11 +192,9 @@ public class HomePageActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    //FlexibleSpaceWithImageListView
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
 
-    }
 
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

@@ -2,6 +2,8 @@ package in.co.echoindia.echo.User;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -27,11 +29,13 @@ import in.co.echoindia.echo.Utils.Constants;
 
 public class ElectedRepresentativeDetailActivity extends AppCompatActivity {
 
-    TextView fullName,repDetail,party,designation,qualification,assumedOffice,echoId,website,twitter,state,city,career,controversy;
+    TextView repDetail,party,designation,qualification,assumedOffice,echoId,website,twitter,state,city,career,controversy;
     ImageView profileImage;
     CircleImageView partyLogo;
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    AppBarLayout mAppBarLayout;
     CardView introduction,cardControversy,cardCareer,cardInfo,cardAddress;
     LinearLayout llState, llCity,llParty,llDesignation,llAssumedOffice,llQualification,llEcho,llWebsite,llTwitter;
 
@@ -40,12 +44,13 @@ public class ElectedRepresentativeDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_elected_representative_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
         profileImage=(ImageView)findViewById(R.id.rep_detail_profile_image);
-        fullName=(TextView)findViewById(R.id.rep_detail_full_name);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        //fullName=(TextView)findViewById(R.id.rep_detail_full_name);
         repDetail=(TextView)findViewById(R.id.rep_detail);
         party=(TextView)findViewById(R.id.rep_detail_party);
         designation=(TextView)findViewById(R.id.rep_detail_designation);
@@ -77,10 +82,23 @@ public class ElectedRepresentativeDetailActivity extends AppCompatActivity {
         Bundle mBundle=getIntent().getExtras();
         Bundle repBundle=mBundle.getBundle("RepObj");
         RepInfoModel repInfoModel=(RepInfoModel)repBundle.getSerializable("RepObj");
-        fullName.setText(repInfoModel.getFullName());
+        //fullName.setText(repInfoModel.getFullName());
         Glide.with(this).load(repInfoModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(profileImage);
         repDetail.setText(repInfoModel.getRepDetail());
+        collapsingToolbarLayout.setTitle(repInfoModel.getFullName());
         party.setText(repInfoModel.getRepParty());
+        mAppBarLayout=(AppBarLayout)findViewById(R.id.app_bar_layout);
+        mAppBarLayout.addOnOffsetChangedListener(new   AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (verticalOffset == -collapsingToolbarLayout.getHeight() + toolbar.getHeight()) {
+                    partyLogo.setVisibility(View.GONE);
+                }
+                else {
+                    partyLogo.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         if(repInfoModel.getIsPM().equals("1")){
             designation.setText("Prime Minister , India");
         }
@@ -178,8 +196,11 @@ public class ElectedRepresentativeDetailActivity extends AppCompatActivity {
         }
 
 
-
     }
+
+
+
+
 
 
 }

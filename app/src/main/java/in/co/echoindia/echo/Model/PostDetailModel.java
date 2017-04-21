@@ -22,6 +22,42 @@ public class PostDetailModel {
     private String postRepDesignation="";
     private ArrayList<String> postImages;
     private String postRepDetail="";
+    private boolean postUpVoteValue;
+    private boolean postDownVoteValue;
+    private String isShared="";
+    private String SharedFrom="";
+
+    public String getIsShared() {
+        return isShared;
+    }
+
+    public void setIsShared(String isShared) {
+        this.isShared = isShared;
+    }
+
+    public String getSharedFrom() {
+        return SharedFrom;
+    }
+
+    public void setSharedFrom(String sharedFrom) {
+        SharedFrom = sharedFrom;
+    }
+
+    public boolean isPostUpVoteValue() {
+        return postUpVoteValue;
+    }
+
+    public void setPostUpVoteValue(boolean postUpVoteValue) {
+        this.postUpVoteValue = postUpVoteValue;
+    }
+
+    public boolean isPostDownVoteValue() {
+        return postDownVoteValue;
+    }
+
+    public void setPostDownVoteValue(boolean postDownVoteValue) {
+        this.postDownVoteValue = postDownVoteValue;
+    }
 
     public String getPostRepDetail() {
         return postRepDetail;
