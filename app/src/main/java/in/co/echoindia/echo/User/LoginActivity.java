@@ -38,6 +38,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.Model.NewsDetailsModel;
+import in.co.echoindia.echo.Model.PostDetailModel;
+import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.RepInfoModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
@@ -55,11 +57,16 @@ public class LoginActivity extends AppCompatActivity{
     LinearLayout signUp;
 
     UserDetailsModel mUserDetailsModel;
+    RepDetailModel repDetailModel;
     ArrayList<RepInfoModel> centralList=new ArrayList<RepInfoModel>();
     ArrayList<RepInfoModel> stateList=new ArrayList<RepInfoModel>();
     ArrayList<RepInfoModel> localList=new ArrayList<RepInfoModel>();
     RepInfoModel mRepInfoModel;
     private static final String LOG_TAG = "LoginActivity";
+
+    PostDetailModel mPostDetailModel;
+    ArrayList<PostDetailModel> myPostList=new ArrayList<PostDetailModel>();
+    ArrayList<PostDetailModel> myPostListUpdated=new ArrayList<PostDetailModel>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -182,31 +189,100 @@ public class LoginActivity extends AppCompatActivity{
         try {
             JSONObject jObject=new JSONObject(o.toString());
             String checkStatus=jObject.getString("status");
+            JSONObject responseObject = jObject.getJSONObject("response");
+            JSONArray jArray = responseObject.getJSONArray("UserDetail");
+            JSONObject userObj = jArray.getJSONObject(0);
             if(checkStatus.equals("0")&&o != null){
-                mUserDetailsModel=new UserDetailsModel();
-                JSONObject responseObject=jObject.getJSONObject("response");
-                JSONArray jArray=responseObject.getJSONArray("UserDetail");
-                JSONObject userObj=jArray.getJSONObject(0);
-                mUserDetailsModel.setUserName(userObj.getString("UserCode"));
-                mUserDetailsModel.setPassword(password.getText().toString().trim());
-                mUserDetailsModel.setFirstName(userObj.getString("FirstName"));
-                mUserDetailsModel.setLastName(userObj.getString("LastName"));
-                mUserDetailsModel.setEmailId(userObj.getString("EmailId"));
-                mUserDetailsModel.setPhoneNo(userObj.getString("PhoneNo"));
-                mUserDetailsModel.setAddress(userObj.getString("Address"));
-                mUserDetailsModel.setCity(userObj.getString("City"));
-                mUserDetailsModel.setWard(userObj.getString("Ward"));
-                mUserDetailsModel.setPinCode(userObj.getString("PinCode"));
-                mUserDetailsModel.setDistrict(userObj.getString("District"));
-                mUserDetailsModel.setState(userObj.getString("State"));
-                mUserDetailsModel.setUserPhoto(userObj.getString("UserPhoto"));
-                mUserDetailsModel.setVoterIdPhoto(userObj.getString("VoterId"));
-                mUserDetailsModel.setAadhaarPhoto(userObj.getString("AadharCard"));
-                mUserDetailsModel.setIssueMaker(userObj.getString("IssueMaker"));
-                mUserDetailsModel.setIsVerified(userObj.getString("isVerified"));
-                mUserDetailsModel.setLokSabha(userObj.getString("LokSabha"));
-                mUserDetailsModel.setVidhanSabha(userObj.getString("VidhanSabha"));
-                mUserDetailsModel.setUserPhoto(userObj.getString("UserPhoto"));
+                if(jObject.getString("userType").equals("user")) {
+                    mUserDetailsModel = new UserDetailsModel();
+                    mUserDetailsModel.setUserName(userObj.getString("UserCode"));
+                    mUserDetailsModel.setPassword(password.getText().toString().trim());
+                    mUserDetailsModel.setFirstName(userObj.getString("FirstName"));
+                    mUserDetailsModel.setLastName(userObj.getString("LastName"));
+                    mUserDetailsModel.setEmailId(userObj.getString("EmailId"));
+                    mUserDetailsModel.setPhoneNo(userObj.getString("PhoneNo"));
+                    mUserDetailsModel.setAddress(userObj.getString("Address"));
+                    mUserDetailsModel.setCity(userObj.getString("City"));
+                    mUserDetailsModel.setWard(userObj.getString("Ward"));
+                    mUserDetailsModel.setPinCode(userObj.getString("PinCode"));
+                    mUserDetailsModel.setDistrict(userObj.getString("District"));
+                    mUserDetailsModel.setState(userObj.getString("State"));
+                    mUserDetailsModel.setUserPhoto(userObj.getString("UserPhoto"));
+                    mUserDetailsModel.setVoterIdPhoto(userObj.getString("VoterId"));
+                    mUserDetailsModel.setAadhaarPhoto(userObj.getString("AadharCard"));
+                    mUserDetailsModel.setIssueMaker(userObj.getString("IssueMaker"));
+                    mUserDetailsModel.setIsVerified(userObj.getString("isVerified"));
+                    mUserDetailsModel.setLokSabha(userObj.getString("LokSabha"));
+                    mUserDetailsModel.setVidhanSabha(userObj.getString("VidhanSabha"));
+                    mUserDetailsModel.setUserPhoto(userObj.getString("UserPhoto"));
+                    editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE,"USER");
+                    editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(mUserDetailsModel));
+                    editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, userObj.getString("UserCode"));
+                }
+                else if(jObject.getString("userType").equals("rep")) {
+                    repDetailModel = new RepDetailModel();
+                    repDetailModel.setRepName(userObj.getString("RepCode"));
+                    repDetailModel.setPassword(password.getText().toString().trim());
+                    repDetailModel.setFirstName(userObj.getString("FirstName"));
+                    repDetailModel.setLastName(userObj.getString("LastName"));
+                    repDetailModel.setEmailId(userObj.getString("EmailId"));
+                    repDetailModel.setPhoneNo(userObj.getString("PhoneNo"));
+                    repDetailModel.setCity(userObj.getString("City"));
+                    repDetailModel.setWard(userObj.getString("Ward"));
+                    repDetailModel.setPinCode(userObj.getString("PinCode"));
+                    repDetailModel.setState(userObj.getString("State"));
+                    repDetailModel.setUserPhoto(userObj.getString("UserPhoto"));
+                    repDetailModel.setVoterIdPhoto(userObj.getString("VoterId"));
+                    repDetailModel.setAadhaarPhoto(userObj.getString("AadharCard"));
+                    repDetailModel.setIsVerified(userObj.getString("isVerified"));
+                    repDetailModel.setLokSabha(userObj.getString("LokSabha"));
+                    repDetailModel.setVidhanSabha(userObj.getString("VidhanSabha"));
+                    repDetailModel.setUserPhoto(userObj.getString("UserPhoto"));
+                    repDetailModel.setRepParty(userObj.getString("RepParty"));
+                    repDetailModel.setRepDesignation(userObj.getString("RepDesignation"));
+                    repDetailModel.setRepLocation(userObj.getString("RepLocation"));
+                    repDetailModel.setRepQualification(userObj.getString("RepQualification"));
+                    repDetailModel.setRepHomePage(userObj.getString("RepHomePage"));
+                    repDetailModel.setRepTwitter(userObj.getString("RepTwitterId"));
+                    editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE,"REP");
+                    editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(repDetailModel));
+                    editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, userObj.getString("RepCode"));
+                }
+
+                int noOfPost = responseObject.getInt("NoOfPosts");
+                if(noOfPost>0){
+                    JSONArray jArrayMyPost=responseObject.getJSONArray("Posts");
+                    for(int i =0 ; i<jArrayMyPost.length();i++){
+                        JSONObject buzzObject=jArrayMyPost.getJSONObject(i);
+                        mPostDetailModel=new PostDetailModel();
+                        mPostDetailModel.setPostId(buzzObject.getString("PostId"));
+                        mPostDetailModel.setPostUserName(buzzObject.getString("PostUserName"));
+                        mPostDetailModel.setPostText(buzzObject.getString("PostText"));
+                        mPostDetailModel.setPostTime(buzzObject.getString("PostTime"));
+                        mPostDetailModel.setPostDate(buzzObject.getString("PostDate"));
+                        mPostDetailModel.setPostUpVote(buzzObject.getInt("PostUpVote"));
+                        mPostDetailModel.setPostDownVote(buzzObject.getInt("PostDownVote"));
+                        mPostDetailModel.setPostType(buzzObject.getString("PostType"));
+                        mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
+                        mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
+                        mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
+                        mPostDetailModel.setPostUpVoteValue(false);
+                        mPostDetailModel.setPostDownVoteValue(false);
+                        JSONArray postImageArray=buzzObject.getJSONArray("images");
+                        ArrayList<String>postImageArrayList = new ArrayList<>();
+                        for(int j =0 ; j<postImageArray.length();j++) {
+                            postImageArrayList.add(postImageArray.getString(j));
+                        }
+                        if(postImageArray.length()>0) {
+                            mPostDetailModel.setPostImages(postImageArrayList);
+                        }
+                        else{
+                            mPostDetailModel.setPostImages(null);
+                        }
+                        myPostList.add(mPostDetailModel);
+                    }
+                }
+
                 int noOfVotes= responseObject.getInt("NoOfVotes");
                 if(noOfVotes>0){
                     JSONArray jArrayNewsVotes=responseObject.getJSONArray("Votes");
@@ -234,6 +310,91 @@ public class LoginActivity extends AppCompatActivity{
                     Log.e(LOG_TAG,"NEWS ELEMENT SIZE"+newsListUpdated.size());
                     editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsListUpdated));
                 }
+
+
+                int noOfVotesPost= responseObject.getInt("NoOfVotes_Post");
+                Log.e(LOG_TAG,String.valueOf(noOfVotesPost));
+                if(noOfVotesPost>0){
+                    JSONArray jArrayNewsVotes=responseObject.getJSONArray("PostVotes");
+                    ArrayList<PostDetailModel> postListBuzz;
+                    ArrayList<PostDetailModel> postListHome;
+                    ArrayList<PostDetailModel> postListUpdatedBuzz=new ArrayList<>();
+                    ArrayList<PostDetailModel> postListUpdatedHome=new ArrayList<>();
+                    Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
+                    postListBuzz = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
+                    for(int i = 0; i < postListBuzz.size(); i++) {
+                        PostDetailModel postObj = postListBuzz.get(i);
+                        for (int j=0;j<noOfVotesPost;j++) {
+                            JSONObject voteObj=jArrayNewsVotes.getJSONObject(j);
+                            String newsIDVote=voteObj.getString("PostId");
+                            String newsVote=voteObj.getString("PostVoteType");
+
+                            if(postObj.getPostId().equals(newsIDVote)){
+                                if(newsVote.equals(("1"))){
+
+                                    postObj.setPostUpVoteValue(true);
+                                }
+                                else if(newsVote.equals("-1")){
+                                    postObj.setPostDownVoteValue(true);
+                                }
+                            }
+                        }
+                        postListUpdatedBuzz.add(postObj);
+                    }
+                    Log.e(LOG_TAG,"BUZZ ELEMENT SIZE"+postListUpdatedBuzz.size());
+                    editor.putString(Constants.BUZZ_LIST, new Gson().toJson(postListUpdatedBuzz));
+
+                    postListHome = new Gson().fromJson(sharedpreferences.getString(Constants.HOME_LIST, ""), type);
+                    for(int i = 0; i < postListHome.size(); i++) {
+                        PostDetailModel postObj = postListHome.get(i);
+                        for (int j=0;j<noOfVotesPost;j++) {
+                            JSONObject voteObj=jArrayNewsVotes.getJSONObject(j);
+                            String newsIDVote=voteObj.getString("PostId");
+
+                            String newsVote=voteObj.getString("PostVoteType");
+                            if(postObj.getPostId().equals(newsIDVote)){
+                                if(newsVote.equals(("1"))){
+
+                                    postObj.setPostUpVoteValue(true);
+                                }
+                                else if(newsVote.equals("-1")){
+                                    postObj.setPostDownVoteValue(true);
+                                }
+                            }
+                        }
+                        postListUpdatedHome.add(postObj);
+                    }
+                    Log.e(LOG_TAG,"HOME ELEMENT SIZE"+postListUpdatedHome.size());
+                    editor.putString(Constants.HOME_LIST, new Gson().toJson(postListUpdatedHome));
+
+
+                    for(int i = 0; i < myPostList.size(); i++) {
+                        PostDetailModel postObj = myPostList.get(i);
+                        for (int j=0;j<noOfVotesPost;j++) {
+                            JSONObject voteObj=jArrayNewsVotes.getJSONObject(j);
+                            String newsIDVote=voteObj.getString("PostId");
+
+                            String newsVote=voteObj.getString("PostVoteType");
+                            if(postObj.getPostId().equals(newsIDVote)){
+                                if(newsVote.equals(("1"))){
+
+                                    postObj.setPostUpVoteValue(true);
+                                }
+                                else if(newsVote.equals("-1")){
+                                    postObj.setPostDownVoteValue(true);
+                                }
+                            }
+                        }
+                        myPostListUpdated.add(postObj);
+                    }
+                    Log.e(LOG_TAG,"MY POST ELEMENT SIZE"+myPostListUpdated.size());
+                    editor.putString(Constants.MY_POST, new Gson().toJson(myPostListUpdated));
+
+
+
+                }
+
+
 
                 centralList.clear();
                 String hasPM=jObject.getString("hasPM");
@@ -291,10 +452,10 @@ public class LoginActivity extends AppCompatActivity{
 
 
 
-                editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE,"USER");
+
                 editor.putBoolean(Constants.SETTINGS_IS_LOGGED,true);
-                editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, userObj.getString("UserCode"));
-                editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(mUserDetailsModel));
+
+
                 editor.putString(Constants.CENTRAL_ELECTED_MEMBERS, new Gson().toJson(centralList));
                 editor.putString(Constants.STATE_ELECTED_MEMBERS, new Gson().toJson(stateList));
                 editor.putString(Constants.LOCAL_ELECTED_MEMBERS, new Gson().toJson(localList));

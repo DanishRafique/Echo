@@ -248,7 +248,7 @@ public class BuzzAdapter extends BaseAdapter {
                 int upvote = Integer.parseInt(textView.getText().toString());
 
                 ViewGroup rootParent = (ViewGroup) view.getParent();
-                ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.buzz_upvote);
+                ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.buzz_downvote);
 
                 if(!isChecked){
                     t.setEnabled(true);
