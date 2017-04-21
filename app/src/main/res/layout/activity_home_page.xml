@@ -124,6 +124,14 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
             />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom|end"
+            android:elevation="10dp"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_post" />
 
     </android.support.design.widget.CoordinatorLayout>
 
@@ -137,6 +145,7 @@
         android:overScrollMode="always"
         app:headerLayout="@layout/nav_header_home_page"
         app:menu="@menu/activity_home_page_drawer" />
+
 
 
 

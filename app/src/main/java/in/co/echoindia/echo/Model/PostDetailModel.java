@@ -26,6 +26,15 @@ public class PostDetailModel {
     private boolean postDownVoteValue;
     private String isShared="";
     private String SharedFrom="";
+    private String SharedCount="";
+
+    public String getSharedCount() {
+        return SharedCount;
+    }
+
+    public void setSharedCount(String sharedCount) {
+        SharedCount = sharedCount;
+    }
 
     public String getIsShared() {
         return isShared;

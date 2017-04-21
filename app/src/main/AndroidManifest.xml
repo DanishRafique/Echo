@@ -167,6 +167,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.User.ElectedRepresentativeActivity" />
         </activity>
+        <activity
+            android:name=".User.MyProfileActivity"
+            android:label="@string/title_activity_my_profile"
+            android:parentActivityName=".HomePage.HomePageActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
+        </activity>
     </application>
 
 </manifest>

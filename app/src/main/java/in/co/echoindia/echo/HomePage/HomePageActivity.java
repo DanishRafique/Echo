@@ -22,6 +22,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -38,6 +44,8 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.User.AboutUsActivity;
 import in.co.echoindia.echo.User.ContactUsActivity;
@@ -45,6 +53,7 @@ import in.co.echoindia.echo.User.DevelopmentActivity;
 import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
 import in.co.echoindia.echo.User.LoginActivity;
 import in.co.echoindia.echo.User.MyAccountActivity;
+import in.co.echoindia.echo.User.MyProfileActivity;
 import in.co.echoindia.echo.User.SettingsActivity;
 import in.co.echoindia.echo.User.SpendingActivity;
 import in.co.echoindia.echo.Utils.AppUtil;
@@ -59,7 +68,10 @@ public class HomePageActivity extends AppCompatActivity
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
+            CircleImageView navUserImage;
+            TextView navFullName,navUserName;
             private ProgressDialog pDialog;
+            UserDetailsModel userDetailsModel;
     private static final String LOG_TAG = "HomePageActivity";
 
     @Override
@@ -90,6 +102,15 @@ public class HomePageActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         setupTabIcons();
 
+        View hView =  navigationView.getHeaderView(0);
+
+        navUserImage=(CircleImageView) hView.findViewById(R.id.nav_user_image);
+        navFullName=(TextView)hView.findViewById(R.id.nav_full_name);
+        navUserName=(TextView)hView.findViewById(R.id.nav_user_name);
+        userDetailsModel = new Gson().fromJson(sharedpreferences.getString(Constants.SETTINGS_OBJ_USER, ""), UserDetailsModel.class);
+        Glide.with(this).load(userDetailsModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(navUserImage);
+        navFullName.setText(capitalizeFirstLetter(userDetailsModel.getFirstName())+" "+capitalizeFirstLetter(userDetailsModel.getLastName()));
+        navUserName.setText(userDetailsModel.getUserName());
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -109,6 +130,13 @@ public class HomePageActivity extends AppCompatActivity
             }
         });
     }
+
+            public String capitalizeFirstLetter(String original) {
+                if (original == null || original.length() == 0) {
+                    return original;
+                }
+                return original.substring(0, 1).toUpperCase() + original.substring(1);
+            }
 
 
 
@@ -186,17 +214,15 @@ public class HomePageActivity extends AppCompatActivity
         } else if(id == R.id.nav_log_out){
             ExecuteLogout mExecuteLogout=new ExecuteLogout();
             mExecuteLogout.execute();
+        } else if(id == R.id.nav_my_profile){
+            Intent i = new Intent(HomePageActivity.this,MyProfileActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    //FlexibleSpaceWithImageListView
-
-
-
-
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();

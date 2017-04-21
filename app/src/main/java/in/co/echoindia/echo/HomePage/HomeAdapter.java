@@ -101,6 +101,8 @@ public class HomeAdapter extends BaseAdapter {
 
     ArrayList<PostDetailModel> postUpdatedList=new ArrayList<>();
     ToggleButton tempBtn;
+    LinearLayout homeShare;
+    TextView homeSharedFrom;
 
 
 
@@ -150,8 +152,17 @@ public class HomeAdapter extends BaseAdapter {
         homeMoreThanOneImage=(LinearLayout)convertView.findViewById(R.id.home_more_than_one_image);
         homeMoreThanTwoImage=(RelativeLayout)convertView.findViewById(R.id.home_more_than_two_image);
 
+        homeShare=(LinearLayout)convertView.findViewById(R.id.home_ll_share);
+        homeSharedFrom=(TextView)convertView.findViewById(R.id.home_shared_from);
         sharedpreferences = AppUtil.getAppPreferences(activity);
         editor = sharedpreferences.edit();
+
+        if(homeObj.getIsShared().equals("0")){
+            homeShare.setVisibility(View.GONE);
+        }
+        else if(homeObj.getIsShared().equals("1")){
+            homeSharedFrom.setText(homeObj.getSharedFrom());
+        }
 
         homeFullName.setText(homeObj.getPostFirstName()+" "+homeObj.getPostLastName());
 

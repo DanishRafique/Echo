@@ -133,4 +133,6 @@
     <string name="title_activity_elected_representative_detail">
        Representative Info
     </string>
+    <string name="title_activity_fff">fff</string>
+    <string name="title_activity_my_profile">MyProfile</string>
 </resources>

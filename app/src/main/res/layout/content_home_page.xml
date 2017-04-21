@@ -13,4 +13,5 @@
     tools:context="in.co.echoindia.echo.HomePage.HomePageActivity"
     tools:showIn="@layout/app_bar_home_page">
 
+
 </android.support.v4.widget.NestedScrollView>

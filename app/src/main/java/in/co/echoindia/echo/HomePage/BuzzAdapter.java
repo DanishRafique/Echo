@@ -84,6 +84,9 @@ public class BuzzAdapter extends BaseAdapter {
     LinearLayout buzzMoreThanOneImage;
     RelativeLayout buzzMoreThanTwoImage;
 
+    LinearLayout buzzShare;
+    TextView buzzSharedFrom;
+
 
     BuzzImageAdapter mBuzzImageAdapter;
     private static final String LOG_TAG = "BuzzAdapter";
@@ -153,8 +156,19 @@ public class BuzzAdapter extends BaseAdapter {
         buzzMoreThanOneImage=(LinearLayout)convertView.findViewById(R.id.buzz_more_than_one_image);
         buzzMoreThanTwoImage=(RelativeLayout)convertView.findViewById(R.id.buzz_more_than_two_image);
 
+        buzzShare=(LinearLayout)convertView.findViewById(R.id.buzz_ll_share);
+        buzzSharedFrom=(TextView)convertView.findViewById(R.id.buzz_shared_from);
+
         sharedpreferences = AppUtil.getAppPreferences(activity);
         editor = sharedpreferences.edit();
+
+
+        if(buzzObj.getIsShared().equals("0")){
+            buzzShare.setVisibility(View.GONE);
+        }
+        else if(buzzObj.getIsShared().equals("1")){
+            buzzSharedFrom.setText(buzzObj.getSharedFrom());
+        }
 
         buzzFullName.setText(buzzObj.getPostFirstName()+" "+buzzObj.getPostLastName());
 
