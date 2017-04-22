@@ -11,11 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -26,7 +29,11 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import javax.net.ssl.HttpsURLConnection;
+
 import in.co.echoindia.echo.Model.PostDetailModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
@@ -58,6 +65,7 @@ public class HomeFragment extends Fragment {
         Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
         homeListArray = new Gson().fromJson(sharedpreferences.getString(Constants.HOME_LIST, ""), type);
         Log.e(LOG_TAG,"home Element Count "+homeListArray.size());
+        Collections.sort(homeListArray,new PostComparator());
         mHomeAdapter = new HomeAdapter(getActivity(), homeListArray);
         homeListView.setAdapter(mHomeAdapter);
         mHomeAdapter.notifyDataSetChanged();
@@ -68,12 +76,17 @@ public class HomeFragment extends Fragment {
                         Log.e(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
                         FetchHome mFetchHome=new FetchHome();
                         mFetchHome.execute();
+                        mHomeAdapter.notifyDataSetChanged();
                     }
                 }
         );
         return v;
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        mHomeAdapter.notifyDataSetChanged();
+    }
 
     private void setHomeData(Object o)  {
         int max=sharedpreferences.getInt(Constants.LAST_USER_UPDATE,0);
@@ -134,6 +147,30 @@ public class HomeFragment extends Fragment {
         onRefreshComplete(homeListArray);
 
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && mHomeAdapter!=null) {
+            Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
+            homeListArray = new Gson().fromJson(sharedpreferences.getString(Constants.HOME_LIST, ""), type);
+            Log.e(LOG_TAG,"home Element Count "+homeListArray.size());
+            Collections.sort(homeListArray,new PostComparator());
+            mHomeAdapter = new HomeAdapter(getActivity(), homeListArray);
+            homeListView.setAdapter(mHomeAdapter);
+            mHomeAdapter.notifyDataSetChanged();
+            Log.e(LOG_TAG,"Set User Visibility Called Home");
+        }
+    }
+
+    public class PostComparator implements Comparator<PostDetailModel> {
+
+        @Override
+        public int compare(PostDetailModel lhs, PostDetailModel rhs) {
+
+            return Integer.parseInt(lhs.getPostId())<Integer.parseInt(rhs.getPostId()) ? 1:(Integer.parseInt(lhs.getPostId())==Integer.parseInt(rhs.getPostId())?0:-1);
+        }
     }
 
     class FetchHome extends AsyncTask {

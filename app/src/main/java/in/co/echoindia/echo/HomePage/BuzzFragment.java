@@ -29,6 +29,8 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -61,6 +63,7 @@ public class BuzzFragment extends Fragment {
         Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
         buzzListArray = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
         Log.e(LOG_TAG,"Buzz Element Count "+buzzListArray.size());
+        Collections.sort(buzzListArray,new PostComparator());
         mBuzzAdapter = new BuzzAdapter(getActivity(), buzzListArray);
         buzzListView.setAdapter(mBuzzAdapter);
         mBuzzAdapter.notifyDataSetChanged();
@@ -71,12 +74,41 @@ public class BuzzFragment extends Fragment {
                         Log.e(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
                         FetchBuzz mFetchBuzz=new FetchBuzz();
                         mFetchBuzz.execute();
+                        mBuzzAdapter.notifyDataSetChanged();
                     }
                 }
         );
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mBuzzAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && mBuzzAdapter!=null) {
+            Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
+            buzzListArray = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
+            Log.e(LOG_TAG,"Buzz Element Count "+buzzListArray.size());
+            Collections.sort(buzzListArray,new PostComparator());
+            mBuzzAdapter = new BuzzAdapter(getActivity(), buzzListArray);
+            buzzListView.setAdapter(mBuzzAdapter);
+            mBuzzAdapter.notifyDataSetChanged();
+            Log.e(LOG_TAG,"Set User Visibility Called Buzz");
+        }
+    }
+    public class PostComparator implements Comparator<PostDetailModel> {
+
+        @Override
+        public int compare(PostDetailModel lhs, PostDetailModel rhs) {
+
+            return Integer.parseInt(lhs.getPostId())<Integer.parseInt(rhs.getPostId()) ? 1:(Integer.parseInt(lhs.getPostId())==Integer.parseInt(rhs.getPostId())?0:-1);
+        }
+    }
     private void setBuzzData(Object o)  {
         int max=sharedpreferences.getInt(Constants.LAST_BUZZ_UPDATE,0);
         try {

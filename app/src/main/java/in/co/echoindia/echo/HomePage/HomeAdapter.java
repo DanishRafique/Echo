@@ -27,6 +27,7 @@ import android.widget.ToggleButton;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -51,6 +53,8 @@ import javax.net.ssl.HttpsURLConnection;
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.echoindia.echo.Model.PollCommentModel;
 import in.co.echoindia.echo.Model.PostDetailModel;
+import in.co.echoindia.echo.Model.RepDetailModel;
+import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
@@ -62,8 +66,10 @@ import in.co.echoindia.echo.Utils.Constants;
 public class HomeAdapter extends BaseAdapter {
     ArrayList<PostDetailModel> homeDetailsModels = new ArrayList<>();
     Activity activity;
+    ArrayList<PostDetailModel> buzzDetailsModels = new ArrayList<>();
 
     TextView homeFullName;
+    ArrayList<PostDetailModel> homeListArray = new ArrayList<>();
 
     CircleImageView homeUserImage;
     TextView homeUserName;
@@ -103,8 +109,7 @@ public class HomeAdapter extends BaseAdapter {
     ToggleButton tempBtn;
     LinearLayout homeShare;
     TextView homeSharedFrom;
-
-
+    PostDetailModel mPostDetailModel;
 
 
     public HomeAdapter(Activity activity, ArrayList<PostDetailModel> homeDetailsModels) {
@@ -154,6 +159,7 @@ public class HomeAdapter extends BaseAdapter {
 
         homeShare=(LinearLayout)convertView.findViewById(R.id.home_ll_share);
         homeSharedFrom=(TextView)convertView.findViewById(R.id.home_shared_from);
+        final LinearLayout buzzShareButton=(LinearLayout)convertView.findViewById(R.id.home_share_button);
         sharedpreferences = AppUtil.getAppPreferences(activity);
         editor = sharedpreferences.edit();
 
@@ -175,6 +181,7 @@ public class HomeAdapter extends BaseAdapter {
         homeDownvoteValue.setText(String.valueOf(homeObj.getPostDownVote()));
         final LinearLayout postCommentButton =(LinearLayout)convertView.findViewById(R.id.home_comment_link);
         final String postId=homeObj.getPostId();
+        final String fullNameStr=homeObj.getPostFirstName()+" "+homeObj.getPostLastName();
 
 
         final ArrayList<String> homeImageArrayList = homeObj.getPostImages();
@@ -224,9 +231,11 @@ public class HomeAdapter extends BaseAdapter {
 
         if(homeObj.isPostUpVoteValue()){
             homeUpvote.setChecked(true);
+            homeDownvote.setEnabled(false);
         }
         else if(homeObj.isPostDownVoteValue()){
             homeDownvote.setChecked(true);
+            homeUpvote.setEnabled(false);
         }
 
 
@@ -240,7 +249,6 @@ public class HomeAdapter extends BaseAdapter {
                 textView = (TextView) view.findViewById(R.id.home_upvote_value);
                 Log.e("Voting...", textView.getText().toString());
                 int upvote = Integer.parseInt(textView.getText().toString());
-
                 ViewGroup rootParent = (ViewGroup) view.getParent();
                 ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.home_downvote);
 
@@ -306,6 +314,14 @@ public class HomeAdapter extends BaseAdapter {
         }
         editor.putString(Constants.HOME_LIST, new Gson().toJson(postUpdatedList));
         editor.commit();
+
+        buzzShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharePost mSharePost=new SharePost(fullNameStr,postId);
+                mSharePost.execute();
+            }
+        });
 
 
 
@@ -622,6 +638,166 @@ public class HomeAdapter extends BaseAdapter {
                 }
                 else if(checkStatus.equals("0")){
                     Toast.makeText(activity, "No Comment Found", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG,e.toString());
+            }
+        }
+    }
+
+    class SharePost extends AsyncTask {
+
+        String url_share_post = "http://echoindia.co.in/php/share.php";
+        String postFullName="";
+        String postId="";
+        public SharePost(String postFullName,String postId){
+            this.postFullName=postFullName;
+            this.postId=postId;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_share_post);
+                JSONObject postDataParams = new JSONObject();
+                Date currentDate = new Date();
+                String dateToday = new SimpleDateFormat("yyyy-MM-dd").format(currentDate);
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                String timeNow = sdf.format(new Date());
+                postDataParams.put("postId",postId);
+                if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("REP")) {
+                    postDataParams.put("postType","BUZZ");
+                }
+                else if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("USER")) {
+                    postDataParams.put("postType","USER");
+                }
+                postDataParams.put("username",sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""));
+                postDataParams.put("postFullName",postFullName);
+                postDataParams.put("postTime",timeNow);
+                postDataParams.put("postDate",dateToday);
+                Log.e(LOG_TAG,"URL"+url_share_post);
+                Log.e(LOG_TAG,"PostParam Insert Comment "+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            try {
+                JSONObject jObject=new JSONObject(o.toString());
+                String checkStatus=jObject.getString("status");
+                if(checkStatus.equals("1")&&o != null) {
+                    Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
+                    UserDetailsModel mUserDetails=new Gson().fromJson(sharedpreferences.getString(Constants.SETTINGS_OBJ_USER, ""), UserDetailsModel.class);
+                    RepDetailModel mRepDetails=new Gson().fromJson(sharedpreferences.getString(Constants.SETTINGS_OBJ_USER, ""), RepDetailModel.class);
+                    buzzDetailsModels = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
+                    homeDetailsModels = new Gson().fromJson(sharedpreferences.getString(Constants.HOME_LIST, ""), type);
+                    JSONArray jArrayMyPost=jObject.getJSONArray("Post");
+                    for(int i =0 ; i<jArrayMyPost.length();i++){
+                        JSONObject buzzObject=jArrayMyPost.getJSONObject(i);
+                        mPostDetailModel=new PostDetailModel();
+                        mPostDetailModel.setPostId(buzzObject.getString("PostId"));
+                        mPostDetailModel.setPostUserName(buzzObject.getString("PostUserName"));
+                        mPostDetailModel.setPostText(buzzObject.getString("PostText"));
+                        mPostDetailModel.setPostTime(buzzObject.getString("PostTime"));
+                        mPostDetailModel.setPostDate(buzzObject.getString("PostDate"));
+                        mPostDetailModel.setPostUpVote(buzzObject.getInt("PostUpVote"));
+                        mPostDetailModel.setPostDownVote(buzzObject.getInt("PostDownVote"));
+                        mPostDetailModel.setPostType(buzzObject.getString("PostType"));
+                        mPostDetailModel.setPostImageRef(buzzObject.getString("PostImageRef"));
+                        mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
+                        mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
+                        mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
+                        mPostDetailModel.setSharedFromUserName(buzzObject.getString("SharedFromUserName"));
+                        mPostDetailModel.setPostUpVoteValue(false);
+                        mPostDetailModel.setPostDownVoteValue(false);
+                        JSONArray postImageArray=buzzObject.getJSONArray("images");
+                        ArrayList<String>postImageArrayList = new ArrayList<>();
+                        for(int j =0 ; j<postImageArray.length();j++) {
+                            postImageArrayList.add(postImageArray.getString(j));
+                        }
+                        if(postImageArray.length()>0) {
+                            mPostDetailModel.setPostImages(postImageArrayList);
+                        }
+                        else{
+                            mPostDetailModel.setPostImages(null);
+                        }
+                        if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("REP")) {
+
+                            mPostDetailModel.setPostFirstName(mRepDetails.getFirstName());
+                            mPostDetailModel.setPostLastName(mRepDetails.getLastName());
+                            mPostDetailModel.setPostUserPhoto(mRepDetails.getUserPhoto());
+                            mPostDetailModel.setPostRepParty(mRepDetails.getRepParty());
+                            mPostDetailModel.setPostRepDesignation(mRepDetails.getRepDesignation());
+                            buzzDetailsModels.add(0,mPostDetailModel);
+                            editor.putString(Constants.BUZZ_LIST, new Gson().toJson(buzzDetailsModels));
+                            Log.e(LOG_TAG,"Added to Buzz List");
+                            editor.putInt(Constants.LAST_BUZZ_UPDATE,Integer.parseInt(mPostDetailModel.getPostId()));
+
+                        }
+                        else if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("USER")) {
+
+                            mPostDetailModel.setPostFirstName(mUserDetails.getFirstName());
+                            mPostDetailModel.setPostLastName(mUserDetails.getLastName());
+                            mPostDetailModel.setPostUserPhoto(mUserDetails.getUserPhoto());
+                            homeDetailsModels.add(0,mPostDetailModel);
+                            editor.putString(Constants.HOME_LIST, new Gson().toJson(homeDetailsModels));
+                            Log.e(LOG_TAG,"Added to Home List");
+                            editor.putInt(Constants.LAST_USER_UPDATE,Integer.parseInt(mPostDetailModel.getPostId()));
+
+                        }
+
+                    }
+                    editor.commit();
+                    notifyDataSetChanged();
+                    Toast.makeText(activity, "Post Shared Successfully", Toast.LENGTH_SHORT).show();
+                }
+                else if(checkStatus.equals("0")){
+                    Toast.makeText(activity, "Post Share Failed", Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
                 }

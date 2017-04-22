@@ -189,10 +189,11 @@ public class LoginActivity extends AppCompatActivity{
         try {
             JSONObject jObject=new JSONObject(o.toString());
             String checkStatus=jObject.getString("status");
+            if(checkStatus.equals("0")&& o != null){
             JSONObject responseObject = jObject.getJSONObject("response");
             JSONArray jArray = responseObject.getJSONArray("UserDetail");
             JSONObject userObj = jArray.getJSONObject(0);
-            if(checkStatus.equals("0")&&o != null){
+
                 if(jObject.getString("userType").equals("user")) {
                     mUserDetailsModel = new UserDetailsModel();
                     mUserDetailsModel.setUserName(userObj.getString("UserCode"));

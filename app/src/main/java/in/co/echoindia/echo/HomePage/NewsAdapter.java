@@ -127,9 +127,11 @@ public class NewsAdapter extends BaseAdapter {
 
         if(newsObj.isNewsUpVoteValue()){
             newsUpvote.setChecked(true);
+            newsDownvote.setEnabled(false);
         }
         else if(newsObj.isNewsDownVoteValue()){
             newsDownvote.setChecked(true);
+            newsUpvote.setEnabled(false);
         }
 
 
@@ -252,9 +254,7 @@ public class NewsAdapter extends BaseAdapter {
         protected String doInBackground(String... params) {
             String btn = params[0].toString();
             String voteType = params[1].toString();
-
             String voteUrl = "http://echoindia.co.in/php/newsVote.php";
-
             try {
                 URL url = new URL(voteUrl);
                 JSONObject postDataParams = new JSONObject();
@@ -262,9 +262,7 @@ public class NewsAdapter extends BaseAdapter {
                 postDataParams.put("voteType",voteType);
                 postDataParams.put("newsId",newsId);
                 postDataParams.put("username",sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""));
-
                 Log.e("Voting", "Params: " + postDataParams.toString());
-
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);

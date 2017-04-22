@@ -27,6 +27,24 @@ public class PostDetailModel {
     private String isShared="";
     private String SharedFrom="";
     private String SharedCount="";
+    private String PostImageRef="";
+    private String SharedFromUserName="";
+
+    public String getSharedFromUserName() {
+        return SharedFromUserName;
+    }
+
+    public void setSharedFromUserName(String sharedFromUserName) {
+        SharedFromUserName = sharedFromUserName;
+    }
+
+    public String getPostImageRef() {
+        return PostImageRef;
+    }
+
+    public void setPostImageRef(String postImageRef) {
+        PostImageRef = postImageRef;
+    }
 
     public String getSharedCount() {
         return SharedCount;
