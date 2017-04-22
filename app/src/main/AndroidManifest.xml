@@ -176,6 +176,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
         </activity>
+        <activity
+            android:name=".User.PostActivity"
+            android:label="@string/title_activity_post"
+            android:parentActivityName=".HomePage.HomePageActivity"
+            android:theme="@style/MyMaterialTheme"
+            android:windowSoftInputMode="stateVisible|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
+        </activity>
     </application>
 
 </manifest>

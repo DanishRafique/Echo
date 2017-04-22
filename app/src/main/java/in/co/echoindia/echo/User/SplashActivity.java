@@ -101,6 +101,9 @@ public class SplashActivity extends AppCompatActivity {
             double latitude = gps.getLatitude();
             double longitude = gps.getLongitude();
             LatLng mLatLng = new LatLng(latitude, longitude);
+            editor.putString(Constants.MY_LATITUDE,String.valueOf(latitude));
+            editor.putString(Constants.MY_LONGITUDE,String.valueOf(longitude));
+            editor.commit();
             String errorMessage = "";
             geocoder = new Geocoder(SplashActivity.this, Locale.getDefault());
             try {

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="in.co.echoindia.echo.User.PostActivity"
+    tools:showIn="@layout/activity_post">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:padding="8dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/comment_user_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/dan"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bg_comment_avatar" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="16dp">
+
+            <TextView
+                android:id="@+id/comment_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Danish Rafique"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+
+                android:textColor="#000"
+
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/echo_post_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="danish_rafique"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="5dp"
+                android:textColor="#000"
+                android:textSize="14sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/echo_post_edit"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="Echo something..."
+        android:padding="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:imeOptions="actionDone"
+        android:layout_weight="1"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
+        android:weightSum="2">
+        <TextView
+            android:id="@+id/echo_post_photo_selection"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Add Photo"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:visibility="gone"
+            android:textColor="@color/colorPrimaryDark"/>
+        <TextView
+            android:id="@+id/echo_post_location_selection"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Add Location"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:weightSum="3">
+        <TextView
+            android:id="@+id/echo_post_photo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_camera"
+            android:text="Add Photo"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="2.5dp"
+            android:textColor="#000"/>
+        <TextView
+            android:id="@+id/echo_post_location"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_location"
+            android:text="Add Location"
+            android:gravity="center"
+            android:layout_marginLeft="2.5dp"
+            android:layout_marginRight="2.5dp"
+            android:textColor="#000"/>
+        <Button
+            android:id="@+id/btn_choose_aadhaar_card"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="ECHO"
+            android:background="@drawable/rounded_buttons"
+            android:shadowColor="@color/colorPrimaryDark"
+            android:textColor="#fff"
+            />
+
+
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>

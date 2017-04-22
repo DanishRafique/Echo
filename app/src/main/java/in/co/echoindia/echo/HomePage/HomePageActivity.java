@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -54,6 +55,7 @@ import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
 import in.co.echoindia.echo.User.LoginActivity;
 import in.co.echoindia.echo.User.MyAccountActivity;
 import in.co.echoindia.echo.User.MyProfileActivity;
+import in.co.echoindia.echo.User.PostActivity;
 import in.co.echoindia.echo.User.SettingsActivity;
 import in.co.echoindia.echo.User.SpendingActivity;
 import in.co.echoindia.echo.Utils.AppUtil;
@@ -63,16 +65,16 @@ public class HomePageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
         {
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-
+    private static final String LOG_TAG = "HomePageActivity";
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
             CircleImageView navUserImage;
             TextView navFullName,navUserName;
-            private ProgressDialog pDialog;
             UserDetailsModel userDetailsModel;
-    private static final String LOG_TAG = "HomePageActivity";
+            FloatingActionButton fabPost;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+            private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +129,15 @@ public class HomePageActivity extends AppCompatActivity
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
+            }
+        });
+
+        fabPost=(FloatingActionButton)findViewById(R.id.fab_post);
+        fabPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent postIntent=new Intent(HomePageActivity.this, PostActivity.class);
+                startActivity(postIntent);
             }
         });
     }
@@ -223,6 +234,34 @@ public class HomePageActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void setupTabIcons() {
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_poll_blue);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_news_blue);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_buzz_blue);
+    }
+
+    private void setWorkLogOut() {
+        Log.e(LOG_TAG,sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"")+" .");
+        editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE, "");
+        editor.putBoolean(Constants.SETTINGS_IS_LOGGED, false);
+        editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, "");
+        editor.putString(Constants.SETTINGS_OBJ_USER,"");
+        editor.commit();
+        Intent loginPathIntent = new Intent(HomePageActivity.this, LoginActivity.class);
+        loginPathIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(loginPathIntent);
+        HomePageActivity.this.finish();
+    }
+
+            @Override
+            protected void onPause() {
+                super.onPause();
+                if(pDialog!=null)
+                    pDialog.dismiss();
+            }
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -250,26 +289,6 @@ public class HomePageActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-    }
-
-    private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_white);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_poll_blue);
-        tabLayout.getTabAt(3).setIcon(R.drawable.ic_news_blue);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_buzz_blue);
-    }
-
-    private void setWorkLogOut() {
-        Log.e(LOG_TAG,sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"")+" .");
-        editor.putString(Constants.SETTINGS_IS_LOGGED_TYPE, "");
-        editor.putBoolean(Constants.SETTINGS_IS_LOGGED, false);
-        editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, "");
-        editor.putString(Constants.SETTINGS_OBJ_USER,"");
-        editor.commit();
-        Intent loginPathIntent = new Intent(HomePageActivity.this, LoginActivity.class);
-        loginPathIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(loginPathIntent);
-        HomePageActivity.this.finish();
     }
 
     class ExecuteLogout extends AsyncTask {
@@ -343,12 +362,5 @@ public class HomePageActivity extends AppCompatActivity
                     Log.e(LOG_TAG,"Logout "+o.toString());
                     setWorkLogOut();
                 }
-            }
-
-            @Override
-            protected void onPause() {
-                super.onPause();
-                if(pDialog!=null)
-                    pDialog.dismiss();
             }
         }

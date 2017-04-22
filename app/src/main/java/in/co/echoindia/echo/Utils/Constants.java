@@ -31,5 +31,7 @@ public class Constants {
     public static final String LOCAL_ELECTED_MEMBERS="LOCAL_ELECTED_MEMBERS";
     public static final String POLITICAL_PARTY_LIST="POLITICAL_PARTY_LIST";
     public static final String MY_POST="MY_POST";
+    public static final String MY_LATITUDE="MY_LATITUDE";
+    public static final String MY_LONGITUDE="MY_LONGITUDE";
 
 }

@@ -133,6 +133,12 @@
     <string name="title_activity_elected_representative_detail">
        Representative Info
     </string>
+    <string name="error_gif">x or y bound size should be at least %1$dpx and file size should be no more than %2$sM</string>
     <string name="title_activity_fff">fff</string>
     <string name="title_activity_my_profile">MyProfile</string>
+    <string name="title_activity_post">Post</string>
+    <string name="title_activity_echo_post">EchoPostActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
