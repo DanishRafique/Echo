@@ -49,6 +49,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.User.AboutUsActivity;
+import in.co.echoindia.echo.User.ChangePasswordActivity;
 import in.co.echoindia.echo.User.ContactUsActivity;
 import in.co.echoindia.echo.User.DevelopmentActivity;
 import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
@@ -227,6 +228,9 @@ public class HomePageActivity extends AppCompatActivity
             mExecuteLogout.execute();
         } else if(id == R.id.nav_my_profile){
             Intent i = new Intent(HomePageActivity.this,MyProfileActivity.class);
+            startActivity(i);
+        }else if(id == R.id.nav_share){
+            Intent i = new Intent(HomePageActivity.this,ChangePasswordActivity.class);
             startActivity(i);
         }
 

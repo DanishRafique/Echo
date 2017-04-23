@@ -46,6 +46,7 @@ import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
 import in.co.echoindia.echo.Utils.GPSTracker;
+import in.co.echoindia.echo.Utils.PrefManager;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -73,6 +74,7 @@ public class SplashActivity extends AppCompatActivity {
     boolean boolean_permission;
     List<Address> addresses;
     GPSTracker gps;
+    private PrefManager prefManager;
     private View mContentView;
 
     @Override
@@ -174,11 +176,17 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     void gotoNextActivity(){
+        Boolean firstTime=sharedpreferences.getBoolean(Constants.IS_FIRST_TIME_LAUNCH,false);
+        Log.e(LOG_TAG," "+firstTime);
         if(sharedpreferences.getBoolean(Constants.SETTINGS_IS_LOGGED,false)) {
             Intent intentHomePage = new Intent(SplashActivity.this, HomePageActivity.class);
             Toast.makeText(SplashActivity.this, "Welcome "+sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""), Toast.LENGTH_SHORT).show();
             startActivity(intentHomePage);
 
+        }
+        else if(firstTime!=null && firstTime==true) {
+            Intent intentLogin = new Intent(SplashActivity.this, LoginActivity.class);
+            startActivity(intentLogin);
         }
         else{
             Intent intentWalkThrough = new Intent(SplashActivity.this, WalkthroughActivity.class);
@@ -293,11 +301,17 @@ public class SplashActivity extends AppCompatActivity {
 
     private void setBuzzData(Object o)  {
         int max=sharedpreferences.getInt(Constants.LAST_BUZZ_UPDATE,0);
+
         try {
             JSONObject jObject=new JSONObject(o.toString());
             Log.e(LOG_TAG,"Buzz Details :"+o.toString());
             String checkStatus=jObject.getString("status");
             if(checkStatus.equals("1")&&o != null){
+                Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
+                Boolean firstTime=sharedpreferences.getBoolean(Constants.IS_FIRST_TIME_LAUNCH,false);
+                if(firstTime==null) {
+                    buzzList = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
+                }
                 JSONArray newsArray=jObject.getJSONArray("posts");
                 for(int i =0 ; i<newsArray.length();i++){
                     JSONObject buzzObject=newsArray.getJSONObject(i);
@@ -362,6 +376,11 @@ public class SplashActivity extends AppCompatActivity {
             Log.e(LOG_TAG,"Home Details :"+o.toString());
             String checkStatus=jObject.getString("status");
             if(checkStatus.equals("1")&&o != null){
+                Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
+                Boolean firstTime=sharedpreferences.getBoolean(Constants.IS_FIRST_TIME_LAUNCH,false);
+                if(firstTime==null) {
+                    homeList = new Gson().fromJson(sharedpreferences.getString(Constants.HOME_LIST, ""), type);
+                }
                 JSONArray newsArray=jObject.getJSONArray("posts");
                 for(int i =0 ; i<newsArray.length();i++){
                     JSONObject buzzObject=newsArray.getJSONObject(i);

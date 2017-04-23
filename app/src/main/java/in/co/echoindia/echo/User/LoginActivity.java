@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity{
     ArrayList<RepInfoModel> localList=new ArrayList<RepInfoModel>();
     RepInfoModel mRepInfoModel;
     private static final String LOG_TAG = "LoginActivity";
+    LinearLayout forgotPasswordll;
 
     PostDetailModel mPostDetailModel;
     ArrayList<PostDetailModel> myPostList=new ArrayList<PostDetailModel>();
@@ -101,6 +102,16 @@ public class LoginActivity extends AppCompatActivity{
                 Intent signUpIntent=new Intent(LoginActivity.this,SignupActivity.class);
                 startActivity(signUpIntent);
                 LoginActivity.this.finish();
+            }
+        });
+
+        forgotPasswordll=(LinearLayout)findViewById(R.id.forgot_password_ll);
+
+        forgotPasswordll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent forgotIntent=new Intent(LoginActivity.this,ForgotPasswordActivity.class);
+                startActivity(forgotIntent);
             }
         });
     }

@@ -43,6 +43,8 @@ dependencies {
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     compile 'com.github.medyo:fancybuttons:1.8.3'
     compile 'info.hoang8f:android-segmented:1.0.6'
+    compile 'com.kaopiz:kprogresshud:1.0.2'
+    compile 'cc.cloudist.acplibrary:library:1.2.1'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'

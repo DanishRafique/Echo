@@ -56,6 +56,8 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import cc.cloudist.acplibrary.ACProgressConstant;
+import cc.cloudist.acplibrary.ACProgressFlower;
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
@@ -90,6 +92,7 @@ public class PostActivity extends AppCompatActivity {
 
     UserDetailsModel mUserDetail;
     RepDetailModel mRepDetail;
+    ACProgressFlower dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,16 +157,19 @@ public class PostActivity extends AppCompatActivity {
                 if (!marshMallowPermission.checkPermissionForExternalStorage()) {
                     marshMallowPermission.requestPermissionForExternalStorage();
                 }
-                Matisse.from(PostActivity.this)
-                        .choose(MimeType.allOf())
-                        .countable(true)
-                        .maxSelectable(5)
-                        .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
-                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                        .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
-                        .thumbnailScale(0.85f)
-                        .imageEngine(new GlideEngine())
-                        .forResult(REQUEST_CODE_CHOOSE);
+                else {
+
+                    Matisse.from(PostActivity.this)
+                            .choose(MimeType.allOf())
+                            .countable(true)
+                            .maxSelectable(5)
+                            .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
+                            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                            .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                            .thumbnailScale(0.85f)
+                            .imageEngine(new GlideEngine())
+                            .forResult(REQUEST_CODE_CHOOSE);
+                }
             }
         });
 
@@ -287,17 +293,19 @@ public class PostActivity extends AppCompatActivity {
             }
         }
         else{
-            encodedImageList.clear();
-            mSelected.clear();
+            if(encodedImageList!=null && mSelected!=null){
+                encodedImageList.clear();
+                mSelected.clear();
+            }
             echoPostImagell.setVisibility(View.GONE);
             echoPostPhoto.setText("Add Photo");
             echoPostPhoto.setTextColor(Color.parseColor("#000000"));
             echoPostPhoto.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_camera, 0, 0, 0);
         }
-
-        for(int i=0;i<mSelected.size();i++){
-
-            Log.e(LOG_TAG,"Image "+i+" : "+mSelected.get(i)+" "+encodedImageList.get(i));
+        if(encodedImageList!=null && mSelected!=null) {
+            for (int i = 0; i < mSelected.size(); i++) {
+                Log.e(LOG_TAG, "Image " + i + " : " + mSelected.get(i) + " " + encodedImageList.get(i));
+            }
         }
     }
 
@@ -312,6 +320,17 @@ public class PostActivity extends AppCompatActivity {
             this.postText=postText;
         }
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = new ACProgressFlower.Builder(PostActivity.this)
+                    .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                    .themeColor(Color.parseColor("#087cb0"))
+                    .text("Echoing")
+                    .textColor(Color.WHITE)
+                    .build();
+            dialog.show();
+        }
 
         @Override
         protected Object doInBackground(Object[] params) {
@@ -404,9 +423,21 @@ public class PostActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             Log.e(LOG_TAG,"Insert Post : "+o.toString());
+            dialog.dismiss();
             finish();
 
         }
+
+
+
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(dialog!=null){
+            dialog.dismiss();
+        }
+    }
 }

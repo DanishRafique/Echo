@@ -110,6 +110,7 @@ public class HomeAdapter extends BaseAdapter {
     LinearLayout homeShare;
     TextView homeSharedFrom;
     PostDetailModel mPostDetailModel;
+    LinearLayout commentListLL;
 
 
     public HomeAdapter(Activity activity, ArrayList<PostDetailModel> homeDetailsModels) {
@@ -406,11 +407,13 @@ public class HomeAdapter extends BaseAdapter {
         commentDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         commentDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         commentDialog.setContentView(R.layout.dialog_poll_comment);
+        commentListLL=(LinearLayout)commentDialog.findViewById(R.id.comment_list_ll);
         postCommentList = (ListView) commentDialog.findViewById(R.id.poll_comment_list);
         postCommentEdit = (EditText) commentDialog.findViewById(R.id.poll_comment_edt);
         postCommentSend = (ImageView) commentDialog.findViewById(R.id.poll_comment_send);
         postCommentSwipeRefresh = (SwipeRefreshLayout)commentDialog.findViewById(R.id.poll_comment_swipe_refresh);
         commentDialog.show();
+
         postCommentSwipeRefresh.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override

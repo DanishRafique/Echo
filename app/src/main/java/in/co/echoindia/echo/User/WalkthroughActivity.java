@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import in.co.echoindia.echo.R;
+import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.PrefManager;
 
 /**
@@ -34,6 +35,8 @@ public class WalkthroughActivity extends AppCompatActivity {
     private TextView[] dots;
     private int[] layouts;
     private Button btnSkip, btnNext;
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor editor;
     //	viewpager change listener
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
 
@@ -68,6 +71,10 @@ public class WalkthroughActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedpreferences = AppUtil.getAppPreferences(this);
+        /*editor = sharedpreferences.edit();
+        editor.putBoolean(Constants.IS_FIRST_TIME_LAUNCH,false);
+        editor.commit();*/
 
         // Checking for first time launch - before calling setContentView()
         prefManager = new PrefManager(this);
@@ -154,7 +161,7 @@ public class WalkthroughActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        prefManager.setFirstTimeLaunch(true);
+        prefManager.setFirstTimeLaunch(false);
         SharedPreferences sp = getSharedPreferences("init", 0);
         sp.edit().putString("done", "1").apply();
         startActivity(new Intent(WalkthroughActivity.this, LoginActivity.class));
