@@ -135,6 +135,9 @@ public class BuzzFragment extends Fragment {
                     mPostDetailModel.setPostRepParty(buzzObject.getString("RepParty"));
                     mPostDetailModel.setPostRepDesignation(buzzObject.getString("RepDesignation"));
                     mPostDetailModel.setPostRepDetail(buzzObject.getString("RepDetail"));
+                    mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
+                    mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
+                    mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
                     JSONArray postImageArray=buzzObject.getJSONArray("images");
                     ArrayList<String>postImageArrayList = new ArrayList<>();
                     for(int j =0 ; j<postImageArray.length();j++) {
@@ -171,6 +174,7 @@ public class BuzzFragment extends Fragment {
     }
 
     void onRefreshComplete(ArrayList<PostDetailModel> buzzListRefresh){
+        Collections.sort(buzzListRefresh,new PostComparator());
         BuzzAdapter mBuzzAdapterRefreshed = new BuzzAdapter(getActivity(), buzzListRefresh);
         buzzListView.setAdapter(mBuzzAdapterRefreshed);
         mBuzzAdapterRefreshed.notifyDataSetChanged();

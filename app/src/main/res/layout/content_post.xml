@@ -15,7 +15,7 @@
         android:layout_marginTop="5dp"
         android:padding="8dp">
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/comment_user_image"
+            android:id="@+id/echo_post_user_image"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginLeft="10dp"
@@ -31,7 +31,7 @@
             android:layout_marginRight="16dp">
 
             <TextView
-                android:id="@+id/comment_name"
+                android:id="@+id/echo_post_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Danish Rafique"
@@ -71,6 +71,59 @@
         android:textSize="18sp" />
 
     <LinearLayout
+        android:id="@+id/echo_post_image_ll"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:weightSum="5">
+        <ImageView
+            android:id="@+id/echo_post_image_1"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="2.5dp"
+            android:src="@drawable/dan"/>
+        <ImageView
+            android:id="@+id/echo_post_image_2"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="2.5dp"
+            android:layout_marginRight="2.5dp"
+            android:src="@drawable/dan"/>
+        <ImageView
+            android:id="@+id/echo_post_image_3"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="2.5dp"
+            android:layout_marginRight="2.5dp"
+            android:src="@drawable/dan"/>
+        <ImageView
+            android:id="@+id/echo_post_image_4"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="2.5dp"
+            android:layout_marginRight="2.5dp"
+            android:src="@drawable/dan"/>
+        <ImageView
+            android:id="@+id/echo_post_image_5"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="2.5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/dan"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -105,50 +158,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
         android:weightSum="3">
+
         <TextView
             android:id="@+id/echo_post_photo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_camera"
-            android:text="Add Photo"
-            android:gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="2.5dp"
-            android:textColor="#000"/>
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_camera"
+            android:gravity="center"
+            android:text="Add Photo"
+            android:textColor="#000" />
+
         <TextView
             android:id="@+id/echo_post_location"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_location"
-            android:text="Add Location"
-            android:gravity="center"
             android:layout_marginLeft="2.5dp"
             android:layout_marginRight="2.5dp"
-            android:textColor="#000"/>
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_location"
+            android:gravity="center"
+            android:text="Add Location"
+            android:textColor="#000" />
+
         <Button
-            android:id="@+id/btn_choose_aadhaar_card"
+            android:id="@+id/btn_echo_post"
             android:layout_width="0dp"
             android:layout_height="45dp"
-            android:layout_weight="1"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:text="ECHO"
+            android:layout_weight="1"
+            android:enabled="false"
             android:background="@drawable/rounded_buttons"
             android:shadowColor="@color/colorPrimaryDark"
-            android:textColor="#fff"
-            />
-
+            android:text="ECHO"
+            android:textColor="#fff" />
 
 
     </LinearLayout>
-
-
-
 
 
 </LinearLayout>

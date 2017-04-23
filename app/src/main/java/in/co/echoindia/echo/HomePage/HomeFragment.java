@@ -114,6 +114,9 @@ public class HomeFragment extends Fragment {
                     mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
                     mPostDetailModel.setPostUpVoteValue(false);
                     mPostDetailModel.setPostDownVoteValue(false);
+                    mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
+                    mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
+                    mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
                     JSONArray postImageArray=buzzObject.getJSONArray("images");
                     ArrayList<String>postImageArrayList = new ArrayList<>();
                     for(int j =0 ; j<postImageArray.length();j++) {
@@ -239,11 +242,10 @@ public class HomeFragment extends Fragment {
     }
 
     void onRefreshComplete(ArrayList<PostDetailModel> homeListRefresh){
+        Collections.sort(homeListRefresh,new PostComparator());
         HomeAdapter mHomeAdapterRefreshed = new HomeAdapter(getActivity(), homeListRefresh);
         homeListView.setAdapter(mHomeAdapterRefreshed);
         mHomeAdapterRefreshed.notifyDataSetChanged();
         homeSwipeRefresh.setRefreshing(false);
     }
-
-
 }
