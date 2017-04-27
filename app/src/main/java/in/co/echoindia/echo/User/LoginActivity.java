@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity{
                 postDataParams.put("username",userNameStr);
                 postDataParams.put("password",passwordStr);
                 postDataParams.put("deviceType","ANDROID");
-                postDataParams.put("deviceId","1234");
+                postDataParams.put("deviceId",sharedpreferences.getString(Constants.REG_ID,""));
                 Log.e(LOG_TAG,"URL"+url_user_login);
                 Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();

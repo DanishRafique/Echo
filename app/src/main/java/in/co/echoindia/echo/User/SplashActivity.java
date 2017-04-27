@@ -96,7 +96,7 @@ public class SplashActivity extends AppCompatActivity {
             RegID = sharedpreferences.getString(Constants.REG_ID,"");
             Log.e(LOG_TAG,"Inside this FireBase");
         }
-        Log.e(LOG_TAG,"RegID"+RegID);
+        Log.e(LOG_TAG,"Device Id "+RegID);
         Intent intent = new Intent(getApplicationContext(), GPSTracker.class);
         this.startService(intent);
 

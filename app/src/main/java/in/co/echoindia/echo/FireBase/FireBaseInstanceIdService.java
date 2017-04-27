@@ -27,11 +27,7 @@ public class FireBaseInstanceIdService extends FirebaseInstanceIdService {
         @Override
         public void onTokenRefresh() {
             // Get updated InstanceID token.
-            Log.e(LOG_TAG,"Inside Instance");
             String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-
-            Log.e(LOG_TAG,"onTokenRefresh");
-
             // If you want to send messages to this application instance or
             // manage this apps subscriptions on the server side, send the
             // Instance ID token to your app server.
@@ -53,11 +49,10 @@ public class FireBaseInstanceIdService extends FirebaseInstanceIdService {
         }
 
         private void storeRegIdInPref(String token) {
-
-            Log.e(LOG_TAG,token+" ");
+            Log.e(LOG_TAG,"Device Id"+token);
             sharedpreferences = AppUtil.getAppPreferences(this);
             editor = sharedpreferences.edit();
-            editor.putString(Constants.REG_ID, token);
+            editor.putString(Constants.REG_ID,token);
             editor.commit();
 
         }

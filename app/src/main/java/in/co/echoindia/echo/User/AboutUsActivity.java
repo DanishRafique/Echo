@@ -22,6 +22,7 @@ public class AboutUsActivity extends AppCompatActivity {
         View aboutPage = new AboutPage(this)
                 .isRTL(false)
                 .setImage(R.mipmap.icon)
+                .setDescription("Change Description")
                 .addItem(new Element().setTitle("Version 1.0").setGravity(Gravity.CENTER))
                 .addItem(getCopyRightsElement())
                 .create();
