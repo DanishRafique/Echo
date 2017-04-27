@@ -143,4 +143,6 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_change_password">Change Password</string>
     <string name="title_activity_forgot_password">Forgot Password</string>
+    <string name="title_activity_promises">Promises</string>
+    <string name="copy_right">Copyrights © %1$d</string>
 </resources>

@@ -14,27 +14,27 @@ import java.util.List;
 
 import in.co.echoindia.echo.R;
 
-public class SpendingActivity extends AppCompatActivity {
+public class PromisesActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_spending);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_spending);
+        setContentView(R.layout.activity_promises);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_promises);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        viewPager = (ViewPager) findViewById(R.id.spending_viewpager);
+        viewPager = (ViewPager) findViewById(R.id.promises_viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.spending_tabs);
+        tabLayout = (TabLayout) findViewById(R.id.promises_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
     }
+
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         RepCentralFragment repCentralFragment = new RepCentralFragment();

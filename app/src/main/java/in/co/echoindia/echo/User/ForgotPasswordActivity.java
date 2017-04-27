@@ -62,7 +62,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
-
         searchll=(LinearLayout)findViewById(R.id.forgot_password_search_ll);
         changell=(LinearLayout)findViewById(R.id.forgot_change_password_ll);
         searchBtn=(Button)findViewById(R.id.forgot_password_search_button);
@@ -77,7 +76,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 mGetUserName.execute();
             }
         });
-
         changePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -343,10 +341,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
-
-
 }

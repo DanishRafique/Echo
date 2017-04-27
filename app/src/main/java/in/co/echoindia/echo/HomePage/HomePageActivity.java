@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -57,6 +58,7 @@ import in.co.echoindia.echo.User.LoginActivity;
 import in.co.echoindia.echo.User.MyAccountActivity;
 import in.co.echoindia.echo.User.MyProfileActivity;
 import in.co.echoindia.echo.User.PostActivity;
+import in.co.echoindia.echo.User.PromisesActivity;
 import in.co.echoindia.echo.User.SettingsActivity;
 import in.co.echoindia.echo.User.SpendingActivity;
 import in.co.echoindia.echo.Utils.AppUtil;
@@ -76,6 +78,7 @@ public class HomePageActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private ViewPager viewPager;
             private ProgressDialog pDialog;
+            ImageView imgMessage,imgNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,8 @@ public class HomePageActivity extends AppCompatActivity
         pDialog = new ProgressDialog(this);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        //imgMessage=(ImageView)findViewById(R.id.img_message);
+        //imgNotification=(ImageView)findViewById(R.id.img_notification);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -231,6 +236,9 @@ public class HomePageActivity extends AppCompatActivity
             startActivity(i);
         }else if(id == R.id.nav_share){
             Intent i = new Intent(HomePageActivity.this,ChangePasswordActivity.class);
+            startActivity(i);
+        }else if(id == R.id.nav_promises){
+            Intent i = new Intent(HomePageActivity.this, PromisesActivity.class);
             startActivity(i);
         }
 

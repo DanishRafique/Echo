@@ -37,6 +37,7 @@ import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import in.co.echoindia.echo.FireBase.FireBaseInstanceIdService;
 import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.Model.NewsDetailsModel;
 import in.co.echoindia.echo.Model.PoliticalPartyModel;
@@ -76,6 +77,7 @@ public class SplashActivity extends AppCompatActivity {
     GPSTracker gps;
     private PrefManager prefManager;
     private View mContentView;
+    String RegID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +88,15 @@ public class SplashActivity extends AppCompatActivity {
         mContentView = findViewById(R.id.fullscreen_content);
         sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
+        RegID = sharedpreferences.getString(Constants.REG_ID,"");
 
-
+        if (RegID.isEmpty() || RegID.equals("")) {
+            Intent intentFirebase = new Intent(this, FireBaseInstanceIdService.class);
+            startService(intentFirebase);
+            RegID = sharedpreferences.getString(Constants.REG_ID,"");
+            Log.e(LOG_TAG,"Inside this FireBase");
+        }
+        Log.e(LOG_TAG,"RegID"+RegID);
         Intent intent = new Intent(getApplicationContext(), GPSTracker.class);
         this.startService(intent);
 

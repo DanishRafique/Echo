@@ -18,8 +18,12 @@
     <group android:id="@+id/nav_group_representative" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_elected_representative"
-            android:icon="@drawable/ic_elected_representative"
+            android:icon="@drawable/ic_fingerprint"
             android:title="Elected Representative" />
+        <item
+            android:id="@+id/nav_promises"
+            android:icon="@drawable/ic_bubble"
+            android:title="Promises" />
         <item
             android:id="@+id/nav_development_in_progress"
             android:icon="@drawable/ic_development_in_progress"
@@ -27,7 +31,7 @@
         <item
             android:id="@+id/nav_spending"
             android:icon="@drawable/ic_spending"
-            android:title="Spending" />
+            android:title="Budget Allocation" />
     </group>
     <group android:id="@+id/nav_group_communicate" android:checkableBehavior="single">
         <item
