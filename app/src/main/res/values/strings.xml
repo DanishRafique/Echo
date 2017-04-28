@@ -146,4 +146,5 @@
     <string name="title_activity_promises">Promises</string>
     <string name="copy_right">Copyrights © %1$d</string>
     <string name="title_activity_other_user_profile">OtherUserProfile</string>
+    <string name="title_activity_view_post">View Post</string>
 </resources>

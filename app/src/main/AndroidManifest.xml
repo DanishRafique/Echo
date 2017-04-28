@@ -238,6 +238,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
         </activity>
+        <activity
+            android:name=".User.ViewPostActivity"
+            android:label="@string/title_activity_view_post"
+            android:parentActivityName=".HomePage.HomePageActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
+        </activity>
     </application>
 
 </manifest>

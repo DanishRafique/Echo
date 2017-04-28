@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="in.co.echoindia.echo.User.ViewPostActivity"
+    tools:showIn="@layout/activity_view_post">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/home_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/home_user_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_comment_avatar" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/home_name_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="4">
+
+                    <TextView
+                        android:id="@+id/home_full_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="3"
+                        android:text="Danish Rafique"
+                        android:textColor="#000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/home_ll_share"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/home_name_title"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="shared " />
+
+                    <TextView
+                        android:id="@+id/home_shared_from"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Danish Rafique"
+                        android:textColor="#000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="'s"
+                        android:textColor="#000"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" post" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/home_user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/home_ll_share"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="3"
+                    android:text="Danish Rafique"
+                    android:textColor="#000"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+
+            </RelativeLayout>
+            <ImageView
+                android:id="@+id/home_down_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_down"
+                android:layout_marginRight="10dp"
+                />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/home_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/home_title"
+            android:layout_margin="10dp"
+            android:text="Description goes here . Description goes here ok fine go. Description goes here . Description goes here."
+            android:textColor="#2c3033"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:id="@+id/home_image_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/home_text"
+            android:orientation="vertical"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:weightSum="2">
+
+            <ImageView
+                android:id="@+id/home_image_1"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:src="@drawable/news_image"
+                />
+            <ImageView
+                android:id="@+id/home_image_2"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:src="@drawable/news_image"
+                />
+            <ImageView
+                android:id="@+id/home_image_3"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:src="@drawable/news_image"
+                />
+
+            <ImageView
+                android:id="@+id/home_image_4"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:src="@drawable/news_image"
+                />
+
+            <ImageView
+                android:id="@+id/home_image_5"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="5dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:src="@drawable/news_image"
+                />
+
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/home_post_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/home_image_list"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/home_location_ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/home_location_logo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_location_grey" />
+
+                <TextView
+                    android:id="@+id/home_location_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_alignBaseline="@+id/news_timeline"
+
+                    android:layout_alignBottom="@+id/news_timeline"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toEndOf="@+id/news_vendor_logo"
+                    android:text="CNN Broadcast"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/home_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="2dp"
+                android:text="4 hr ago"
+                android:layout_marginRight="10dp"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/home_post_footer">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ToggleButton
+                        android:id="@+id/home_upvote"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@android:color/transparent"
+                        android:button="@drawable/selector_wishlist_icon"
+                        android:textOff="@null"
+                        android:textOn="@null" />
+
+                    <TextView
+                        android:id="@+id/home_upvote_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="1dp"
+                        android:text="Kudos" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ToggleButton
+                        android:id="@+id/home_downvote"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@android:color/transparent"
+                        android:button="@drawable/selector_downvote_icon"
+                        android:textOff="@null"
+                        android:textOn="@null" />
+
+                    <TextView
+                        android:id="@+id/home_downvote_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="1dp"
+                        android:text="Nah" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/home_comment_link"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/home_comment"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignBottom="@+id/news_title"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/ic_comment"
+                        android:textOff="@null"
+                        android:textOn="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="1dp"
+                        android:text="Comment" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/home_share_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/home_share"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignBottom="@+id/news_title"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/ic_share"
+                        android:textOff="@null"
+                        android:textOn="@null" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="1dp"
+                        android:text="Share" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</ScrollView>

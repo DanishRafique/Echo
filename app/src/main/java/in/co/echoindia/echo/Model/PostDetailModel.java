@@ -1,12 +1,13 @@
 package in.co.echoindia.echo.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Danish Rafique on 18-04-2017.
  */
 
-public class PostDetailModel {
+public class PostDetailModel implements Serializable {
     private String postId = "";
     private String postFirstName="";
     private String postLastName="";

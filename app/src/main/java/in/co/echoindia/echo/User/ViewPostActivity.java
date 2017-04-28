@@ -1,27 +1,23 @@
-package in.co.echoindia.echo.HomePage;
+package in.co.echoindia.echo.User;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -53,22 +49,19 @@ import java.util.Date;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import in.co.echoindia.echo.HomePage.BuzzImageAdapter;
+import in.co.echoindia.echo.HomePage.PollCommentAdapter;
 import in.co.echoindia.echo.Model.PollCommentModel;
 import in.co.echoindia.echo.Model.PostDetailModel;
 import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
-import in.co.echoindia.echo.User.ViewPostActivity;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
 
-/**
- * Created by Danish Rafique on 21-04-2017.
- */
+public class ViewPostActivity extends AppCompatActivity {
 
-public class HomeAdapter extends BaseAdapter {
     ArrayList<PostDetailModel> homeDetailsModels = new ArrayList<>();
-    Activity activity;
     ArrayList<PostDetailModel> buzzDetailsModels = new ArrayList<>();
 
     TextView homeFullName;
@@ -85,12 +78,7 @@ public class HomeAdapter extends BaseAdapter {
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
 
-    ImageView homeImage1,homeImage2,homeImage3;
-    RelativeLayout homeMoreImage;
-    TextView homeMoreImageText;
-    LinearLayout homeMoreThanOneImage;
-    RelativeLayout homeMoreThanTwoImage;
-
+    ImageView homeImage1,homeImage2,homeImage3,homeImage4,homeImage5;
 
     BuzzImageAdapter mBuzzImageAdapter;
     private static final String LOG_TAG = "HomeAdapter";
@@ -119,58 +107,38 @@ public class HomeAdapter extends BaseAdapter {
     LinearLayout postLocationll;
 
 
-
-    public HomeAdapter(Activity activity, ArrayList<PostDetailModel> homeDetailsModels) {
-        this.activity = activity;
-        this.homeDetailsModels = homeDetailsModels;
-    }
-
     @Override
-    public int getCount() {
-        if(homeDetailsModels != null)
-            return homeDetailsModels.size();
-        else
-            return  0;
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_post);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    @Override
-    public Object getItem(int position) {
-        return position;
-    }
+        Bundle mBundle=getIntent().getExtras();
+        Bundle repBundle=mBundle.getBundle("postObj");
+        final PostDetailModel homeObj=(PostDetailModel)repBundle.getSerializable("postObj");
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        homeFullName=(TextView)findViewById(R.id.home_full_name);
+        homeUserImage=(CircleImageView)findViewById(R.id.home_user_image);
+        homeUserName=(TextView)findViewById(R.id.home_user_name);
+        homeTime=(TextView)findViewById(R.id.home_time);
+        homeText=(TextView)findViewById(R.id.home_text);
+        homeImageList=(LinearLayout)findViewById(R.id.home_image_list);
+        homeUpvoteValue=(TextView)findViewById(R.id.home_upvote_value);
+        homeDownvoteValue=(TextView)findViewById(R.id.home_downvote_value);
+        homeImage1=(ImageView)findViewById(R.id.home_image_1);
+        homeImage2=(ImageView)findViewById(R.id.home_image_2);
+        homeImage3=(ImageView)findViewById(R.id.home_image_3);
+        homeImage4=(ImageView)findViewById(R.id.home_image_4);
+        homeImage5=(ImageView)findViewById(R.id.home_image_5);
 
-    @Override
-    public View getView(final int position, View convertView, ViewGroup viewGroup) {
-        LayoutInflater inflater=(LayoutInflater) this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.list_home_child, null);
-        final PostDetailModel homeObj = homeDetailsModels.get(position);
-        homeFullName=(TextView)convertView.findViewById(R.id.home_full_name);
-        homeUserImage=(CircleImageView) convertView.findViewById(R.id.home_user_image);
-        homeUserName=(TextView) convertView.findViewById(R.id.home_user_name);
-        homeTime=(TextView)convertView.findViewById(R.id.home_time);
-        homeText=(TextView)convertView.findViewById(R.id.home_text);
-        homeImageList=(LinearLayout)convertView.findViewById(R.id.home_image_list);
-        homeUpvoteValue=(TextView)convertView.findViewById(R.id.home_upvote_value);
-        homeDownvoteValue=(TextView)convertView.findViewById(R.id.home_downvote_value);
-        homeImage1=(ImageView)convertView.findViewById(R.id.home_image_1);
-        homeImage2=(ImageView)convertView.findViewById(R.id.home_image_2);
-        homeImage3=(ImageView)convertView.findViewById(R.id.home_image_3);
-
-        homeMoreImageText=(TextView)convertView.findViewById(R.id.home_more_image_text);
-        homeMoreImage=(RelativeLayout)convertView.findViewById(R.id.home_more_image);
-        homeMoreThanOneImage=(LinearLayout)convertView.findViewById(R.id.home_more_than_one_image);
-        homeMoreThanTwoImage=(RelativeLayout)convertView.findViewById(R.id.home_more_than_two_image);
-
-        homeShare=(LinearLayout)convertView.findViewById(R.id.home_ll_share);
-        homeSharedFrom=(TextView)convertView.findViewById(R.id.home_shared_from);
-        postLocationll=(LinearLayout)convertView.findViewById(R.id.home_location_ll);
-        postLocationText=(TextView)convertView.findViewById(R.id.home_location_text);
-        final LinearLayout buzzShareButton=(LinearLayout)convertView.findViewById(R.id.home_share_button);
-        sharedpreferences = AppUtil.getAppPreferences(activity);
+        homeShare=(LinearLayout)findViewById(R.id.home_ll_share);
+        homeSharedFrom=(TextView)findViewById(R.id.home_shared_from);
+        postLocationll=(LinearLayout)findViewById(R.id.home_location_ll);
+        postLocationText=(TextView)findViewById(R.id.home_location_text);
+        final LinearLayout buzzShareButton=(LinearLayout)findViewById(R.id.home_share_button);
+        sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
 
         if(homeObj.getIsShared().equals("0")){
@@ -190,14 +158,14 @@ public class HomeAdapter extends BaseAdapter {
             postLocationText.setText(postLocation);
         }
 
-        Glide.with(activity).load(homeObj.getPostUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeUserImage);
+        Glide.with(this).load(homeObj.getPostUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeUserImage);
         homeUserName.setText(homeObj.getPostUserName());
 
         homeTime.setText(homeObj.getPostTime());
         homeText.setText(homeObj.getPostText());
         homeUpvoteValue.setText(String.valueOf(homeObj.getPostUpVote()));
         homeDownvoteValue.setText(String.valueOf(homeObj.getPostDownVote()));
-        final LinearLayout postCommentButton =(LinearLayout)convertView.findViewById(R.id.home_comment_link);
+        final LinearLayout postCommentButton =(LinearLayout)findViewById(R.id.home_comment_link);
         final String postId=homeObj.getPostId();
         final String fullNameStr=homeObj.getPostFirstName()+" "+homeObj.getPostLastName();
 
@@ -206,24 +174,25 @@ public class HomeAdapter extends BaseAdapter {
         if(homeImageArrayList!=null){
             for(int i=0;i<homeImageArrayList.size();i++){
                 if(i==0){
+                    homeImageList.setVisibility(View.VISIBLE);
                     homeImage1.setVisibility(View.VISIBLE);
-                    Glide.with(activity).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage1);
+                    Glide.with(this).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage1);
                 }
                 else if(i==1){
-                    homeMoreThanOneImage.setVisibility(View.VISIBLE);
                     homeImage2.setVisibility(View.VISIBLE);
-                    Glide.with(activity).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage2);
+                    Glide.with(this).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage2);
                 }
                 else if(i==2){
-                    homeMoreThanTwoImage.setVisibility(View.VISIBLE);
                     homeImage3.setVisibility(View.VISIBLE);
-                    Glide.with(activity).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage3);
+                    Glide.with(this).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage3);
                 }
-                else if(i>2){
-                    homeMoreImage.setVisibility(View.VISIBLE);
-                    homeMoreImageText.setVisibility(View.VISIBLE);
-                    int numberOfImage=homeImageArrayList.size()-3;
-                    homeMoreImageText.setText(String.valueOf(numberOfImage)+"+");
+                else if(i==3){
+                    homeImage4.setVisibility(View.VISIBLE);
+                    Glide.with(this).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage4);
+                }
+                else if(i==4){
+                    homeImage5.setVisibility(View.VISIBLE);
+                    Glide.with(this).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage5);
                 }
             }
         }
@@ -242,9 +211,9 @@ public class HomeAdapter extends BaseAdapter {
         });
 
 
-        final ToggleButton homeUpvote = (ToggleButton) convertView.findViewById(R.id.home_upvote);
+        final ToggleButton homeUpvote = (ToggleButton) findViewById(R.id.home_upvote);
         homeUpvote.setTag(String.valueOf(homeObj.getPostId()));
-        final ToggleButton homeDownvote = (ToggleButton) convertView.findViewById(R.id.home_downvote);
+        final ToggleButton homeDownvote = (ToggleButton)findViewById(R.id.home_downvote);
         homeDownvote.setTag(String.valueOf(homeObj.getPostId()));
 
         if(homeObj.isPostUpVoteValue()){
@@ -320,19 +289,6 @@ public class HomeAdapter extends BaseAdapter {
             }
         });
 
-        postUpdatedList.clear();
-
-        for(int i=0;i<homeDetailsModels.size();i++){
-            if(i!=position) {
-                postUpdatedList.add(homeDetailsModels.get(i));
-            }
-            else if(i==position){
-                postUpdatedList.add(homeObj);
-            }
-        }
-        editor.putString(Constants.HOME_LIST, new Gson().toJson(postUpdatedList));
-        editor.commit();
-
         buzzShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -340,19 +296,9 @@ public class HomeAdapter extends BaseAdapter {
                 mSharePost.execute();
             }
         });
-        homeImageList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent viewPost=new Intent(activity, ViewPostActivity.class);
-                Bundle mBundle = new Bundle();
-                mBundle.putSerializable("postObj", homeObj);
-                viewPost.putExtra("postObj",mBundle);
-                activity.startActivity(viewPost);
-            }
-        });
 
 
-        return convertView;
+
     }
 
 
@@ -429,7 +375,7 @@ public class HomeAdapter extends BaseAdapter {
 
 
     void openPollCommentDialog(final String pollId) {
-        commentDialog = new Dialog(activity);
+        commentDialog = new Dialog(this);
         commentDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         commentDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         commentDialog.setContentView(R.layout.dialog_poll_comment);
@@ -554,16 +500,16 @@ public class HomeAdapter extends BaseAdapter {
                     pollCommentListArray.add(mPollCommentModel);
                 }
                 Collections.sort(pollCommentListArray,new PollCommentsComparator());
-                mPollCommentAdapter = new PollCommentAdapter(activity, pollCommentListArray);
+                mPollCommentAdapter = new PollCommentAdapter(this, pollCommentListArray);
                 postCommentList.setAdapter(mPollCommentAdapter);
                 mPollCommentAdapter.notifyDataSetChanged();
 
             }
             else if(checkStatus.equals("2")){
-                Toast.makeText(activity, "No Comment Found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No Comment Found", Toast.LENGTH_SHORT).show();
             }
             else if(checkStatus.equals("0")){
-                Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Server Connection Error", Toast.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {
@@ -666,9 +612,9 @@ public class HomeAdapter extends BaseAdapter {
 
                 }
                 else if(checkStatus.equals("0")){
-                    Toast.makeText(activity, "No Comment Found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewPostActivity.this, "No Comment Found", Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewPostActivity.this, "Server Connection Error", Toast.LENGTH_SHORT).show();
                 }
 
             } catch (JSONException e) {
@@ -823,13 +769,12 @@ public class HomeAdapter extends BaseAdapter {
 
                     }
                     editor.commit();
-                    notifyDataSetChanged();
-                    Toast.makeText(activity, "Post Shared Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewPostActivity.this, "Post Shared Successfully", Toast.LENGTH_SHORT).show();
                 }
                 else if(checkStatus.equals("0")){
-                    Toast.makeText(activity, "Post Share Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewPostActivity.this, "Post Share Failed", Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ViewPostActivity.this, "Server Connection Error", Toast.LENGTH_SHORT).show();
                 }
 
             } catch (JSONException e) {
@@ -840,6 +785,4 @@ public class HomeAdapter extends BaseAdapter {
         }
     }
 
-
 }
-
