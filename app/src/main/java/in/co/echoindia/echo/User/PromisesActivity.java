@@ -37,13 +37,13 @@ public class PromisesActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        RepCentralFragment repCentralFragment = new RepCentralFragment();
-        RepStateFragment repStateFragment = new RepStateFragment();
-        RepLocalFragment repLocalFragment = new RepLocalFragment();
+        PromiseCentralFragment promiseCentralFragment = new PromiseCentralFragment();
+        PromiseStateFragment promiseStateFragment = new PromiseStateFragment();
+        PromiseLocalFragment promiseLocalFragment = new PromiseLocalFragment();
 
-        adapter.addFragment(repCentralFragment,"CENTRAL");
-        adapter.addFragment(repStateFragment,"STATE");
-        adapter.addFragment(repLocalFragment,"LOCAL");
+        adapter.addFragment(promiseCentralFragment,"CENTRAL");
+        adapter.addFragment(promiseStateFragment,"STATE");
+        adapter.addFragment(promiseLocalFragment,"LOCAL");
 
         viewPager.setAdapter(adapter);
     }

@@ -34,4 +34,7 @@ public class Constants {
     public static final String MY_LATITUDE="MY_LATITUDE";
     public static final String MY_LONGITUDE="MY_LONGITUDE";
     public static final String REG_ID="REG_ID";
+    public static final String PROMISE_COUNTRY="PROMISE_COUNTRY";
+    public static final String PROMISE_STATE="PROMISE_STATE";
+    public static final String PROMISE_CITY="PROMISE_CITY";
 }

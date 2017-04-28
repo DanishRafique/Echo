@@ -39,6 +39,8 @@ import javax.net.ssl.HttpsURLConnection;
 import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.Model.NewsDetailsModel;
 import in.co.echoindia.echo.Model.PostDetailModel;
+import in.co.echoindia.echo.Model.PromiseDetailModel;
+import in.co.echoindia.echo.Model.PromiseModel;
 import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.RepInfoModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
@@ -61,6 +63,16 @@ public class LoginActivity extends AppCompatActivity{
     ArrayList<RepInfoModel> centralList=new ArrayList<RepInfoModel>();
     ArrayList<RepInfoModel> stateList=new ArrayList<RepInfoModel>();
     ArrayList<RepInfoModel> localList=new ArrayList<RepInfoModel>();
+
+    ArrayList<PromiseModel> centralPromiseList=new ArrayList<PromiseModel>();
+    ArrayList<PromiseModel> statePromiseList=new ArrayList<PromiseModel>();
+    ArrayList<PromiseModel> localPromiseList=new ArrayList<PromiseModel>();
+    ArrayList<PromiseDetailModel> promiseDetail=new ArrayList<PromiseDetailModel>();
+
+    PromiseModel promiseModel;
+    PromiseDetailModel promiseDetailModel;
+
+
     RepInfoModel mRepInfoModel;
     private static final String LOG_TAG = "LoginActivity";
     LinearLayout forgotPasswordll;
@@ -334,6 +346,108 @@ public class LoginActivity extends AppCompatActivity{
                     Log.e(LOG_TAG,"NEWS ELEMENT SIZE"+newsListUpdated.size());
                     editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsListUpdated));
                 }
+
+                Log.e(LOG_TAG,"PromiseCountry");
+
+                JSONArray jArrayPromiseCountry = responseObject.getJSONArray("PromisesCountry");
+                Log.e(LOG_TAG,"PromiseCountry"+jArrayPromiseCountry.toString());
+                for(int i =0 ; i<jArrayPromiseCountry.length();i++) {
+                    JSONObject promiseObj=jArrayPromiseCountry.getJSONObject(i);
+                    promiseModel=new PromiseModel();
+                    promiseModel.setPromiseId(promiseObj.getString("PromiseId"));
+                    promiseModel.setPromiseImageId(promiseObj.getString("PromiseImageId"));
+                    promiseModel.setPromiseCountry(promiseObj.getString("Country"));
+                    promiseModel.setPromiseState(promiseObj.getString("State"));
+                    promiseModel.setPromiseCity(promiseObj.getString("City"));
+                    promiseModel.setPromiseType(promiseObj.getString("PromiseType"));
+                    promiseModel.setPromiseCount(promiseObj.getString("PromiseCount"));
+                    promiseModel.setPromiseImage(promiseObj.getString("PromiseImage"));
+                    promiseDetail.clear();
+                    if(!promiseObj.getString("PromiseCount").equals("0")){
+                        JSONArray jArrayPromiseDetail =promiseObj.getJSONArray("PromiseDetail");
+                        Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
+                        for (int j = 0; j < jArrayPromiseDetail.length(); j++) {
+                            JSONObject promiseDetailObj = jArrayPromiseDetail.getJSONObject(j);
+                            promiseDetailModel = new PromiseDetailModel();
+                            promiseDetailModel.setPromiseDetailId(promiseDetailObj.getString("PromiseDetailId"));
+                            promiseDetailModel.setPromiseId(promiseDetailObj.getString("PromiseId"));
+                            promiseDetailModel.setPromiseType(promiseDetailObj.getString("PromiseType"));
+                            promiseDetailModel.setPromiseDetailName(promiseDetailObj.getString("PromiseDetailName"));
+                            promiseDetailModel.setPromiseDetailSynopsis(promiseDetailObj.getString("PromiseDetailSynopsis"));
+                            promiseDetail.add(promiseDetailModel);
+                        }
+                    }
+                    promiseModel.setPromiseDetail(promiseDetail);
+                    centralPromiseList.add(promiseModel);
+                }
+                editor.putString(Constants.PROMISE_COUNTRY, new Gson().toJson(centralPromiseList));
+
+                JSONArray jArrayPromiseState = responseObject.getJSONArray("PromisesState");
+
+                for(int i =0 ; i<jArrayPromiseState.length();i++) {
+                    JSONObject promiseObj=jArrayPromiseState.getJSONObject(i);
+                    promiseModel=new PromiseModel();
+                    promiseModel.setPromiseId(promiseObj.getString("PromiseId"));
+                    promiseModel.setPromiseImageId(promiseObj.getString("PromiseImageId"));
+                    promiseModel.setPromiseCountry(promiseObj.getString("Country"));
+                    promiseModel.setPromiseState(promiseObj.getString("State"));
+                    promiseModel.setPromiseCity(promiseObj.getString("City"));
+                    promiseModel.setPromiseType(promiseObj.getString("PromiseType"));
+                    promiseModel.setPromiseCount(promiseObj.getString("PromiseCount"));
+                    promiseModel.setPromiseImage(promiseObj.getString("PromiseImage"));
+                    promiseDetail.clear();
+                    if(!promiseObj.getString("PromiseCount").equals("0")){
+                        JSONArray jArrayPromiseDetail =promiseObj.getJSONArray("PromiseDetail");
+                        Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
+                        for (int j = 0; j < jArrayPromiseDetail.length(); j++) {
+                            JSONObject promiseDetailObj = jArrayPromiseDetail.getJSONObject(j);
+                            promiseDetailModel = new PromiseDetailModel();
+                            promiseDetailModel.setPromiseDetailId(promiseDetailObj.getString("PromiseDetailId"));
+                            promiseDetailModel.setPromiseId(promiseDetailObj.getString("PromiseId"));
+                            promiseDetailModel.setPromiseType(promiseDetailObj.getString("PromiseType"));
+                            promiseDetailModel.setPromiseDetailName(promiseDetailObj.getString("PromiseDetailName"));
+                            promiseDetailModel.setPromiseDetailSynopsis(promiseDetailObj.getString("PromiseDetailSynopsis"));
+                            promiseDetail.add(promiseDetailModel);
+                        }
+                    }
+                    promiseModel.setPromiseDetail(promiseDetail);
+                    statePromiseList.add(promiseModel);
+                }
+                editor.putString(Constants.PROMISE_STATE, new Gson().toJson(statePromiseList));
+
+
+                JSONArray jArrayPromiseLocal = responseObject.getJSONArray("PromisesCity");
+
+                for(int i =0 ; i<jArrayPromiseLocal.length();i++) {
+                    JSONObject promiseObj=jArrayPromiseLocal.getJSONObject(i);
+                    promiseModel=new PromiseModel();
+                    promiseModel.setPromiseId(promiseObj.getString("PromiseId"));
+                    promiseModel.setPromiseImageId(promiseObj.getString("PromiseImageId"));
+                    promiseModel.setPromiseCountry(promiseObj.getString("Country"));
+                    promiseModel.setPromiseState(promiseObj.getString("State"));
+                    promiseModel.setPromiseCity(promiseObj.getString("City"));
+                    promiseModel.setPromiseType(promiseObj.getString("PromiseType"));
+                    promiseModel.setPromiseCount(promiseObj.getString("PromiseCount"));
+                    promiseModel.setPromiseImage(promiseObj.getString("PromiseImage"));
+                    promiseDetail.clear();
+                    if(!promiseObj.getString("PromiseCount").equals("0")){
+                        JSONArray jArrayPromiseDetail =promiseObj.getJSONArray("PromiseDetail");
+                        Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
+                        for (int j = 0; j < jArrayPromiseDetail.length(); j++) {
+                            JSONObject promiseDetailObj = jArrayPromiseDetail.getJSONObject(j);
+                            promiseDetailModel = new PromiseDetailModel();
+                            promiseDetailModel.setPromiseDetailId(promiseDetailObj.getString("PromiseDetailId"));
+                            promiseDetailModel.setPromiseId(promiseDetailObj.getString("PromiseId"));
+                            promiseDetailModel.setPromiseType(promiseDetailObj.getString("PromiseType"));
+                            promiseDetailModel.setPromiseDetailName(promiseDetailObj.getString("PromiseDetailName"));
+                            promiseDetailModel.setPromiseDetailSynopsis(promiseDetailObj.getString("PromiseDetailSynopsis"));
+                            promiseDetail.add(promiseDetailModel);
+                        }
+                    }
+                    promiseModel.setPromiseDetail(promiseDetail);
+                    localPromiseList.add(promiseModel);
+                }
+                editor.putString(Constants.PROMISE_CITY, new Gson().toJson(localPromiseList));
 
 
                 int noOfVotesPost= responseObject.getInt("NoOfVotes_Post");

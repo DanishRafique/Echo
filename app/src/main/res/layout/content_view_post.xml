@@ -203,9 +203,6 @@
                 android:visibility="gone"
                 android:src="@drawable/news_image"
                 />
-
-
-
         </LinearLayout>
 
         <RelativeLayout
