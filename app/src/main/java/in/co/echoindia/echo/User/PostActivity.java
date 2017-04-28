@@ -425,12 +425,7 @@ public class PostActivity extends AppCompatActivity {
             Log.e(LOG_TAG,"Insert Post : "+o.toString());
             dialog.dismiss();
             finish();
-
         }
-
-
-
-
     }
 
     @Override

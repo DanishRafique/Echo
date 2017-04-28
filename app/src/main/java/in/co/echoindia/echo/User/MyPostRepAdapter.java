@@ -1,4 +1,4 @@
-package in.co.echoindia.echo.HomePage;
+package in.co.echoindia.echo.User;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -51,6 +51,8 @@ import java.util.Date;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import in.co.echoindia.echo.HomePage.BuzzImageAdapter;
+import in.co.echoindia.echo.HomePage.PollCommentAdapter;
 import in.co.echoindia.echo.Model.PollCommentModel;
 import in.co.echoindia.echo.Model.PostDetailModel;
 import in.co.echoindia.echo.Model.RepDetailModel;
@@ -60,39 +62,43 @@ import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
 
 /**
- * Created by Danish Rafique on 21-04-2017.
+ * Created by Danish Rafique on 28-04-2017.
  */
 
-public class HomeAdapter extends BaseAdapter {
-    ArrayList<PostDetailModel> homeDetailsModels = new ArrayList<>();
-    Activity activity;
+public class MyPostRepAdapter extends BaseAdapter {
+
     ArrayList<PostDetailModel> buzzDetailsModels = new ArrayList<>();
+    Activity activity;
 
-    TextView homeFullName;
-    ArrayList<PostDetailModel> homeListArray = new ArrayList<>();
+    TextView buzzFullName;
 
-    CircleImageView homeUserImage;
-    TextView homeUserName;
-    TextView homeTime;
-    TextView homeText;
-    ListView homeImageListView;
-    TextView homeUpvoteValue;
-    TextView homeDownvoteValue;
+    CircleImageView buzzUserImage;
+    TextView buzzUserName;
+    TextView buzzUserDesignation;
+    TextView buzzTime;
+    TextView buzzText;
+    ListView buzzImageListView;
+    TextView buzzUpvoteValue;
+    TextView buzzDownvoteValue;
 
     SharedPreferences sharedpreferences;
     SharedPreferences.Editor editor;
 
-    ImageView homeImage1,homeImage2,homeImage3;
-    RelativeLayout homeMoreImage;
-    TextView homeMoreImageText;
-    LinearLayout homeMoreThanOneImage;
-    RelativeLayout homeMoreThanTwoImage;
+    ImageView buzzImage1,buzzImage2,buzzImage3;
+    RelativeLayout buzzMoreImage;
+    TextView buzzMoreImageText;
+    LinearLayout buzzMoreThanOneImage;
+    RelativeLayout buzzMoreThanTwoImage;
+
+    LinearLayout buzzShare;
+    TextView buzzSharedFrom;
 
 
     BuzzImageAdapter mBuzzImageAdapter;
-    private static final String LOG_TAG = "HomeAdapter";
+    private static final String LOG_TAG = "BuzzAdapter";
+    ArrayList<PostDetailModel> homeDetailsModels = new ArrayList<>();
 
-    LinearLayout homeImageList;
+    LinearLayout buzzImageList;
 
 
     Dialog commentDialog;
@@ -107,24 +113,19 @@ public class HomeAdapter extends BaseAdapter {
 
     ArrayList<PostDetailModel> postUpdatedList=new ArrayList<>();
     ToggleButton tempBtn;
-    LinearLayout homeShare;
-    TextView homeSharedFrom;
     PostDetailModel mPostDetailModel;
-    LinearLayout commentListLL;
     String postLocation;
     TextView postLocationText;
     LinearLayout postLocationll;
-
-
-    public HomeAdapter(Activity activity, ArrayList<PostDetailModel> homeDetailsModels) {
+    public MyPostRepAdapter(Activity activity, ArrayList<PostDetailModel> buzzDetailsModels) {
         this.activity = activity;
-        this.homeDetailsModels = homeDetailsModels;
+        this.buzzDetailsModels = buzzDetailsModels;
     }
 
     @Override
     public int getCount() {
-        if(homeDetailsModels != null)
-            return homeDetailsModels.size();
+        if(buzzDetailsModels != null)
+            return buzzDetailsModels.size();
         else
             return  0;
     }
@@ -142,43 +143,48 @@ public class HomeAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup viewGroup) {
         LayoutInflater inflater=(LayoutInflater) this.activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.list_home_child, null);
-        final PostDetailModel homeObj = homeDetailsModels.get(position);
-        homeFullName=(TextView)convertView.findViewById(R.id.home_full_name);
-        homeUserImage=(CircleImageView) convertView.findViewById(R.id.home_user_image);
-        homeUserName=(TextView) convertView.findViewById(R.id.home_user_name);
-        homeTime=(TextView)convertView.findViewById(R.id.home_time);
-        homeText=(TextView)convertView.findViewById(R.id.home_text);
-        homeImageList=(LinearLayout)convertView.findViewById(R.id.home_image_list);
-        homeUpvoteValue=(TextView)convertView.findViewById(R.id.home_upvote_value);
-        homeDownvoteValue=(TextView)convertView.findViewById(R.id.home_downvote_value);
-        homeImage1=(ImageView)convertView.findViewById(R.id.home_image_1);
-        homeImage2=(ImageView)convertView.findViewById(R.id.home_image_2);
-        homeImage3=(ImageView)convertView.findViewById(R.id.home_image_3);
+        convertView = inflater.inflate(R.layout.list_buzz_child, null);
+        final PostDetailModel buzzObj = buzzDetailsModels.get(position);
+        buzzFullName=(TextView)convertView.findViewById(R.id.buzz_full_name);
+        buzzUserImage=(CircleImageView) convertView.findViewById(R.id.buzz_user_image);
+        buzzUserName=(TextView) convertView.findViewById(R.id.buzz_user_name);
+        buzzUserDesignation=(TextView)convertView.findViewById(R.id.buzz_user_designation);
+        buzzTime=(TextView)convertView.findViewById(R.id.buzz_time);
+        buzzText=(TextView)convertView.findViewById(R.id.buzz_text);
+        buzzImageList=(LinearLayout)convertView.findViewById(R.id.buzz_image_list);
+        buzzUpvoteValue=(TextView)convertView.findViewById(R.id.buzz_upvote_value);
+        buzzDownvoteValue=(TextView)convertView.findViewById(R.id.buzz_downvote_value);
+        buzzImage1=(ImageView)convertView.findViewById(R.id.buzz_image_1);
+        buzzImage2=(ImageView)convertView.findViewById(R.id.buzz_image_2);
+        buzzImage3=(ImageView)convertView.findViewById(R.id.buzz_image_3);
 
-        homeMoreImageText=(TextView)convertView.findViewById(R.id.home_more_image_text);
-        homeMoreImage=(RelativeLayout)convertView.findViewById(R.id.home_more_image);
-        homeMoreThanOneImage=(LinearLayout)convertView.findViewById(R.id.home_more_than_one_image);
-        homeMoreThanTwoImage=(RelativeLayout)convertView.findViewById(R.id.home_more_than_two_image);
+        buzzMoreImageText=(TextView)convertView.findViewById(R.id.buzz_more_image_text);
+        buzzMoreImage=(RelativeLayout)convertView.findViewById(R.id.buzz_more_image);
+        buzzMoreThanOneImage=(LinearLayout)convertView.findViewById(R.id.buzz_more_than_one_image);
+        buzzMoreThanTwoImage=(RelativeLayout)convertView.findViewById(R.id.buzz_more_than_two_image);
 
-        homeShare=(LinearLayout)convertView.findViewById(R.id.home_ll_share);
-        homeSharedFrom=(TextView)convertView.findViewById(R.id.home_shared_from);
-        postLocationll=(LinearLayout)convertView.findViewById(R.id.home_location_ll);
-        postLocationText=(TextView)convertView.findViewById(R.id.home_location_text);
-        final LinearLayout buzzShareButton=(LinearLayout)convertView.findViewById(R.id.home_share_button);
+        buzzShare=(LinearLayout)convertView.findViewById(R.id.buzz_ll_share);
+        buzzSharedFrom=(TextView)convertView.findViewById(R.id.buzz_shared_from);
+        postLocationll=(LinearLayout)convertView.findViewById(R.id.buzz_location_ll);
+        postLocationText=(TextView)convertView.findViewById(R.id.buzz_location_text);
+
         sharedpreferences = AppUtil.getAppPreferences(activity);
         editor = sharedpreferences.edit();
 
-        if(homeObj.getIsShared().equals("0")){
-            homeShare.setVisibility(View.GONE);
+        final LinearLayout  buzzShareButton=(LinearLayout)convertView.findViewById(R.id.buzz_share_button);
+
+
+
+        if(buzzObj.getIsShared().equals("0")){
+            buzzShare.setVisibility(View.GONE);
         }
-        else if(homeObj.getIsShared().equals("1")){
-            homeSharedFrom.setText(homeObj.getSharedFrom());
+        else if(buzzObj.getIsShared().equals("1")){
+            buzzSharedFrom.setText(buzzObj.getSharedFrom());
         }
 
-        homeFullName.setText(homeObj.getPostFirstName()+" "+homeObj.getPostLastName());
+        buzzFullName.setText(buzzObj.getPostFirstName()+" "+buzzObj.getPostLastName());
 
-        postLocation=homeObj.getPostLocation();
+        postLocation=buzzObj.getPostLocation();
         if(postLocation==null || postLocation.isEmpty() || postLocation.equals(" ") || postLocation.equals("")){
             postLocationll.setVisibility(View.GONE);
         }
@@ -186,45 +192,45 @@ public class HomeAdapter extends BaseAdapter {
             postLocationText.setText(postLocation);
         }
 
-        Glide.with(activity).load(homeObj.getPostUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeUserImage);
-        homeUserName.setText(homeObj.getPostUserName());
+        Glide.with(activity).load(buzzObj.getPostUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(buzzUserImage);
+        buzzUserName.setText(buzzObj.getPostUserName());
+        buzzUserDesignation.setText(buzzObj.getPostRepDesignation()+" , "+buzzObj.getPostRepParty());
+        buzzTime.setText(buzzObj.getPostTime());
+        buzzText.setText(buzzObj.getPostText());
+        buzzUpvoteValue.setText(String.valueOf(buzzObj.getPostUpVote()));
+        buzzDownvoteValue.setText(String.valueOf(buzzObj.getPostDownVote()));
+        final LinearLayout postCommentButton =(LinearLayout)convertView.findViewById(R.id.buzz_comment_link);
+        final String postId=buzzObj.getPostId();
+        final String fullnameStr=buzzObj.getPostFirstName()+" "+buzzObj.getPostLastName();
 
-        homeTime.setText(homeObj.getPostTime());
-        homeText.setText(homeObj.getPostText());
-        homeUpvoteValue.setText(String.valueOf(homeObj.getPostUpVote()));
-        homeDownvoteValue.setText(String.valueOf(homeObj.getPostDownVote()));
-        final LinearLayout postCommentButton =(LinearLayout)convertView.findViewById(R.id.home_comment_link);
-        final String postId=homeObj.getPostId();
-        final String fullNameStr=homeObj.getPostFirstName()+" "+homeObj.getPostLastName();
 
-
-        final ArrayList<String> homeImageArrayList = homeObj.getPostImages();
-        if(homeImageArrayList!=null){
-            for(int i=0;i<homeImageArrayList.size();i++){
+        final ArrayList<String> buzzImageArrayList = buzzObj.getPostImages();
+        if(buzzImageArrayList!=null){
+            for(int i=0;i<buzzImageArrayList.size();i++){
                 if(i==0){
-                    homeImage1.setVisibility(View.VISIBLE);
-                    Glide.with(activity).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage1);
+                    buzzImage1.setVisibility(View.VISIBLE);
+                    Glide.with(activity).load(buzzImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(buzzImage1);
                 }
                 else if(i==1){
-                    homeMoreThanOneImage.setVisibility(View.VISIBLE);
-                    homeImage2.setVisibility(View.VISIBLE);
-                    Glide.with(activity).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage2);
+                    buzzMoreThanOneImage.setVisibility(View.VISIBLE);
+                    buzzImage2.setVisibility(View.VISIBLE);
+                    Glide.with(activity).load(buzzImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(buzzImage2);
                 }
                 else if(i==2){
-                    homeMoreThanTwoImage.setVisibility(View.VISIBLE);
-                    homeImage3.setVisibility(View.VISIBLE);
-                    Glide.with(activity).load(homeImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeImage3);
+                    buzzMoreThanTwoImage.setVisibility(View.VISIBLE);
+                    buzzImage3.setVisibility(View.VISIBLE);
+                    Glide.with(activity).load(buzzImageArrayList.get(i)).diskCacheStrategy(DiskCacheStrategy.ALL).into(buzzImage3);
                 }
                 else if(i>2){
-                    homeMoreImage.setVisibility(View.VISIBLE);
-                    homeMoreImageText.setVisibility(View.VISIBLE);
-                    int numberOfImage=homeImageArrayList.size()-3;
-                    homeMoreImageText.setText(String.valueOf(numberOfImage)+"+");
+                    buzzMoreImage.setVisibility(View.VISIBLE);
+                    buzzMoreImageText.setVisibility(View.VISIBLE);
+                    int numberOfImage=buzzImageArrayList.size()-3;
+                    buzzMoreImageText.setText(String.valueOf(numberOfImage)+"+");
                 }
             }
         }
         else{
-            homeImageList.setVisibility(View.GONE);
+            buzzImageList.setVisibility(View.GONE);
         }
 
 
@@ -238,78 +244,77 @@ public class HomeAdapter extends BaseAdapter {
         });
 
 
-        final ToggleButton homeUpvote = (ToggleButton) convertView.findViewById(R.id.home_upvote);
-        homeUpvote.setTag(String.valueOf(homeObj.getPostId()));
-        final ToggleButton homeDownvote = (ToggleButton) convertView.findViewById(R.id.home_downvote);
-        homeDownvote.setTag(String.valueOf(homeObj.getPostId()));
+        final ToggleButton buzzUpvote = (ToggleButton) convertView.findViewById(R.id.buzz_upvote);
+        buzzUpvote.setTag(String.valueOf(buzzObj.getPostId()));
+        final ToggleButton buzzDownvote = (ToggleButton) convertView.findViewById(R.id.buzz_downvote);
+        buzzDownvote.setTag(String.valueOf(buzzObj.getPostId()));
 
-        if(homeObj.isPostUpVoteValue()){
-            homeUpvote.setChecked(true);
-            homeDownvote.setEnabled(false);
+        if(buzzObj.isPostUpVoteValue()){
+            buzzUpvote.setChecked(true);
+            buzzDownvote.setEnabled(false);
         }
-        else if(homeObj.isPostDownVoteValue()){
-            homeDownvote.setChecked(true);
-            homeUpvote.setEnabled(false);
+        else if(buzzObj.isPostDownVoteValue()){
+            buzzDownvote.setChecked(true);
+            buzzUpvote.setEnabled(false);
         }
-
-
-        homeUpvote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        buzzUpvote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 postVote postVote = new postVote();
                 TextView textView = null;
                 tempBtn = (ToggleButton) buttonView;
                 ViewGroup view = (ViewGroup) tempBtn.getParent();
-                textView = (TextView) view.findViewById(R.id.home_upvote_value);
+                textView = (TextView) view.findViewById(R.id.buzz_upvote_value);
                 Log.e("Voting...", textView.getText().toString());
                 int upvote = Integer.parseInt(textView.getText().toString());
+
                 ViewGroup rootParent = (ViewGroup) view.getParent();
-                ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.home_downvote);
+                ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.buzz_downvote);
 
                 if(!isChecked){
                     t.setEnabled(true);
                     upvote --;
-                    homeObj.setPostUpVoteValue(false);
-                    homeObj.setPostUpVote(upvote);
+                    buzzObj.setPostUpVoteValue(false);
+                    buzzObj.setPostUpVote(upvote);
                     postVote.execute("up", "none");
                     textView.setText(upvote + "");
                 }
                 else {
                     t.setEnabled(false);
                     upvote ++;
-                    homeObj.setPostUpVoteValue(true);
-                    homeObj.setPostUpVote(upvote);
+                    buzzObj.setPostUpVoteValue(true);
+                    buzzObj.setPostUpVote(upvote);
                     postVote.execute("up", "up");
                     textView.setText(upvote + "");
                 }
             }
         });
 
-        homeDownvote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        buzzDownvote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 postVote postVote = new postVote();
                 TextView textView = null;
                 tempBtn = (ToggleButton) buttonView;
                 ViewGroup view = (ViewGroup) tempBtn.getParent();
-                textView = (TextView) view.findViewById(R.id.home_downvote_value);
+                textView = (TextView) view.findViewById(R.id.buzz_downvote_value);
                 Log.e("Voting...", textView.getText().toString());
                 int downvote = Integer.parseInt(textView.getText().toString());
                 ViewGroup rootParent = (ViewGroup) view.getParent();
-                ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.home_upvote);
+                ToggleButton t = (ToggleButton) rootParent.findViewById(R.id.buzz_upvote);
                 if(!isChecked){
                     t.setEnabled(true);
                     downvote --;
-                    homeObj.setPostDownVoteValue(false);
-                    homeObj.setPostDownVote(downvote);
+                    buzzObj.setPostDownVoteValue(false);
+                    buzzObj.setPostDownVote(downvote);
                     postVote.execute("down", "none");
                     textView.setText(downvote + "");
                 }
                 else {
                     t.setEnabled(false);
                     downvote ++;
-                    homeObj.setPostDownVoteValue(true);
-                    homeObj.setPostDownVote(downvote);
+                    buzzObj.setPostDownVoteValue(true);
+                    buzzObj.setPostDownVote(downvote);
                     postVote.execute("down", "down");
                     textView.setText(downvote + "");
                 }
@@ -318,21 +323,21 @@ public class HomeAdapter extends BaseAdapter {
 
         postUpdatedList.clear();
 
-        for(int i=0;i<homeDetailsModels.size();i++){
+        for(int i=0;i<buzzDetailsModels.size();i++){
             if(i!=position) {
-                postUpdatedList.add(homeDetailsModels.get(i));
+                postUpdatedList.add(buzzDetailsModels.get(i));
             }
             else if(i==position){
-                postUpdatedList.add(homeObj);
+                postUpdatedList.add(buzzObj);
             }
         }
-        editor.putString(Constants.HOME_LIST, new Gson().toJson(postUpdatedList));
+        editor.putString(Constants.MY_POST, new Gson().toJson(postUpdatedList));
         editor.commit();
 
         buzzShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharePost mSharePost=new SharePost(fullNameStr,postId);
+                SharePost mSharePost=new SharePost(fullnameStr,postId);
                 mSharePost.execute();
             }
         });
@@ -413,20 +418,16 @@ public class HomeAdapter extends BaseAdapter {
         }
     }
 
-
-
     void openPollCommentDialog(final String pollId) {
         commentDialog = new Dialog(activity);
         commentDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         commentDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         commentDialog.setContentView(R.layout.dialog_poll_comment);
-        commentListLL=(LinearLayout)commentDialog.findViewById(R.id.comment_list_ll);
         postCommentList = (ListView) commentDialog.findViewById(R.id.poll_comment_list);
         postCommentEdit = (EditText) commentDialog.findViewById(R.id.poll_comment_edt);
         postCommentSend = (ImageView) commentDialog.findViewById(R.id.poll_comment_send);
         postCommentSwipeRefresh = (SwipeRefreshLayout)commentDialog.findViewById(R.id.poll_comment_swipe_refresh);
         commentDialog.show();
-
         postCommentSwipeRefresh.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -560,6 +561,7 @@ public class HomeAdapter extends BaseAdapter {
         postCommentSwipeRefresh.setRefreshing(false);
 
     }
+
     public class PollCommentsComparator implements Comparator<PollCommentModel> {
 
         @Override
@@ -768,12 +770,17 @@ public class HomeAdapter extends BaseAdapter {
                         mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
                         mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
                         mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
+
+
+                        mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
+
+
+
                         mPostDetailModel.setSharedFromUserName(buzzObject.getString("SharedFromUserName"));
                         mPostDetailModel.setPostUpVoteValue(false);
-                        mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
                         mPostDetailModel.setPostDownVoteValue(false);
                         JSONArray postImageArray=buzzObject.getJSONArray("images");
-                        ArrayList<String>postImageArrayList = new ArrayList<>();
+                        ArrayList<String> postImageArrayList = new ArrayList<>();
                         for(int j =0 ; j<postImageArray.length();j++) {
                             postImageArrayList.add(postImageArray.getString(j));
                         }
@@ -784,7 +791,6 @@ public class HomeAdapter extends BaseAdapter {
                             mPostDetailModel.setPostImages(null);
                         }
                         if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("REP")) {
-
                             mPostDetailModel.setPostFirstName(mRepDetails.getFirstName());
                             mPostDetailModel.setPostLastName(mRepDetails.getLastName());
                             mPostDetailModel.setPostUserPhoto(mRepDetails.getUserPhoto());
@@ -792,22 +798,16 @@ public class HomeAdapter extends BaseAdapter {
                             mPostDetailModel.setPostRepDesignation(mRepDetails.getRepDesignation());
                             buzzDetailsModels.add(0,mPostDetailModel);
                             editor.putString(Constants.BUZZ_LIST, new Gson().toJson(buzzDetailsModels));
-                            Log.e(LOG_TAG,"Added to Buzz List");
                             editor.putInt(Constants.LAST_BUZZ_UPDATE,Integer.parseInt(mPostDetailModel.getPostId()));
-
                         }
                         else if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("USER")) {
-
                             mPostDetailModel.setPostFirstName(mUserDetails.getFirstName());
                             mPostDetailModel.setPostLastName(mUserDetails.getLastName());
                             mPostDetailModel.setPostUserPhoto(mUserDetails.getUserPhoto());
                             homeDetailsModels.add(0,mPostDetailModel);
                             editor.putString(Constants.HOME_LIST, new Gson().toJson(homeDetailsModels));
-                            Log.e(LOG_TAG,"Added to Home List"+", Number of elements "+homeDetailsModels.size());
                             editor.putInt(Constants.LAST_USER_UPDATE,Integer.parseInt(mPostDetailModel.getPostId()));
-
                         }
-
                     }
                     editor.commit();
                     notifyDataSetChanged();
@@ -823,10 +823,8 @@ public class HomeAdapter extends BaseAdapter {
                 e.printStackTrace();
                 Log.e(LOG_TAG,e.toString());
             }
-
         }
     }
 
 
 }
-

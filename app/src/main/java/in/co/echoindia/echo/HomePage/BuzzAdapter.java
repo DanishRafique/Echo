@@ -112,6 +112,9 @@ public class BuzzAdapter extends BaseAdapter {
     ArrayList<PostDetailModel> postUpdatedList=new ArrayList<>();
     ToggleButton tempBtn;
     PostDetailModel mPostDetailModel;
+    String postLocation;
+    TextView postLocationText;
+    LinearLayout postLocationll;
 
 
 
@@ -166,6 +169,8 @@ public class BuzzAdapter extends BaseAdapter {
 
         buzzShare=(LinearLayout)convertView.findViewById(R.id.buzz_ll_share);
         buzzSharedFrom=(TextView)convertView.findViewById(R.id.buzz_shared_from);
+        postLocationll=(LinearLayout)convertView.findViewById(R.id.buzz_location_ll);
+        postLocationText=(TextView)convertView.findViewById(R.id.buzz_location_text);
 
         sharedpreferences = AppUtil.getAppPreferences(activity);
         editor = sharedpreferences.edit();
@@ -182,6 +187,14 @@ public class BuzzAdapter extends BaseAdapter {
         }
 
         buzzFullName.setText(buzzObj.getPostFirstName()+" "+buzzObj.getPostLastName());
+
+        postLocation=buzzObj.getPostLocation();
+        if(postLocation==null || postLocation.isEmpty() || postLocation.equals(" ") || postLocation.equals("")){
+            postLocationll.setVisibility(View.GONE);
+        }
+        else{
+            postLocationText.setText(postLocation);
+        }
 
         Glide.with(activity).load(buzzObj.getPostUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(buzzUserImage);
         buzzUserName.setText(buzzObj.getPostUserName());
@@ -763,7 +776,7 @@ public class BuzzAdapter extends BaseAdapter {
                         mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
 
 
-
+                        mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
 
 
 

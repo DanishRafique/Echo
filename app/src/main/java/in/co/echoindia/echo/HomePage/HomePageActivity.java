@@ -56,7 +56,7 @@ import in.co.echoindia.echo.User.DevelopmentActivity;
 import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
 import in.co.echoindia.echo.User.LoginActivity;
 import in.co.echoindia.echo.User.MyAccountActivity;
-import in.co.echoindia.echo.User.MyProfileActivity;
+import in.co.echoindia.echo.User.MyPostActivity;
 import in.co.echoindia.echo.User.PostActivity;
 import in.co.echoindia.echo.User.PromisesActivity;
 import in.co.echoindia.echo.User.SettingsActivity;
@@ -232,7 +232,7 @@ public class HomePageActivity extends AppCompatActivity
             ExecuteLogout mExecuteLogout=new ExecuteLogout();
             mExecuteLogout.execute();
         } else if(id == R.id.nav_my_profile){
-            Intent i = new Intent(HomePageActivity.this,MyProfileActivity.class);
+            Intent i = new Intent(HomePageActivity.this,MyPostActivity.class);
             startActivity(i);
         }else if(id == R.id.nav_share){
             Intent i = new Intent(HomePageActivity.this,ChangePasswordActivity.class);
@@ -260,6 +260,7 @@ public class HomePageActivity extends AppCompatActivity
         editor.putBoolean(Constants.SETTINGS_IS_LOGGED, false);
         editor.putString(Constants.SETTINGS_IS_LOGGED_USER_CODE, "");
         editor.putString(Constants.SETTINGS_OBJ_USER,"");
+        editor.putString(Constants.MY_POST,"");
         editor.commit();
         Intent loginPathIntent = new Intent(HomePageActivity.this, LoginActivity.class);
         loginPathIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

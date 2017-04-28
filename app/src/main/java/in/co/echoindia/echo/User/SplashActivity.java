@@ -339,6 +339,7 @@ public class SplashActivity extends AppCompatActivity {
                     mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
                     mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
                     mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
+                    mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
                     mPostDetailModel.setPostRepParty(buzzObject.getString("RepParty"));
                     mPostDetailModel.setPostRepDesignation(buzzObject.getString("RepDesignation"));
                     mPostDetailModel.setPostRepDetail(buzzObject.getString("RepDetail"));
@@ -408,6 +409,7 @@ public class SplashActivity extends AppCompatActivity {
                     mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
                     mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
                     mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
+                    mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
                     mPostDetailModel.setPostUpVoteValue(false);
                     mPostDetailModel.setPostDownVoteValue(false);
                     JSONArray postImageArray=buzzObject.getJSONArray("images");

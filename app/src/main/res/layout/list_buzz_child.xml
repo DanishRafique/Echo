@@ -63,18 +63,6 @@
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/buzz_time"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_below="@+id/buzz_user_designation"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1"
-                            android:text="14hr ago"
-                            android:textSize="13sp"
-                            android:textStyle="italic" />
-
                     </LinearLayout>
 
                     <TextView
@@ -94,10 +82,10 @@
                     <TextView
                         android:id="@+id/buzz_user_designation"
                         android:layout_width="match_parent"
-                        android:layout_marginRight="80dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/buzz_user_name"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginRight="80dp"
                         android:text="MP , Trinamool Congress Party"
                         android:textColor="#000"
                         android:textSize="12sp" />
@@ -140,6 +128,14 @@
 
 
                 </RelativeLayout>
+                <ImageView
+                    android:id="@+id/buzz_down_dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_down"
+                    android:layout_marginRight="10dp"
+
+                    />
 
             </LinearLayout>
 
@@ -237,13 +233,63 @@
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/buzz_post_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/buzz_image_list"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/buzz_location_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/buzz_location_logo"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/ic_location_grey" />
+
+                    <TextView
+                        android:id="@+id/buzz_location_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignBaseline="@+id/news_timeline"
+                        android:layout_alignBottom="@+id/news_timeline"
+
+                        android:layout_marginLeft="10dp"
+                        android:layout_toEndOf="@+id/news_vendor_logo"
+                        android:gravity="center_vertical"
+                        android:text="CNN Broadcast"
+                        android:textSize="12sp"
+                        android:textStyle="italic" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/buzz_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="2dp"
+                    android:text="4 hr ago"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+
+            </RelativeLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/buzz_image_list">
+                android:layout_below="@+id/buzz_post_footer">
 
                 <LinearLayout
                     android:layout_width="match_parent"

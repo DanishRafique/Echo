@@ -443,7 +443,7 @@ public class SignupActivity extends AppCompatActivity {
                 try {
                     Bitmap image = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    image.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
+                    image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
                     byteArray = byteArrayOutputStream.toByteArray();
                     Log.e("byteArray", byteArray.toString());
                     //btnUpload.setVisibility(View.VISIBLE);

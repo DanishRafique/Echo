@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="20dp"
+        android:background="#cccccc" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="7"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+        <TextView
+            android:id="@+id/promise_number"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:text="1"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#000"
+            android:textSize="40sp"
+            android:layout_marginRight="10dp"
+            />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/promise_detail_"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delhi To Be Made A Trade And Retail Hub"
+                android:textStyle="bold"
+                android:layout_marginBottom="5dp"
+                android:textColor="#000"
+                android:layout_marginRight="16dp"
+                android:textSize="15sp"/>
+            <TextView
+                android:id="@+id/comment_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="14sp"
+                android:textColor="#000"
+                android:layout_below="@+id/comment_name"
+                android:layout_marginBottom="5dp"
+                android:text="AAP will formulate trader-friendly policies and streamline rules and regulations for setting up and running businesses." />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</FrameLayout>

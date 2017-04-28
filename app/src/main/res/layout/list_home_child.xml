@@ -8,10 +8,10 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
+        android:layout_marginTop="3dp"
         app:cardCornerRadius="2dp"
         app:cardElevation="10dp">
 
@@ -36,55 +36,47 @@
                     android:layout_height="48dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/bg_comment_avatar"
-                     />
+                    android:background="@drawable/bg_comment_avatar" />
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
+
                     <LinearLayout
-                        android:layout_marginTop="10dp"
                         android:id="@+id/home_name_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:weightSum="4"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
                         <TextView
                             android:id="@+id/home_full_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="3"
                             android:layout_marginRight="16dp"
+                            android:layout_weight="3"
                             android:text="Danish Rafique"
                             android:textColor="#000"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/home_time"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_alignParentRight="true"
-                            android:layout_gravity="center_vertical"
-                            android:text="14hr ago"
-                            android:textSize="13sp"
-                            android:textStyle="italic" />
-
                     </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/home_ll_share"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_below="@+id/home_name_title">
+                        android:layout_below="@+id/home_name_title"
+                        android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="shared "/>
+                            android:text="shared " />
+
                         <TextView
                             android:id="@+id/home_shared_from"
                             android:layout_width="wrap_content"
@@ -92,38 +84,45 @@
                             android:text="Danish Rafique"
                             android:textColor="#000"
                             android:textSize="15sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="'s"
                             android:textColor="#000"
                             android:textSize="15sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=" post"/>
+                            android:text=" post" />
 
                     </LinearLayout>
 
                     <TextView
-                        android:visibility="gone"
                         android:id="@+id/home_user_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:layout_marginRight="16dp"
                         android:layout_below="@+id/home_ll_share"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="3"
                         android:text="Danish Rafique"
                         android:textColor="#000"
                         android:textSize="13sp"
-                        android:textStyle="bold" />
-
-
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
 
                 </RelativeLayout>
+                <ImageView
+                    android:id="@+id/home_down_dialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_down"
+                    android:layout_marginRight="10dp"
+                    />
 
             </LinearLayout>
 
@@ -142,41 +141,41 @@
                 android:id="@+id/home_image_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:orientation="vertical"
-                android:layout_below="@+id/home_text"
                 android:layout_alignParentStart="true"
-                android:weightSum="2"
-                >
+                android:layout_below="@+id/home_text"
+                android:orientation="vertical"
+                android:scaleType="centerCrop"
+                android:weightSum="2">
+
                 <ImageView
                     android:id="@+id/home_image_1"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:layout_margin="1dp"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/news_image"
-                    android:layout_margin="1dp"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
+
                 <LinearLayout
                     android:id="@+id/home_more_than_one_image"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_weight="1"
-                    android:weightSum="2"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:weightSum="2">
+
                     <ImageView
                         android:id="@+id/home_image_2"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
+                        android:layout_margin="1dp"
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
                         android:src="@drawable/news_image"
-                        android:layout_margin="1dp"
-                        android:visibility="gone"
-                        />
+                        android:visibility="gone" />
 
                     <RelativeLayout
                         android:id="@+id/home_more_than_two_image"
@@ -221,13 +220,62 @@
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/home_post_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/home_image_list"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/home_location_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/home_location_logo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_location_grey" />
+
+                <TextView
+                    android:id="@+id/home_location_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_alignBaseline="@+id/news_timeline"
+
+                    android:layout_alignBottom="@+id/news_timeline"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toEndOf="@+id/news_vendor_logo"
+                    android:text="CNN Broadcast"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/home_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="2dp"
+                    android:text="4 hr ago"
+                    android:layout_marginRight="10dp"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+
+            </RelativeLayout>
+
 
             <RelativeLayout
-                android:layout_below="@+id/home_image_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true">
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/home_post_footer">
 
                 <LinearLayout
                     android:layout_width="match_parent"

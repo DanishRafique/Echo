@@ -51,6 +51,7 @@ public class HomeFragment extends Fragment {
     ArrayList<PostDetailModel> homeList=new ArrayList<PostDetailModel>();
     PostDetailModel mPostDetailModel;
     SwipeRefreshLayout homeSwipeRefresh;
+    Type type;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +63,7 @@ public class HomeFragment extends Fragment {
         homeSwipeRefresh=(SwipeRefreshLayout)v.findViewById(R.id.home_swipe_refresh);
         sharedpreferences = AppUtil.getAppPreferences(getActivity());
         editor = sharedpreferences.edit();
-        Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
+        type= new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
         homeListArray = new Gson().fromJson(sharedpreferences.getString(Constants.HOME_LIST, ""), type);
         Log.e(LOG_TAG,"home Element Count "+homeListArray.size());
         Collections.sort(homeListArray,new PostComparator());
@@ -73,6 +74,7 @@ public class HomeFragment extends Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
+                        homeListArray = new Gson().fromJson(sharedpreferences.getString(Constants.HOME_LIST, ""), type);
                         Log.e(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
                         FetchHome mFetchHome=new FetchHome();
                         mFetchHome.execute();
@@ -114,6 +116,7 @@ public class HomeFragment extends Fragment {
                     mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
                     mPostDetailModel.setPostUpVoteValue(false);
                     mPostDetailModel.setPostDownVoteValue(false);
+                    mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
                     mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
                     mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
                     mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
@@ -243,6 +246,7 @@ public class HomeFragment extends Fragment {
 
     void onRefreshComplete(ArrayList<PostDetailModel> homeListRefresh){
         Collections.sort(homeListRefresh,new PostComparator());
+        Log.e(LOG_TAG,"Number of Element"+homeListRefresh.size());
         HomeAdapter mHomeAdapterRefreshed = new HomeAdapter(getActivity(), homeListRefresh);
         homeListView.setAdapter(mHomeAdapterRefreshed);
         mHomeAdapterRefreshed.notifyDataSetChanged();

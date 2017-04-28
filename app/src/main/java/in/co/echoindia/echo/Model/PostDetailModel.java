@@ -29,6 +29,15 @@ public class PostDetailModel {
     private String SharedCount="";
     private String PostImageRef="";
     private String SharedFromUserName="";
+    private String PostLocation="";
+
+    public String getPostLocation() {
+        return PostLocation;
+    }
+
+    public void setPostLocation(String postLocation) {
+        PostLocation = postLocation;
+    }
 
     public String getSharedFromUserName() {
         return SharedFromUserName;

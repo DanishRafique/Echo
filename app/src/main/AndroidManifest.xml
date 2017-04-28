@@ -14,7 +14,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-
     <uses-feature android:name="android.hardware.camera" />
 
     <!--
@@ -23,10 +22,6 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-
-
-
 
     <application
         android:allowBackup="true"
@@ -171,7 +166,7 @@
                 android:value="in.co.echoindia.echo.User.ElectedRepresentativeActivity" />
         </activity>
         <activity
-            android:name=".User.MyProfileActivity"
+            android:name=".User.MyPostActivity"
             android:label="@string/title_activity_my_profile"
             android:parentActivityName=".HomePage.HomePageActivity"
             android:theme="@style/MyMaterialTheme">
@@ -216,9 +211,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
         </activity>
-        <service android:name="in.co.echoindia.echo.Utils.GPSTracker" />
+
+        <service android:name=".Utils.GPSTracker" />
         <!-- Id service -->
-        <service android:name=".FireBase.FireBaseInstanceIdService"
+        <service
+            android:name=".FireBase.FireBaseInstanceIdService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -228,10 +225,19 @@
         <!-- Service listening for any incoming messages -->
         <service android:name=".FireBase.FireBaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".User.OtherUserProfile"
+            android:label="@string/title_activity_other_user_profile"
+            android:parentActivityName=".HomePage.HomePageActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
+        </activity>
     </application>
 
 </manifest>

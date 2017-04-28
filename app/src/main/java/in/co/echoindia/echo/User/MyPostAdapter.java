@@ -1,4 +1,4 @@
-package in.co.echoindia.echo.HomePage;
+package in.co.echoindia.echo.User;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -51,6 +51,8 @@ import java.util.Date;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import in.co.echoindia.echo.HomePage.BuzzImageAdapter;
+import in.co.echoindia.echo.HomePage.PollCommentAdapter;
 import in.co.echoindia.echo.Model.PollCommentModel;
 import in.co.echoindia.echo.Model.PostDetailModel;
 import in.co.echoindia.echo.Model.RepDetailModel;
@@ -60,10 +62,10 @@ import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
 
 /**
- * Created by Danish Rafique on 21-04-2017.
+ * Created by Danish Rafique on 28-04-2017.
  */
 
-public class HomeAdapter extends BaseAdapter {
+public class MyPostAdapter extends BaseAdapter {
     ArrayList<PostDetailModel> homeDetailsModels = new ArrayList<>();
     Activity activity;
     ArrayList<PostDetailModel> buzzDetailsModels = new ArrayList<>();
@@ -116,7 +118,7 @@ public class HomeAdapter extends BaseAdapter {
     LinearLayout postLocationll;
 
 
-    public HomeAdapter(Activity activity, ArrayList<PostDetailModel> homeDetailsModels) {
+    public MyPostAdapter(Activity activity, ArrayList<PostDetailModel> homeDetailsModels) {
         this.activity = activity;
         this.homeDetailsModels = homeDetailsModels;
     }
@@ -326,7 +328,7 @@ public class HomeAdapter extends BaseAdapter {
                 postUpdatedList.add(homeObj);
             }
         }
-        editor.putString(Constants.HOME_LIST, new Gson().toJson(postUpdatedList));
+        editor.putString(Constants.MY_POST, new Gson().toJson(postUpdatedList));
         editor.commit();
 
         buzzShareButton.setOnClickListener(new View.OnClickListener() {
@@ -823,10 +825,8 @@ public class HomeAdapter extends BaseAdapter {
                 e.printStackTrace();
                 Log.e(LOG_TAG,e.toString());
             }
-
         }
     }
-
 
 }
 

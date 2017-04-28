@@ -50,6 +50,7 @@ public class BuzzFragment extends Fragment {
     ArrayList<PostDetailModel> buzzList=new ArrayList<PostDetailModel>();
     PostDetailModel mPostDetailModel;
     SwipeRefreshLayout buzzSwipeRefresh;
+    Type type;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +61,7 @@ public class BuzzFragment extends Fragment {
         buzzSwipeRefresh=(SwipeRefreshLayout)v.findViewById(R.id.buzz_swipe_refresh);
         sharedpreferences = AppUtil.getAppPreferences(getActivity());
         editor = sharedpreferences.edit();
-        Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
+        type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
         buzzListArray = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
         Log.e(LOG_TAG,"Buzz Element Count "+buzzListArray.size());
         Collections.sort(buzzListArray,new PostComparator());
@@ -71,6 +72,7 @@ public class BuzzFragment extends Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
+                        buzzListArray = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
                         Log.e(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
                         FetchBuzz mFetchBuzz=new FetchBuzz();
                         mFetchBuzz.execute();
@@ -138,6 +140,7 @@ public class BuzzFragment extends Fragment {
                     mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
                     mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
                     mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
+                    mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
                     JSONArray postImageArray=buzzObject.getJSONArray("images");
                     ArrayList<String>postImageArrayList = new ArrayList<>();
                     for(int j =0 ; j<postImageArray.length();j++) {

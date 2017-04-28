@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="3dp"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="175dp">
+
+                <ImageView
+                    android:id="@+id/promise_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/news_image" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/gradient_bg" />
+
+                <TextView
+                    android:id="@+id/promise_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingStart="10dp"
+                    android:text="Business"
+                    android:textColor="@color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/promise_count"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/shape_round"
+                    android:gravity="center"
+                    android:text="5"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/top_border" />
+
+            <Button
+                android:id="@+id/promise_view_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rep_btn"
+                android:drawableEnd="@drawable/ic_right"
+                android:text="View Promises" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

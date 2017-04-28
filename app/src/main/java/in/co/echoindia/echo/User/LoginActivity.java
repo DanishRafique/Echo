@@ -262,13 +262,17 @@ public class LoginActivity extends AppCompatActivity{
                 }
 
                 int noOfPost = responseObject.getInt("NoOfPosts");
+                Log.e(LOG_TAG,"Number of Post"+noOfPost);
                 if(noOfPost>0){
                     JSONArray jArrayMyPost=responseObject.getJSONArray("Posts");
+                    Log.e(LOG_TAG,"Post"+jArrayMyPost.toString());
                     for(int i =0 ; i<jArrayMyPost.length();i++){
                         JSONObject buzzObject=jArrayMyPost.getJSONObject(i);
                         mPostDetailModel=new PostDetailModel();
                         mPostDetailModel.setPostId(buzzObject.getString("PostId"));
                         mPostDetailModel.setPostUserName(buzzObject.getString("PostUserName"));
+                        mPostDetailModel.setPostFirstName(userObj.getString("FirstName"));
+                        mPostDetailModel.setPostLastName(userObj.getString("LastName"));
                         mPostDetailModel.setPostText(buzzObject.getString("PostText"));
                         mPostDetailModel.setPostTime(buzzObject.getString("PostTime"));
                         mPostDetailModel.setPostDate(buzzObject.getString("PostDate"));
@@ -280,6 +284,13 @@ public class LoginActivity extends AppCompatActivity{
                         mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
                         mPostDetailModel.setPostUpVoteValue(false);
                         mPostDetailModel.setPostDownVoteValue(false);
+                        mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
+                        mPostDetailModel.setPostUserPhoto(userObj.getString("UserPhoto"));
+                        if(jObject.getString("userType").equals("rep")){
+                            mPostDetailModel.setPostRepParty(userObj.getString("RepParty"));
+                            mPostDetailModel.setPostRepDesignation(userObj.getString("RepDesignation"));
+                            mPostDetailModel.setPostRepDetail(userObj.getString("RepDetail"));
+                        }
                         JSONArray postImageArray=buzzObject.getJSONArray("images");
                         ArrayList<String>postImageArrayList = new ArrayList<>();
                         for(int j =0 ; j<postImageArray.length();j++) {
@@ -293,6 +304,7 @@ public class LoginActivity extends AppCompatActivity{
                         }
                         myPostList.add(mPostDetailModel);
                     }
+                    editor.putString(Constants.MY_POST, new Gson().toJson(myPostList));
                 }
 
                 int noOfVotes= responseObject.getInt("NoOfVotes");
