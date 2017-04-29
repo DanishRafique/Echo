@@ -354,6 +354,7 @@ public class LoginActivity extends AppCompatActivity{
                 for(int i =0 ; i<jArrayPromiseCountry.length();i++) {
                     JSONObject promiseObj=jArrayPromiseCountry.getJSONObject(i);
                     promiseModel=new PromiseModel();
+                    ArrayList<PromiseDetailModel> promiseCentralDetail=new ArrayList<>();
                     promiseModel.setPromiseId(promiseObj.getString("PromiseId"));
                     promiseModel.setPromiseImageId(promiseObj.getString("PromiseImageId"));
                     promiseModel.setPromiseCountry(promiseObj.getString("Country"));
@@ -362,7 +363,7 @@ public class LoginActivity extends AppCompatActivity{
                     promiseModel.setPromiseType(promiseObj.getString("PromiseType"));
                     promiseModel.setPromiseCount(promiseObj.getString("PromiseCount"));
                     promiseModel.setPromiseImage(promiseObj.getString("PromiseImage"));
-                    promiseDetail.clear();
+                    promiseCentralDetail.clear();
                     if(!promiseObj.getString("PromiseCount").equals("0")){
                         JSONArray jArrayPromiseDetail =promiseObj.getJSONArray("PromiseDetail");
                         Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
@@ -374,10 +375,11 @@ public class LoginActivity extends AppCompatActivity{
                             promiseDetailModel.setPromiseType(promiseDetailObj.getString("PromiseType"));
                             promiseDetailModel.setPromiseDetailName(promiseDetailObj.getString("PromiseDetailName"));
                             promiseDetailModel.setPromiseDetailSynopsis(promiseDetailObj.getString("PromiseDetailSynopsis"));
-                            promiseDetail.add(promiseDetailModel);
+                            promiseCentralDetail.add(promiseDetailModel);
                         }
                     }
-                    promiseModel.setPromiseDetail(promiseDetail);
+                    Log.e(LOG_TAG,"PromiseDetail ArrayList Size "+promiseCentralDetail.size());
+                    promiseModel.setPromiseDetail(promiseCentralDetail);
                     centralPromiseList.add(promiseModel);
                 }
                 editor.putString(Constants.PROMISE_COUNTRY, new Gson().toJson(centralPromiseList));
@@ -387,6 +389,7 @@ public class LoginActivity extends AppCompatActivity{
                 for(int i =0 ; i<jArrayPromiseState.length();i++) {
                     JSONObject promiseObj=jArrayPromiseState.getJSONObject(i);
                     promiseModel=new PromiseModel();
+                    ArrayList<PromiseDetailModel> promiseStateDetail=new ArrayList<>();
                     promiseModel.setPromiseId(promiseObj.getString("PromiseId"));
                     promiseModel.setPromiseImageId(promiseObj.getString("PromiseImageId"));
                     promiseModel.setPromiseCountry(promiseObj.getString("Country"));
@@ -395,7 +398,7 @@ public class LoginActivity extends AppCompatActivity{
                     promiseModel.setPromiseType(promiseObj.getString("PromiseType"));
                     promiseModel.setPromiseCount(promiseObj.getString("PromiseCount"));
                     promiseModel.setPromiseImage(promiseObj.getString("PromiseImage"));
-                    promiseDetail.clear();
+                    promiseStateDetail.clear();
                     if(!promiseObj.getString("PromiseCount").equals("0")){
                         JSONArray jArrayPromiseDetail =promiseObj.getJSONArray("PromiseDetail");
                         Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
@@ -407,10 +410,10 @@ public class LoginActivity extends AppCompatActivity{
                             promiseDetailModel.setPromiseType(promiseDetailObj.getString("PromiseType"));
                             promiseDetailModel.setPromiseDetailName(promiseDetailObj.getString("PromiseDetailName"));
                             promiseDetailModel.setPromiseDetailSynopsis(promiseDetailObj.getString("PromiseDetailSynopsis"));
-                            promiseDetail.add(promiseDetailModel);
+                            promiseStateDetail.add(promiseDetailModel);
                         }
                     }
-                    promiseModel.setPromiseDetail(promiseDetail);
+                    promiseModel.setPromiseDetail(promiseStateDetail);
                     statePromiseList.add(promiseModel);
                 }
                 editor.putString(Constants.PROMISE_STATE, new Gson().toJson(statePromiseList));
@@ -421,6 +424,7 @@ public class LoginActivity extends AppCompatActivity{
                 for(int i =0 ; i<jArrayPromiseLocal.length();i++) {
                     JSONObject promiseObj=jArrayPromiseLocal.getJSONObject(i);
                     promiseModel=new PromiseModel();
+                    ArrayList<PromiseDetailModel> promiseLocalDetail=new ArrayList<>();
                     promiseModel.setPromiseId(promiseObj.getString("PromiseId"));
                     promiseModel.setPromiseImageId(promiseObj.getString("PromiseImageId"));
                     promiseModel.setPromiseCountry(promiseObj.getString("Country"));
@@ -429,7 +433,7 @@ public class LoginActivity extends AppCompatActivity{
                     promiseModel.setPromiseType(promiseObj.getString("PromiseType"));
                     promiseModel.setPromiseCount(promiseObj.getString("PromiseCount"));
                     promiseModel.setPromiseImage(promiseObj.getString("PromiseImage"));
-                    promiseDetail.clear();
+                    promiseLocalDetail.clear();
                     if(!promiseObj.getString("PromiseCount").equals("0")){
                         JSONArray jArrayPromiseDetail =promiseObj.getJSONArray("PromiseDetail");
                         Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
@@ -441,10 +445,10 @@ public class LoginActivity extends AppCompatActivity{
                             promiseDetailModel.setPromiseType(promiseDetailObj.getString("PromiseType"));
                             promiseDetailModel.setPromiseDetailName(promiseDetailObj.getString("PromiseDetailName"));
                             promiseDetailModel.setPromiseDetailSynopsis(promiseDetailObj.getString("PromiseDetailSynopsis"));
-                            promiseDetail.add(promiseDetailModel);
+                            promiseLocalDetail.add(promiseDetailModel);
                         }
                     }
-                    promiseModel.setPromiseDetail(promiseDetail);
+                    promiseModel.setPromiseDetail(promiseLocalDetail);
                     localPromiseList.add(promiseModel);
                 }
                 editor.putString(Constants.PROMISE_CITY, new Gson().toJson(localPromiseList));

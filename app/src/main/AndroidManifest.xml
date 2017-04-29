@@ -247,6 +247,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="in.co.echoindia.echo.HomePage.HomePageActivity" />
         </activity>
+        <activity
+            android:name=".User.PromiseDetailActivity"
+            android:label="@string/title_activity_promise_detail"
+            android:parentActivityName=".User.PromisesActivity"
+            android:theme="@style/MyMaterialTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="in.co.echoindia.echo.User.PromisesActivity" />
+        </activity>
     </application>
 
 </manifest>
