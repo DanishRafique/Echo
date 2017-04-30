@@ -26,11 +26,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -47,6 +50,8 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import in.co.echoindia.echo.Model.PostDetailModel;
+import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.User.AboutUsActivity;
@@ -74,11 +79,18 @@ public class HomePageActivity extends AppCompatActivity
             CircleImageView navUserImage;
             TextView navFullName,navUserName;
             UserDetailsModel userDetailsModel;
+            RepDetailModel repDetailModel;
             FloatingActionButton fabPost;
     private TabLayout tabLayout;
     private ViewPager viewPager;
             private ProgressDialog pDialog;
             ImageView imgMessage,imgNotification;
+
+            String userParty,userDesignation;
+
+            ArrayList<PostDetailModel> userPost=new ArrayList<>();
+
+            PostDetailModel mPostDetailModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +127,20 @@ public class HomePageActivity extends AppCompatActivity
         navUserImage=(CircleImageView) hView.findViewById(R.id.nav_user_image);
         navFullName=(TextView)hView.findViewById(R.id.nav_full_name);
         navUserName=(TextView)hView.findViewById(R.id.nav_user_name);
-        userDetailsModel = new Gson().fromJson(sharedpreferences.getString(Constants.SETTINGS_OBJ_USER, ""), UserDetailsModel.class);
-        Glide.with(this).load(userDetailsModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(navUserImage);
-        navFullName.setText(capitalizeFirstLetter(userDetailsModel.getFirstName())+" "+capitalizeFirstLetter(userDetailsModel.getLastName()));
-        navUserName.setText(userDetailsModel.getUserName());
+        if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("USER")) {
+            userDetailsModel = new Gson().fromJson(sharedpreferences.getString(Constants.SETTINGS_OBJ_USER, ""), UserDetailsModel.class);
+            Glide.with(this).load(userDetailsModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(navUserImage);
+            navFullName.setText(capitalizeFirstLetter(userDetailsModel.getFirstName()) + " " + capitalizeFirstLetter(userDetailsModel.getLastName()));
+            navUserName.setText(userDetailsModel.getUserName());
+        }
+        else if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("REP")) {
+            repDetailModel = new Gson().fromJson(sharedpreferences.getString(Constants.SETTINGS_OBJ_USER, ""), RepDetailModel.class);
+            Glide.with(this).load(repDetailModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(navUserImage);
+            navFullName.setText(capitalizeFirstLetter(repDetailModel.getFirstName()) + " " + capitalizeFirstLetter(repDetailModel.getLastName()));
+            navUserName.setText(repDetailModel.getRepName());
+            userParty=repDetailModel.getRepParty();
+            userDesignation=repDetailModel.getRepDesignation();
+        }
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -232,8 +254,8 @@ public class HomePageActivity extends AppCompatActivity
             ExecuteLogout mExecuteLogout=new ExecuteLogout();
             mExecuteLogout.execute();
         } else if(id == R.id.nav_my_profile){
-            Intent i = new Intent(HomePageActivity.this,MyPostActivity.class);
-            startActivity(i);
+            ViewUser mViewUser=new ViewUser();
+            mViewUser.execute();
         }else if(id == R.id.nav_share){
             Intent i = new Intent(HomePageActivity.this,ChangePasswordActivity.class);
             startActivity(i);
@@ -376,4 +398,133 @@ public class HomePageActivity extends AppCompatActivity
                     setWorkLogOut();
                 }
             }
+
+
+
+
+            class ViewUser extends AsyncTask {
+
+                String url_share_post = "http://echoindia.co.in/php/oneUserPost.php";
+
+
+                @Override
+                protected Object doInBackground(Object[] params) {
+                    BufferedReader bufferedReader = null;
+                    try {
+                        URL url = new URL(url_share_post);
+                        JSONObject postDataParams = new JSONObject();
+                        postDataParams.put("username",sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""));
+                        Log.e(LOG_TAG,"URL"+url_share_post);
+                        Log.e(LOG_TAG,"View Profile "+postDataParams.toString());
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setReadTimeout(15000 /* milliseconds */);
+                        conn.setConnectTimeout(15000 /* milliseconds */);
+                        conn.setRequestMethod("POST");
+                        conn.setDoInput(true);
+                        conn.setDoOutput(true);
+                        OutputStream os = conn.getOutputStream();
+                        BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                        writer.write(AppUtil.getPostDataString(postDataParams));
+                        writer.flush();
+                        writer.close();
+                        os.close();
+                        int responseCode = conn.getResponseCode();
+                        if (responseCode == HttpsURLConnection.HTTP_OK) {
+                            BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                            StringBuffer sb = new StringBuffer("");
+
+                            String line = "";
+                            while ((line = in.readLine()) != null) {
+                                sb.append(line);
+                                break;
+                            }
+                            in.close();
+                            Log.e(LOG_TAG,sb.toString());
+                            return sb.toString();
+
+                        } else {
+                            return new String("false : " + responseCode);
+                        }
+                    } catch (Exception ex) {
+                        return null;
+                    } finally {
+                        if (bufferedReader != null) {
+                            try {
+                                bufferedReader.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                    super.onPostExecute(o);
+                    try {
+                        JSONObject jObject=new JSONObject(o.toString());
+                        String checkStatus=jObject.getString("status");
+                        if(checkStatus.equals("1")&&o != null) {
+
+                            JSONArray jArrayMyPost=jObject.getJSONArray("Posts");
+                            for(int i =0 ; i<jArrayMyPost.length();i++){
+                                JSONObject buzzObject=jArrayMyPost.getJSONObject(i);
+                                mPostDetailModel=new PostDetailModel();
+                                mPostDetailModel.setPostId(buzzObject.getString("PostId"));
+                                mPostDetailModel.setPostUserName(buzzObject.getString("PostUserName"));
+                                mPostDetailModel.setPostText(buzzObject.getString("PostText"));
+                                mPostDetailModel.setPostTime(buzzObject.getString("PostTime"));
+                                mPostDetailModel.setPostDate(buzzObject.getString("PostDate"));
+                                mPostDetailModel.setPostUpVote(buzzObject.getInt("PostUpVote"));
+                                mPostDetailModel.setPostDownVote(buzzObject.getInt("PostDownVote"));
+                                mPostDetailModel.setPostType(buzzObject.getString("PostType"));
+                                mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
+                                mPostDetailModel.setPostImageRef(buzzObject.getString("PostImageRef"));
+                                mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
+                                mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
+                                mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
+                                mPostDetailModel.setSharedFromUserName(buzzObject.getString("SharedFromUserName"));
+                                mPostDetailModel.setPostFirstName(buzzObject.getString("FirstName"));
+                                mPostDetailModel.setPostLastName(buzzObject.getString("LastName"));
+                                mPostDetailModel.setPostUpVoteValue(false);
+                                mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
+                                mPostDetailModel.setPostDownVoteValue(false);
+                                mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
+                                if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("REP")){
+                                    mPostDetailModel.setPostRepParty(userParty);
+                                    mPostDetailModel.setPostRepDesignation(userDesignation);
+                                }
+                                JSONArray postImageArray=buzzObject.getJSONArray("images");
+                                ArrayList<String>postImageArrayList = new ArrayList<>();
+                                for(int j =0 ; j<postImageArray.length();j++) {
+                                    postImageArrayList.add(postImageArray.getString(j));
+                                }
+                                if(postImageArray.length()>0) {
+                                    mPostDetailModel.setPostImages(postImageArrayList);
+                                }
+                                else{
+                                    mPostDetailModel.setPostImages(null);
+                                }
+                                userPost.add(mPostDetailModel);
+                            }
+                            Intent viewProfile=new Intent(HomePageActivity.this, MyPostActivity.class);
+                            Bundle mBundle = new Bundle();
+                            mBundle.putSerializable("userPost",userPost);
+                            viewProfile.putExtra("userPost",mBundle);
+                            startActivity(viewProfile);
+                        }
+                        else if(checkStatus.equals("0")){
+                            Toast.makeText(HomePageActivity.this, "Post Share Failed", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(HomePageActivity.this, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e(LOG_TAG,e.toString());
+                    }
+
+                }
+            }
+
         }

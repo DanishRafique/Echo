@@ -90,6 +90,7 @@ public class PollAdapter extends BaseAdapter {
     ArrayList<PollCommentModel> pollCommentListArray = new ArrayList<PollCommentModel>();
 
     PollCommentAdapter mPollCommentAdapter;
+    LinearLayout pollButton;
 
     int totalVote;
     float optionOnePercent, optionTwoPercent;
@@ -140,6 +141,7 @@ public class PollAdapter extends BaseAdapter {
         pollOptionTwoText = (RadioButton) convertView.findViewById(R.id.poll_option_two_text);
         pollQuestion = (TextView)convertView.findViewById(R.id.poll_question);
         segmentedPoll = (SegmentedGroup)convertView.findViewById(R.id.segmented_poll);
+        pollButton=(LinearLayout)convertView.findViewById(R.id.poll_buttons);
         final LinearLayout pollShareButton =(LinearLayout)convertView.findViewById(R.id.poll_share_button);
         final LinearLayout pollCommentButton =(LinearLayout)convertView.findViewById(R.id.poll_comment_button);
 
@@ -180,12 +182,13 @@ public class PollAdapter extends BaseAdapter {
 
         pollOptionOneColor=pollObj.getPollOptionOneColor()-1;
         pollOptionTwoColor=pollObj.getPollOptionTwoColor()-1;
+        //Log.e(LOG_TAG,position+" "+pollOptionOneColor+" "+pollOptionTwoColor);
         pollBarOne.setProgressColor(ContextCompat.getColor(activity,colorCodePrimary[pollOptionOneColor]));
         pollBarTwo.setProgressColor(ContextCompat.getColor(activity,colorCodePrimary[pollOptionTwoColor]));
         pollBarOne.setSecondaryProgressColor(ContextCompat.getColor(activity,colorCodeSecondary[pollOptionOneColor]));
         pollBarTwo.setSecondaryProgressColor(ContextCompat.getColor(activity,colorCodeSecondary[pollOptionTwoColor]));
 
-        segmentedPoll.setTintColor(ContextCompat.getColor(activity,R.color.colorPrimary));
+
         pollShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -202,6 +205,21 @@ public class PollAdapter extends BaseAdapter {
             public void onClick(View view) {
                 FetchPollComment fetchPollComment=new FetchPollComment(pollId);
                 fetchPollComment.execute();
+            }
+        });
+
+        pollOptionOneText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pollVote vote=new pollVote(pollId,"1");
+                vote.execute();
+            }
+        });
+        pollOptionTwoText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pollVote vote=new pollVote(pollId,"2");
+                vote.execute();
             }
         });
 
@@ -454,4 +472,100 @@ public class PollAdapter extends BaseAdapter {
             }
             }
         }
+
+
+    class pollVote extends AsyncTask {
+
+        String url_poll_comment = "http://echoindia.co.in/php/pollVote.php";
+        String pollOption="";
+        String pollId="";
+
+        public pollVote(String pollOption,String pollId){
+            this.pollOption=pollOption;
+            this.pollId=pollId;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_poll_comment);
+                JSONObject postDataParams = new JSONObject();
+                Log.e(LOG_TAG,"POLLID"+pollId);
+                postDataParams.put("pollId",pollId);
+                postDataParams.put("username",sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_USER_CODE,""));
+                postDataParams.put("pollOption",pollOption);
+                Log.e(LOG_TAG,"URL"+url_poll_comment);
+                Log.e(LOG_TAG,"PostParam Insert Comment "+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            try {
+                JSONObject jObject=new JSONObject(o.toString());
+                String checkStatus=jObject.getString("status");
+                if(checkStatus.equals("1")&&o != null) {
+                   pollButton.setVisibility(View.GONE);
+                    if(pollOption.equals("1")){
+                        pollQuestion.setText("Your vote has been submitted for "+pollOptionOneText.getText());
+                    }
+                    else if(pollOption.equals("2")){
+                        pollQuestion.setText("Your vote has been submitted for "+pollOptionTwoText.getText());
+                    }
+                    Toast.makeText(activity, "Thanks for your feedback", Toast.LENGTH_SHORT).show();
+                }
+                else if(checkStatus.equals("0")){
+                    Toast.makeText(activity, "Your Vote wasn't submitted", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG,e.toString());
+            }
+        }
+    }
+
     }

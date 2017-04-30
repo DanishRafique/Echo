@@ -328,8 +328,8 @@ public class MyPostAdapter extends BaseAdapter {
                 postUpdatedList.add(homeObj);
             }
         }
-        editor.putString(Constants.MY_POST, new Gson().toJson(postUpdatedList));
-        editor.commit();
+        //editor.putString(Constants.MY_POST, new Gson().toJson(postUpdatedList));
+        //editor.commit();
 
         buzzShareButton.setOnClickListener(new View.OnClickListener() {
             @Override

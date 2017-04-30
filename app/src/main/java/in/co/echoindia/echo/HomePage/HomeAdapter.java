@@ -58,6 +58,7 @@ import in.co.echoindia.echo.Model.PostDetailModel;
 import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
+import in.co.echoindia.echo.User.OtherUserProfile;
 import in.co.echoindia.echo.User.ViewPostActivity;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
@@ -73,6 +74,13 @@ public class HomeAdapter extends BaseAdapter {
 
     TextView homeFullName;
     ArrayList<PostDetailModel> homeListArray = new ArrayList<>();
+
+    ArrayList<PostDetailModel> userPost=new ArrayList<>();
+    String userImageViewProfile;
+    String userNameViewProfile;
+    String userType;
+    String userParty;
+    String userDesignation;
 
     CircleImageView homeUserImage;
     TextView homeUserName;
@@ -348,6 +356,24 @@ public class HomeAdapter extends BaseAdapter {
                 mBundle.putSerializable("postObj", homeObj);
                 viewPost.putExtra("postObj",mBundle);
                 activity.startActivity(viewPost);
+            }
+        });
+
+        homeFullName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userNameViewProfile=homeObj.getPostFirstName()+" "+homeObj.getPostLastName();
+                userImageViewProfile=homeObj.getPostUserPhoto();
+                if(homeObj.getPostType().equals("USER")){
+                    userType="USER";
+                }
+                else if(homeObj.getPostType().equals("BUZZ")){
+                    userType="REP";
+                    userDesignation=homeObj.getPostRepDesignation();
+                    userParty=homeObj.getPostRepParty();
+                }
+                ViewUser mViewUser=new ViewUser(homeObj.getPostUserName());
+                mViewUser.execute();
             }
         });
 
@@ -825,6 +851,138 @@ public class HomeAdapter extends BaseAdapter {
                     editor.commit();
                     notifyDataSetChanged();
                     Toast.makeText(activity, "Post Shared Successfully", Toast.LENGTH_SHORT).show();
+                }
+                else if(checkStatus.equals("0")){
+                    Toast.makeText(activity, "Post Share Failed", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e(LOG_TAG,e.toString());
+            }
+
+        }
+    }
+
+    class ViewUser extends AsyncTask {
+
+        String url_share_post = "http://echoindia.co.in/php/oneUserPost.php";
+        String postUserName="";
+        public ViewUser(String postUserName){
+            this.postUserName=postUserName;
+
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_share_post);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("username",postUserName);
+                Log.e(LOG_TAG,"URL"+url_share_post);
+                Log.e(LOG_TAG,"View Profile "+postDataParams.toString());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            try {
+                JSONObject jObject=new JSONObject(o.toString());
+                String checkStatus=jObject.getString("status");
+                if(checkStatus.equals("1")&&o != null) {
+
+                    JSONArray jArrayMyPost=jObject.getJSONArray("Posts");
+                    for(int i =0 ; i<jArrayMyPost.length();i++){
+                        JSONObject buzzObject=jArrayMyPost.getJSONObject(i);
+                        mPostDetailModel=new PostDetailModel();
+                        mPostDetailModel.setPostId(buzzObject.getString("PostId"));
+                        mPostDetailModel.setPostUserName(buzzObject.getString("PostUserName"));
+                        mPostDetailModel.setPostText(buzzObject.getString("PostText"));
+                        mPostDetailModel.setPostTime(buzzObject.getString("PostTime"));
+                        mPostDetailModel.setPostDate(buzzObject.getString("PostDate"));
+                        mPostDetailModel.setPostUpVote(buzzObject.getInt("PostUpVote"));
+                        mPostDetailModel.setPostDownVote(buzzObject.getInt("PostDownVote"));
+                        mPostDetailModel.setPostType(buzzObject.getString("PostType"));
+                        mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
+                        mPostDetailModel.setPostImageRef(buzzObject.getString("PostImageRef"));
+                        mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
+                        mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
+                        mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
+                        mPostDetailModel.setSharedFromUserName(buzzObject.getString("SharedFromUserName"));
+                        mPostDetailModel.setPostFirstName(buzzObject.getString("FirstName"));
+                        mPostDetailModel.setPostLastName(buzzObject.getString("LastName"));
+                        mPostDetailModel.setPostUpVoteValue(false);
+                        mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
+                        mPostDetailModel.setPostDownVoteValue(false);
+                        if(userType.equals("REP")){
+                            mPostDetailModel.setPostRepParty(userParty);
+                            mPostDetailModel.setPostRepDesignation(userDesignation);
+                        }
+                        mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
+                        JSONArray postImageArray=buzzObject.getJSONArray("images");
+                        ArrayList<String>postImageArrayList = new ArrayList<>();
+                        for(int j =0 ; j<postImageArray.length();j++) {
+                            postImageArrayList.add(postImageArray.getString(j));
+                        }
+                        if(postImageArray.length()>0) {
+                            mPostDetailModel.setPostImages(postImageArrayList);
+                        }
+                        else{
+                            mPostDetailModel.setPostImages(null);
+                        }
+                        userPost.add(mPostDetailModel);
+                    }
+                    Intent viewProfile=new Intent(activity, OtherUserProfile.class);
+                    Bundle mBundle = new Bundle();
+                    mBundle.putSerializable("userPost",userPost);
+                    mBundle.putString("userName",userNameViewProfile);
+                    mBundle.putString("userImage",userImageViewProfile);
+                    mBundle.putString("userType",userType);
+                    viewProfile.putExtra("userPost",mBundle);
+                    activity.startActivity(viewProfile);
                 }
                 else if(checkStatus.equals("0")){
                     Toast.makeText(activity, "Post Share Failed", Toast.LENGTH_SHORT).show();

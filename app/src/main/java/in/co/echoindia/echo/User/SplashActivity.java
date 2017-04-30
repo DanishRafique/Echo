@@ -561,7 +561,7 @@ public class SplashActivity extends AppCompatActivity {
             try {
                 URL url = new URL(url_poll_update);
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("maxID",maxID);
+                postDataParams.put("maxID",0);
                 Log.e(LOG_TAG,"URL"+url_poll_update);
                 Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -349,9 +349,11 @@ public class PostActivity extends AppCompatActivity {
                 postDataParams.put("date",dateToday);
                 if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("REP")) {
                     postDataParams.put("postType","BUZZ");
+                    postDataParams.put("maxID",sharedpreferences.getInt(Constants.LAST_BUZZ_UPDATE,0));
                 }
                 else if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("USER")) {
                     postDataParams.put("postType","USER");
+                    postDataParams.put("maxID",sharedpreferences.getInt(Constants.LAST_USER_UPDATE,0));
                 }
                 for(int i=0;i<encodedImageList.size();i++){
                     if(i==0){
@@ -373,8 +375,6 @@ public class PostActivity extends AppCompatActivity {
                 if(location!=null){
                     postDataParams.put("location",location);
                 }
-
-
                 Log.e(LOG_TAG,"URL"+url_insert_post);
                 Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -422,7 +422,7 @@ public class PostActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            Log.e(LOG_TAG,"Insert Post : "+o.toString());
+            Log.e(LOG_TAG, "Insert Post : " + o.toString());
             dialog.dismiss();
             finish();
         }

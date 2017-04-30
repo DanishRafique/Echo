@@ -88,7 +88,7 @@ public class PollFragment extends Fragment {
             try {
                 URL url = new URL(url_poll_update);
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("maxID",maxID);
+                postDataParams.put("maxID",0);
                 Log.e(LOG_TAG,"URL"+url_poll_update);
                 Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -147,6 +147,7 @@ public class PollFragment extends Fragment {
             String checkStatus=jObject.getString("status");
             if(checkStatus.equals("1")&&o != null){
                 JSONArray newsArray=jObject.getJSONArray("polls");
+                pollListArray.clear();
                 for(int i =0 ; i<newsArray.length();i++){
                     JSONObject pollObject=newsArray.getJSONObject(i);
                     mPollDetailModel=new PollDetailsModel();
@@ -159,9 +160,11 @@ public class PollFragment extends Fragment {
                     mPollDetailModel.setPollOptionTwoText(pollObject.getString("PollOptionTwoText"));
                     mPollDetailModel.setPollOptionTwoVote(pollObject.getInt("PollOptionTwoVote"));
                     mPollDetailModel.setPollVendor(pollObject.getString("PollVendor"));
+                    mPollDetailModel.setPollOptionOneColor(pollObject.getInt("PollOptionOneColor"));
+                    mPollDetailModel.setPollOptionTwoColor(pollObject.getInt("PollOptionTwoColor"));
                     mPollDetailModel.setPollVendorLogo(pollObject.getString("PollVendorLogo"));
                     mPollDetailModel.setPollStartDate(pollObject.getString("PollStartDate"));
-                    mPollDetailModel.setPollEndDate(pollObject.getString("PollEndData"));
+                    mPollDetailModel.setPollEndDate(pollObject.getString("PollEndDate"));
                     if(Integer.valueOf(mPollDetailModel.getPollId())>max){
                         max=Integer.valueOf(mPollDetailModel.getPollId());
                     }

@@ -186,18 +186,19 @@
 
                 </LinearLayout>
 
+
                 <TextView
                     android:id="@+id/poll_question"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/poll_number_negative"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:text="What's your opinion on this ?"
                     android:textColor="#000"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:layout_below="@+id/poll_number_negative"
+                    android:layout_alignStart="@+id/news_footer" />
 
                 <LinearLayout
                     android:id="@+id/poll_buttons"
@@ -247,6 +248,7 @@
 
 
                 </LinearLayout>
+
 
 
                 <RelativeLayout

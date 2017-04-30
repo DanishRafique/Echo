@@ -15,7 +15,6 @@ import android.widget.ListView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -56,6 +55,9 @@ public class MyPostActivity extends AppCompatActivity {
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
+        Bundle mBundle=getIntent().getExtras();
+        Bundle userBundle=mBundle.getBundle("userPost");
+        myListArray=(ArrayList<PostDetailModel>) userBundle.getSerializable("userPost");
 
 
         myProfileImage=(ImageView)findViewById(R.id.my_profile_image);
@@ -63,8 +65,6 @@ public class MyPostActivity extends AppCompatActivity {
             mUserDetailModel = new Gson().fromJson(sharedpreferences.getString(Constants.SETTINGS_OBJ_USER, ""), UserDetailsModel.class);
             Glide.with(this).load(mUserDetailModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(myProfileImage);
             collapsingToolbarLayout.setTitle(mUserDetailModel.getFirstName()+" "+mUserDetailModel.getLastName());
-            type= new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
-            myListArray = new Gson().fromJson(sharedpreferences.getString(Constants.MY_POST,""), type);
             if(myListArray!=null) {
                 Collections.sort(myListArray, new PostComparator());
                 myAdapter = new MyPostAdapter(this, myListArray);
@@ -76,9 +76,6 @@ public class MyPostActivity extends AppCompatActivity {
             mRepDetailModel = new Gson().fromJson(sharedpreferences.getString(Constants.SETTINGS_OBJ_USER, ""), RepDetailModel.class);
             Glide.with(this).load(mRepDetailModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(myProfileImage);
             collapsingToolbarLayout.setTitle(mRepDetailModel.getFirstName() + " " + mRepDetailModel.getLastName());
-            type = new TypeToken<ArrayList<PostDetailModel>>() {
-            }.getType();
-            myListArray = new Gson().fromJson(sharedpreferences.getString(Constants.MY_POST, ""), type);
             if (myListArray!=null) {
                 Collections.sort(myListArray, new PostComparator());
                 myRepAdapter = new MyPostRepAdapter(this, myListArray);
