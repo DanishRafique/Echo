@@ -37,4 +37,8 @@ public class Constants {
     public static final String PROMISE_COUNTRY="PROMISE_COUNTRY";
     public static final String PROMISE_STATE="PROMISE_STATE";
     public static final String PROMISE_CITY="PROMISE_CITY";
+    public static final String POLL_VOTE="POLL_VOTE";
+    public static final String BUDGET_COUNTRY="BUDGET_COUNTRY";
+    public static final String BUDGET_STATE="BUDGET_STATE";
+    public static final String BUDGET_LOCAL="BUDGET_LOCAL";
 }

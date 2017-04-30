@@ -207,6 +207,7 @@ public class PollAdapter extends BaseAdapter {
                 fetchPollComment.execute();
             }
         });
+        segmentedPoll.setTintColor(ContextCompat.getColor(activity,R.color.colorPrimary));
 
         pollOptionOneText.setOnClickListener(new View.OnClickListener() {
             @Override

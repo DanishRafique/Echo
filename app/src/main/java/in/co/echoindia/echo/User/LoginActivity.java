@@ -38,11 +38,14 @@ import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.HomePage.HomePageActivity;
 import in.co.echoindia.echo.Model.NewsDetailsModel;
+import in.co.echoindia.echo.Model.PollVoteModel;
 import in.co.echoindia.echo.Model.PostDetailModel;
 import in.co.echoindia.echo.Model.PromiseDetailModel;
 import in.co.echoindia.echo.Model.PromiseModel;
 import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.RepInfoModel;
+import in.co.echoindia.echo.Model.SpendingDetailModel;
+import in.co.echoindia.echo.Model.SpendingModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
@@ -68,6 +71,13 @@ public class LoginActivity extends AppCompatActivity{
     ArrayList<PromiseModel> statePromiseList=new ArrayList<PromiseModel>();
     ArrayList<PromiseModel> localPromiseList=new ArrayList<PromiseModel>();
     ArrayList<PromiseDetailModel> promiseDetail=new ArrayList<PromiseDetailModel>();
+
+    SpendingModel spendingCentralModel,spendingStateModel,spendingLocalModel;
+    SpendingDetailModel spendingDetailModel;
+
+
+    ArrayList<PollVoteModel> pollVoteList=new ArrayList<PollVoteModel>();
+    PollVoteModel pollVoteModel;
 
     PromiseModel promiseModel;
     PromiseDetailModel promiseDetailModel;
@@ -320,7 +330,7 @@ public class LoginActivity extends AppCompatActivity{
                 }
 
                 int noOfVotes= responseObject.getInt("NoOfVotes");
-                if(noOfVotes>0){
+                    if(noOfVotes>0){
                     JSONArray jArrayNewsVotes=responseObject.getJSONArray("Votes");
                     ArrayList<NewsDetailsModel> newsList;
                     ArrayList<NewsDetailsModel> newsListUpdated=new ArrayList<>();
@@ -347,7 +357,93 @@ public class LoginActivity extends AppCompatActivity{
                     editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsListUpdated));
                 }
 
-                Log.e(LOG_TAG,"PromiseCountry");
+                int noOfPollVotes=responseObject.getInt("NoOfPollVotes");
+                pollVoteList.clear();
+                if(noOfPollVotes>0){
+                    JSONArray pollVoteJSONArray=responseObject.getJSONArray("PollVotes");
+                    for(int i=0;i<pollVoteJSONArray.length();i++){
+                        JSONObject pollVoteObj=pollVoteJSONArray.getJSONObject(i);
+                        pollVoteModel=new PollVoteModel();
+                        pollVoteModel.setPollId(pollVoteObj.getString("PollId"));
+                        pollVoteModel.setPollVoteOption(pollVoteObj.getString("PollVoteOption"));
+                        pollVoteList.add(pollVoteModel);
+                    }
+                }
+                editor.putString(Constants.POLL_VOTE, new Gson().toJson(pollVoteList));
+
+                JSONObject spendingObj=responseObject.getJSONObject("Spending");
+                JSONObject spendingCentralObj=spendingObj.getJSONObject("SpendingCentral");
+                if(spendingCentralObj!=null){
+                    spendingCentralModel =new SpendingModel();
+                    spendingCentralModel.setSpendingId(spendingCentralObj.getString("SpendingId"));
+                    spendingCentralModel.setSpendingCentral(spendingCentralObj.getString("SpendingCentral"));
+                    spendingCentralModel.setSpendingState(spendingCentralObj.getString("SpendingState"));
+                    spendingCentralModel.setSpendingLocal(spendingCentralObj.getString("SpendingLocal"));
+                    spendingCentralModel.setSpendingBudget(spendingCentralObj.getString("SpendingBudget"));
+                    ArrayList<SpendingDetailModel>spendingDetailModelArrayList=new ArrayList<SpendingDetailModel>();
+                    spendingDetailModelArrayList.clear();
+                    JSONArray spendingDetailJSON=spendingCentralObj.getJSONArray("SpendingDetail");
+                    for(int i=0;i<spendingDetailJSON.length();i++){
+                        spendingDetailModel=new SpendingDetailModel();
+                        JSONObject spendingDetailObj=spendingDetailJSON.getJSONObject(i);
+                        spendingDetailModel.setSpendingId(spendingDetailObj.getString("SpendingId"));
+                        spendingDetailModel.setSpendingDetailId(spendingDetailObj.getString("SpendingDetailId"));
+                        spendingDetailModel.setSpendingType(spendingDetailObj.getString("SpendingType"));
+                        spendingDetailModel.setSpendingTypeBudget(spendingDetailObj.getString("SpendingTypeBudget"));
+                        spendingDetailModelArrayList.add(spendingDetailModel);
+                    }
+                    spendingCentralModel.setSpendingDetail(spendingDetailModelArrayList);
+                }
+                editor.putString(Constants.BUDGET_COUNTRY, new Gson().toJson(spendingCentralModel));
+
+                JSONObject spendingStateObj=spendingObj.getJSONObject("SpendingState");
+                if(spendingCentralObj!=null){
+                    spendingStateModel =new SpendingModel();
+                    spendingStateModel.setSpendingId(spendingStateObj.getString("SpendingId"));
+                    spendingStateModel.setSpendingCentral(spendingStateObj.getString("SpendingCentral"));
+                    spendingStateModel.setSpendingState(spendingStateObj.getString("SpendingState"));
+                    spendingStateModel.setSpendingLocal(spendingStateObj.getString("SpendingLocal"));
+                    spendingStateModel.setSpendingBudget(spendingStateObj.getString("SpendingBudget"));
+                    ArrayList<SpendingDetailModel>spendingDetailModelArrayList=new ArrayList<SpendingDetailModel>();
+                    spendingDetailModelArrayList.clear();
+                    JSONArray spendingDetailJSON=spendingStateObj.getJSONArray("SpendingDetail");
+                    for(int i=0;i<spendingDetailJSON.length();i++){
+                        spendingDetailModel=new SpendingDetailModel();
+                        JSONObject spendingDetailObj=spendingDetailJSON.getJSONObject(i);
+                        spendingDetailModel.setSpendingId(spendingDetailObj.getString("SpendingId"));
+                        spendingDetailModel.setSpendingDetailId(spendingDetailObj.getString("SpendingDetailId"));
+                        spendingDetailModel.setSpendingType(spendingDetailObj.getString("SpendingType"));
+                        spendingDetailModel.setSpendingTypeBudget(spendingDetailObj.getString("SpendingTypeBudget"));
+                        spendingDetailModelArrayList.add(spendingDetailModel);
+                    }
+                    spendingStateModel.setSpendingDetail(spendingDetailModelArrayList);
+                }
+                editor.putString(Constants.BUDGET_STATE, new Gson().toJson(spendingStateModel));
+
+
+                JSONObject spendingLocalObj=spendingObj.getJSONObject("SpendingLocal");
+                if(spendingCentralObj!=null){
+                    spendingLocalModel =new SpendingModel();
+                    spendingLocalModel.setSpendingId(spendingLocalObj.getString("SpendingId"));
+                    spendingLocalModel.setSpendingCentral(spendingLocalObj.getString("SpendingCentral"));
+                    spendingLocalModel.setSpendingState(spendingLocalObj.getString("SpendingState"));
+                    spendingLocalModel.setSpendingLocal(spendingLocalObj.getString("SpendingLocal"));
+                    spendingLocalModel.setSpendingBudget(spendingLocalObj.getString("SpendingBudget"));
+                    ArrayList<SpendingDetailModel>spendingDetailModelArrayList=new ArrayList<SpendingDetailModel>();
+                    spendingDetailModelArrayList.clear();
+                    JSONArray spendingDetailJSON=spendingLocalObj.getJSONArray("SpendingDetail");
+                    for(int i=0;i<spendingDetailJSON.length();i++){
+                        spendingDetailModel=new SpendingDetailModel();
+                        JSONObject spendingDetailObj=spendingDetailJSON.getJSONObject(i);
+                        spendingDetailModel.setSpendingId(spendingDetailObj.getString("SpendingId"));
+                        spendingDetailModel.setSpendingDetailId(spendingDetailObj.getString("SpendingDetailId"));
+                        spendingDetailModel.setSpendingType(spendingDetailObj.getString("SpendingType"));
+                        spendingDetailModel.setSpendingTypeBudget(spendingDetailObj.getString("SpendingTypeBudget"));
+                        spendingDetailModelArrayList.add(spendingDetailModel);
+                    }
+                    spendingLocalModel.setSpendingDetail(spendingDetailModelArrayList);
+                }
+                editor.putString(Constants.BUDGET_LOCAL, new Gson().toJson(spendingLocalModel));
 
                 JSONArray jArrayPromiseCountry = responseObject.getJSONArray("PromisesCountry");
                 Log.e(LOG_TAG,"PromiseCountry"+jArrayPromiseCountry.toString());
@@ -378,7 +474,7 @@ public class LoginActivity extends AppCompatActivity{
                             promiseCentralDetail.add(promiseDetailModel);
                         }
                     }
-                    Log.e(LOG_TAG,"PromiseDetail ArrayList Size "+promiseCentralDetail.size());
+                  //  Log.e(LOG_TAG,"PromiseDetail ArrayList Size "+promiseCentralDetail.size());
                     promiseModel.setPromiseDetail(promiseCentralDetail);
                     centralPromiseList.add(promiseModel);
                 }
@@ -401,7 +497,7 @@ public class LoginActivity extends AppCompatActivity{
                     promiseStateDetail.clear();
                     if(!promiseObj.getString("PromiseCount").equals("0")){
                         JSONArray jArrayPromiseDetail =promiseObj.getJSONArray("PromiseDetail");
-                        Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
+                       // Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
                         for (int j = 0; j < jArrayPromiseDetail.length(); j++) {
                             JSONObject promiseDetailObj = jArrayPromiseDetail.getJSONObject(j);
                             promiseDetailModel = new PromiseDetailModel();
@@ -436,7 +532,7 @@ public class LoginActivity extends AppCompatActivity{
                     promiseLocalDetail.clear();
                     if(!promiseObj.getString("PromiseCount").equals("0")){
                         JSONArray jArrayPromiseDetail =promiseObj.getJSONArray("PromiseDetail");
-                        Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
+                     //   Log.e(LOG_TAG, "PromiseDetail"+jArrayPromiseDetail.length());
                         for (int j = 0; j < jArrayPromiseDetail.length(); j++) {
                             JSONObject promiseDetailObj = jArrayPromiseDetail.getJSONObject(j);
                             promiseDetailModel = new PromiseDetailModel();
@@ -455,7 +551,7 @@ public class LoginActivity extends AppCompatActivity{
 
 
                 int noOfVotesPost= responseObject.getInt("NoOfVotes_Post");
-                Log.e(LOG_TAG,String.valueOf(noOfVotesPost));
+             //   Log.e(LOG_TAG,String.valueOf(noOfVotesPost));
                 if(noOfVotesPost>0){
                     JSONArray jArrayNewsVotes=responseObject.getJSONArray("PostVotes");
                     ArrayList<PostDetailModel> postListBuzz;
