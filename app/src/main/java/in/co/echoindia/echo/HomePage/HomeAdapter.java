@@ -736,7 +736,7 @@ public class HomeAdapter extends BaseAdapter {
                 postDataParams.put("postTime",timeNow);
                 postDataParams.put("postDate",dateToday);
                 Log.e(LOG_TAG,"URL"+url_share_post);
-                Log.e(LOG_TAG,"PostParam Insert Comment "+postDataParams.toString());
+                Log.e(LOG_TAG,"PostParam Share Post "+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000 /* milliseconds */);
                 conn.setConnectTimeout(15000 /* milliseconds */);

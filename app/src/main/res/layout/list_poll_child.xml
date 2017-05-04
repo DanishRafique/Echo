@@ -281,7 +281,7 @@
                         android:textStyle="italic" />
 
                     <TextView
-                        android:id="@+id/news_timeline"
+                        android:id="@+id/poll_timeline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"

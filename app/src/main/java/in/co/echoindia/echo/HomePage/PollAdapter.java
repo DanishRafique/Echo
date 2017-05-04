@@ -73,6 +73,7 @@ public class PollAdapter extends BaseAdapter {
     TextView pollDescription;
     TextView pollVendor;
     ImageView pollVendorLogo;
+    TextView pollTimeline;
     //TextView pollOptionOneVote, pollOptionTwoVote;
    // Button pollOptionOneText, pollOptionTwoText;
     //RadioButton pollOptionOneText, pollOptionTwoText;
@@ -149,7 +150,7 @@ public class PollAdapter extends BaseAdapter {
         pollButton=(LinearLayout)convertView.findViewById(R.id.poll_buttons);
         final LinearLayout pollShareButton =(LinearLayout)convertView.findViewById(R.id.poll_share_button);
         final LinearLayout pollCommentButton =(LinearLayout)convertView.findViewById(R.id.poll_comment_button);
-
+        pollTimeline=(TextView)convertView.findViewById(R.id.poll_timeline);
 
         pollTitle.setText(pollObj.getPollTitle());
         pollDescription.setText(pollObj.getPollDescription());
@@ -239,7 +240,7 @@ public class PollAdapter extends BaseAdapter {
         Type type = new TypeToken<ArrayList<PollVoteModel>>() {}.getType();
 
         ArrayList<PollVoteModel> pollVoteModelArrayList=new Gson().fromJson(sharedpreferences.getString(Constants.POLL_VOTE, ""), type);
-        Log.e(LOG_TAG,"Number of Poll Vote : " +pollVoteModelArrayList.size());
+        //Log.e(LOG_TAG,"Number of Poll Vote : " +pollVoteModelArrayList.size());
         for(int i=0;i<pollVoteModelArrayList.size();i++){
             if(pollObj.getPollId().equals(pollVoteModelArrayList.get(i).getPollId())){
                 if(pollVoteModelArrayList.get(i).getPollVoteOption().equals("1")){
@@ -254,6 +255,36 @@ public class PollAdapter extends BaseAdapter {
             }
         }
 
+       final String startDate=pollObj.getPollStartDate();
+        Date currentDate = new Date();
+       final String dateToday = new SimpleDateFormat("yyyy-MM-dd").format(currentDate);
+        int dateDay=Integer.parseInt(dateToday.substring(8));
+        int dateMonth=Integer.parseInt(dateToday.substring(5,7));
+        int dateYear=Integer.parseInt(dateToday.substring(0,4));
+        int startDateDay=Integer.parseInt(startDate.substring(8));
+        int startDateMonth=Integer.parseInt(startDate.substring(5,7));
+        int startDateYear=Integer.parseInt(startDate.substring(0,4));
+        if(dateMonth>startDateMonth){
+            if((dateMonth-startDateMonth)==1) {
+                pollTimeline.setText(dateMonth - startDateMonth + " month ago");
+            }
+            else
+            {
+                pollTimeline.setText(dateMonth - startDateMonth + " months ago");
+            }
+
+        }
+        else if(startDateYear<dateYear){
+            pollTimeline.setText(dateMonth+(12-startDateMonth) + " months ago");
+        }
+        else if(startDateYear==dateYear&&startDateMonth==dateMonth&&startDateDay<dateDay){
+            pollTimeline.setText((dateDay-startDateDay) + " days ago");
+        }
+        else if(startDateYear==dateYear&&startDateMonth==dateMonth&&startDateDay==dateDay){
+            pollTimeline.setText("Today");
+        }
+
+        //Log.e(LOG_TAG,"dayDate "+dateDay+" "+dateMonth);
         return convertView;
     }
 

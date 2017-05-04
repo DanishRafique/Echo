@@ -29,7 +29,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -235,6 +237,38 @@ public class NewsAdapter extends BaseAdapter {
         }
         editor.putString(Constants.NEWS_LIST, new Gson().toJson(newUpdatedNewsList));
         editor.commit();
+
+
+        final String startDate=newsObj.getNewsTimeline();
+        Date currentDate = new Date();
+        final String dateToday = new SimpleDateFormat("yyyy-MM-dd").format(currentDate);
+        int dateDay=Integer.parseInt(dateToday.substring(8,10));
+        int dateMonth=Integer.parseInt(dateToday.substring(5,7));
+        int dateYear=Integer.parseInt(dateToday.substring(0,4));
+        int startDateDay=Integer.parseInt(startDate.substring(8,10));
+        int startDateMonth=Integer.parseInt(startDate.substring(5,7));
+        int startDateYear=Integer.parseInt(startDate.substring(0,4));
+        if(dateMonth>startDateMonth){
+            if((dateMonth-startDateMonth)==1) {
+                newsTimeline.setText(dateMonth - startDateMonth + " month ago");
+            }
+            else
+            {
+                newsTimeline.setText(dateMonth - startDateMonth + " months ago");
+            }
+
+        }
+        else if(startDateYear<dateYear){
+            newsTimeline.setText(dateMonth+(12-startDateMonth) + " months ago");
+        }
+        else if(startDateYear==dateYear&&startDateMonth==dateMonth&&startDateDay<dateDay){
+            newsTimeline.setText((dateDay-startDateDay) + " days ago");
+        }
+        else if(startDateYear==dateYear&&startDateMonth==dateMonth&&startDateDay==dateDay){
+            newsTimeline.setText("Today");
+        }
+
+
 
         return convertView;
     }
