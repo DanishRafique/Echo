@@ -55,7 +55,6 @@ import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.User.AboutUsActivity;
-import in.co.echoindia.echo.User.ChangePasswordActivity;
 import in.co.echoindia.echo.User.ContactUsActivity;
 import in.co.echoindia.echo.User.DevelopmentActivity;
 import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
@@ -257,8 +256,11 @@ public class HomePageActivity extends AppCompatActivity
             ViewUser mViewUser=new ViewUser();
             mViewUser.execute();
         }else if(id == R.id.nav_share){
-            Intent i = new Intent(HomePageActivity.this,ChangePasswordActivity.class);
-            startActivity(i);
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Download Echo App From Play Store Now");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Download Echo App From Play Store Now");
+            startActivity(Intent.createChooser(sharingIntent, "Share via"));
         }else if(id == R.id.nav_promises){
             Intent i = new Intent(HomePageActivity.this, PromisesActivity.class);
             startActivity(i);
