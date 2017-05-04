@@ -73,7 +73,6 @@ public class PollCommentAdapter extends BaseAdapter {
         commentName.setText(pollCommentObj.getPollCommentUserName());
         commentText.setText(pollCommentObj.getPollCommentText());
         commentTime.setText(pollCommentObj.getPollCommentTime());
-
         return convertView;
     }
 }

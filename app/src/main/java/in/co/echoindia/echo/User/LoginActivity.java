@@ -3,9 +3,13 @@ package in.co.echoindia.echo.User;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -33,6 +38,8 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -50,6 +57,7 @@ import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
+import in.co.echoindia.echo.Utils.GPSTracker;
 
 public class LoginActivity extends AppCompatActivity{
 
@@ -90,6 +98,15 @@ public class LoginActivity extends AppCompatActivity{
     PostDetailModel mPostDetailModel;
     ArrayList<PostDetailModel> myPostList=new ArrayList<PostDetailModel>();
     ArrayList<PostDetailModel> myPostListUpdated=new ArrayList<PostDetailModel>();
+
+
+    Double latitude = 0.0, longitude = 0.0;
+    Geocoder geocoder;
+    String currentLocationAddress = "";
+    boolean boolean_permission;
+    List<Address> addresses;
+    GPSTracker gps;
+    private static final int REQUEST_PERMISSIONS = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,7 +153,80 @@ public class LoginActivity extends AppCompatActivity{
                 startActivity(forgotIntent);
             }
         });
+
+
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        fn_permission();
+        gps = new GPSTracker(LoginActivity.this);
+
+        // check if GPS enabled
+        if(gps.canGetLocation()){
+
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
+            LatLng mLatLng = new LatLng(latitude, longitude);
+            editor.putString(Constants.MY_LATITUDE,String.valueOf(latitude));
+            editor.putString(Constants.MY_LONGITUDE,String.valueOf(longitude));
+            editor.commit();
+            String errorMessage = "";
+            geocoder = new Geocoder(LoginActivity.this, Locale.getDefault());
+            try {
+                addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            } catch (IOException ioException) {
+                errorMessage = "Service Not Available " + ioException.toString();
+                Log.e("My Test", errorMessage, ioException);
+            } catch (IllegalArgumentException illegalArgumentException) {
+                errorMessage = "Invalid Latitude or Longitude Used";
+                Log.e("My test ", errorMessage + ". " + "Latitude = " + latitude + ", Longitude = " + longitude, illegalArgumentException);
+            }
+
+            if (addresses != null && addresses.size() > 0) {
+                String address = addresses.get(0).getAddressLine(0);
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                currentLocationAddress = address + "," + city + "," + state + "," + country + "," + postalCode;
+                editor.putString(Constants.CURRENT_CITY,city);
+                editor.putString(Constants.CURRENT_STATE,state);
+                editor.putString(Constants.CURRENT_PIN_CODE,postalCode);
+                editor.commit();
+            }
+            Log.e(LOG_TAG,"My Test currentLocationAddress " + currentLocationAddress);
+        }else{
+            gps.showSettingsAlert();
+        }
+
+
+
+
+
     }
+
+
+    private void fn_permission() {
+        if ((ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION))) {
+
+
+            } else {
+                ActivityCompat.requestPermissions(LoginActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION
+
+                        },
+                        REQUEST_PERMISSIONS);
+
+
+            }
+        } else {
+
+            boolean_permission = true;
+        }
+
+    }
+
+
     class Login extends AsyncTask {
 
         String url_user_login = "http://echoindia.co.in/php/UserLogin.php";

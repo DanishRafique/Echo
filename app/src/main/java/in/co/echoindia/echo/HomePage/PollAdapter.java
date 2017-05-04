@@ -26,6 +26,8 @@ import android.widget.Toast;
 import com.akexorcist.roundcornerprogressbar.TextRoundCornerProgressBar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -50,6 +53,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.Model.PollCommentModel;
 import in.co.echoindia.echo.Model.PollDetailsModel;
+import in.co.echoindia.echo.Model.PollVoteModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
@@ -69,16 +73,16 @@ public class PollAdapter extends BaseAdapter {
     TextView pollDescription;
     TextView pollVendor;
     ImageView pollVendorLogo;
-    TextView pollOptionOneVote, pollOptionTwoVote;
+    //TextView pollOptionOneVote, pollOptionTwoVote;
    // Button pollOptionOneText, pollOptionTwoText;
-    RadioButton pollOptionOneText, pollOptionTwoText;
+    //RadioButton pollOptionOneText, pollOptionTwoText;
     TextRoundCornerProgressBar pollBarOne , pollBarTwo;
 
     TextView pollQuestion;
     int colorCodePrimary[]={R.color.custom_progress_green_header,R.color.custom_progress_orange_header,R.color.custom_progress_blue_header,R.color.custom_progress_purple_header,R.color.custom_progress_red_header};
     int colorCodeSecondary[]={R.color.custom_progress_green_progress,R.color.custom_progress_orange_progress,R.color.custom_progress_blue_progress,R.color.custom_progress_purple_progress,R.color.custom_progress_red_progress};
     private static final String LOG_TAG = "PollAdapter";
-    SegmentedGroup segmentedPoll;
+
     PollCommentModel mPollCommentModel;
 
     Dialog commentDialog;
@@ -128,6 +132,7 @@ public class PollAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.list_poll_child, null);
         sharedpreferences = AppUtil.getAppPreferences(activity);
+        editor = sharedpreferences.edit();
 
         final PollDetailsModel pollObj = pollDetailModel.get(position);
         pollTitle = (TextView) convertView.findViewById(R.id.poll_title);
@@ -135,12 +140,12 @@ public class PollAdapter extends BaseAdapter {
         pollDescription = (TextView) convertView.findViewById(R.id.poll_description);
         pollVendor = (TextView) convertView.findViewById(R.id.poll_vendor);
         pollVendorLogo = (ImageView) convertView.findViewById(R.id.poll_vendor_logo);
-        pollOptionOneVote = (TextView) convertView.findViewById(R.id.poll_option_one_vote);
-        pollOptionTwoVote = (TextView) convertView.findViewById(R.id.poll_option_two_vote);
-        pollOptionOneText = (RadioButton) convertView.findViewById(R.id.poll_option_one_text);
-        pollOptionTwoText = (RadioButton) convertView.findViewById(R.id.poll_option_two_text);
+      final TextView  pollOptionOneVote = (TextView) convertView.findViewById(R.id.poll_option_one_vote);
+        final TextView pollOptionTwoVote = (TextView) convertView.findViewById(R.id.poll_option_two_vote);
+       final RadioButton pollOptionOneText = (RadioButton) convertView.findViewById(R.id.poll_option_one_text);
+       final RadioButton pollOptionTwoText = (RadioButton) convertView.findViewById(R.id.poll_option_two_text);
         pollQuestion = (TextView)convertView.findViewById(R.id.poll_question);
-        segmentedPoll = (SegmentedGroup)convertView.findViewById(R.id.segmented_poll);
+        final SegmentedGroup segmentedPoll = (SegmentedGroup)convertView.findViewById(R.id.segmented_poll);
         pollButton=(LinearLayout)convertView.findViewById(R.id.poll_buttons);
         final LinearLayout pollShareButton =(LinearLayout)convertView.findViewById(R.id.poll_share_button);
         final LinearLayout pollCommentButton =(LinearLayout)convertView.findViewById(R.id.poll_comment_button);
@@ -213,6 +218,10 @@ public class PollAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 pollVote vote=new pollVote(pollId,"1");
+                segmentedPoll.setEnabled(false);
+                pollOptionOneText.setEnabled(false);
+                pollOptionTwoText.setEnabled(false);
+                pollOptionOneVote.setText(String.valueOf(pollObj.getPollOptionOneVote()+1));
                 vote.execute();
             }
         });
@@ -220,9 +229,30 @@ public class PollAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 pollVote vote=new pollVote(pollId,"2");
+                segmentedPoll.setEnabled(false);
+                pollOptionOneText.setEnabled(false);
+                pollOptionTwoText.setEnabled(false);
+                pollOptionTwoVote.setText(String.valueOf(pollObj.getPollOptionTwoVote()+1));
                 vote.execute();
             }
         });
+        Type type = new TypeToken<ArrayList<PollVoteModel>>() {}.getType();
+
+        ArrayList<PollVoteModel> pollVoteModelArrayList=new Gson().fromJson(sharedpreferences.getString(Constants.POLL_VOTE, ""), type);
+        Log.e(LOG_TAG,"Number of Poll Vote : " +pollVoteModelArrayList.size());
+        for(int i=0;i<pollVoteModelArrayList.size();i++){
+            if(pollObj.getPollId().equals(pollVoteModelArrayList.get(i).getPollId())){
+                if(pollVoteModelArrayList.get(i).getPollVoteOption().equals("1")){
+                    pollOptionOneText.setChecked(true);
+                }
+                else if(pollVoteModelArrayList.get(i).getPollVoteOption().equals("2")){
+                    pollOptionTwoText.setChecked(true);
+                }
+                segmentedPoll.setEnabled(false);
+                pollOptionOneText.setEnabled(false);
+                pollOptionTwoText.setEnabled(false);
+            }
+        }
 
         return convertView;
     }
@@ -256,6 +286,7 @@ public class PollAdapter extends BaseAdapter {
 
             }
         });
+
     }
 
     class FetchPollComment extends AsyncTask {
@@ -481,7 +512,7 @@ public class PollAdapter extends BaseAdapter {
         String pollOption="";
         String pollId="";
 
-        public pollVote(String pollOption,String pollId){
+        public pollVote(String pollId,String pollOption){
             this.pollOption=pollOption;
             this.pollId=pollId;
         }
@@ -547,13 +578,22 @@ public class PollAdapter extends BaseAdapter {
                 JSONObject jObject=new JSONObject(o.toString());
                 String checkStatus=jObject.getString("status");
                 if(checkStatus.equals("1")&&o != null) {
-                   pollButton.setVisibility(View.GONE);
+                  /* pollButton.setVisibility(View.GONE);
                     if(pollOption.equals("1")){
                         pollQuestion.setText("Your vote has been submitted for "+pollOptionOneText.getText());
                     }
                     else if(pollOption.equals("2")){
                         pollQuestion.setText("Your vote has been submitted for "+pollOptionTwoText.getText());
-                    }
+                    }*/
+                    PollVoteModel pollVoteModel=new PollVoteModel();
+                    pollVoteModel.setPollId(pollId);
+                    pollVoteModel.setPollVoteOption(pollOption);
+                    Type type = new TypeToken<ArrayList<PollVoteModel>>() {}.getType();
+
+                    ArrayList<PollVoteModel> pollVoteModelArrayListUpdate=new Gson().fromJson(sharedpreferences.getString(Constants.POLL_VOTE, ""), type);
+                    pollVoteModelArrayListUpdate.add(pollVoteModel);
+                    editor.putString(Constants.POLL_VOTE, new Gson().toJson(pollVoteModelArrayListUpdate));
+                    editor.commit();
                     Toast.makeText(activity, "Thanks for your feedback", Toast.LENGTH_SHORT).show();
                 }
                 else if(checkStatus.equals("0")){
