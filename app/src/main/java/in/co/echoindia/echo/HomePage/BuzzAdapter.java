@@ -81,7 +81,7 @@ public class BuzzAdapter extends BaseAdapter {
     CircleImageView buzzUserImage;
     TextView buzzUserName;
     TextView buzzUserDesignation;
-    TextView buzzTime;
+
     TextView buzzText;
     ListView buzzImageListView;
     TextView buzzUpvoteValue;
@@ -161,7 +161,7 @@ public class BuzzAdapter extends BaseAdapter {
         buzzUserImage=(CircleImageView) convertView.findViewById(R.id.buzz_user_image);
         buzzUserName=(TextView) convertView.findViewById(R.id.buzz_user_name);
         buzzUserDesignation=(TextView)convertView.findViewById(R.id.buzz_user_designation);
-        buzzTime=(TextView)convertView.findViewById(R.id.buzz_time);
+        final TextView buzzTime=(TextView)convertView.findViewById(R.id.buzz_time);
         buzzText=(TextView)convertView.findViewById(R.id.buzz_text);
         buzzImageList=(LinearLayout)convertView.findViewById(R.id.buzz_image_list);
         buzzUpvoteValue=(TextView)convertView.findViewById(R.id.buzz_upvote_value);
@@ -371,6 +371,72 @@ public class BuzzAdapter extends BaseAdapter {
                 mViewUser.execute();
             }
         });
+
+
+        final String startDate=buzzObj.getPostDate();
+        Date currentDate = new Date();
+        final String dateToday = new SimpleDateFormat("yyyy-MM-dd").format(currentDate);
+        int dateDay=Integer.parseInt(dateToday.substring(8,10));
+        int dateMonth=Integer.parseInt(dateToday.substring(5,7));
+        int dateYear=Integer.parseInt(dateToday.substring(0,4));
+        int startDateDay=Integer.parseInt(startDate.substring(8,10));
+        int startDateMonth=Integer.parseInt(startDate.substring(5,7));
+        int startDateYear=Integer.parseInt(startDate.substring(0,4));
+        if(dateMonth>startDateMonth){
+            if((dateMonth-startDateMonth)==1) {
+                buzzTime.setText(dateMonth - startDateMonth + " month ago");
+            }
+            else
+            {
+                buzzTime.setText(dateMonth - startDateMonth + " months ago");
+            }
+
+        }
+        else if(startDateYear<dateYear){
+            buzzTime.setText(dateMonth+(12-startDateMonth) + " months ago");
+        }
+        else if(startDateYear==dateYear&&startDateMonth==dateMonth&&startDateDay<dateDay){
+            buzzTime.setText((dateDay-startDateDay) + " days ago");
+        }
+        else if(startDateYear==dateYear&&startDateMonth==dateMonth&&startDateDay==dateDay){
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            String timeNow = sdf.format(new Date());
+            final String postTime=buzzObj.getPostTime();
+            int timeNowHour=Integer.parseInt(timeNow.substring(0,2));
+            int timeNowMin=Integer.parseInt(timeNow.substring(3,5));
+            int timeNowSec=Integer.parseInt(timeNow.substring(6));
+            int postTimeHour=Integer.parseInt(postTime.substring(0,2));
+            int postTimeMin=Integer.parseInt(postTime.substring(3,5));
+            int postTimeSec=Integer.parseInt(postTime.substring(6));
+            if(timeNowHour>postTimeHour){
+                if((timeNowHour-postTimeHour)==1) {
+                    buzzTime.setText(timeNowHour - postTimeHour + " hr ago");
+                }
+                else
+                {
+                    buzzTime.setText(timeNowHour - postTimeHour + " hrs ago");
+                }
+            }
+            else if(timeNowMin>postTimeMin){
+                if((timeNowMin-postTimeMin)==1) {
+                    buzzTime.setText(timeNowMin - postTimeMin + " min ago");
+                }
+                else
+                {
+                    buzzTime.setText(timeNowMin - postTimeMin + " mins ago");
+                }
+            }
+            else if(timeNowSec>postTimeSec){
+                if((timeNowSec-postTimeSec)==1) {
+                    buzzTime.setText(timeNowSec - postTimeSec + " sec ago");
+                }
+                else
+                {
+                    buzzTime.setText(timeNowSec - postTimeSec + " secs ago");
+                }
+            }
+        }
+
 
 
 
