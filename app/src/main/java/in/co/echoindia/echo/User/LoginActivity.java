@@ -44,6 +44,7 @@ import java.util.Locale;
 import javax.net.ssl.HttpsURLConnection;
 
 import in.co.echoindia.echo.HomePage.HomePageActivity;
+import in.co.echoindia.echo.Model.DevelopmentInProgressModel;
 import in.co.echoindia.echo.Model.NewsDetailsModel;
 import in.co.echoindia.echo.Model.PollVoteModel;
 import in.co.echoindia.echo.Model.PostDetailModel;
@@ -107,6 +108,9 @@ public class LoginActivity extends AppCompatActivity{
     List<Address> addresses;
     GPSTracker gps;
     private static final int REQUEST_PERMISSIONS = 100;
+
+    DevelopmentInProgressModel developmentInProgressModel;
+    ArrayList<DevelopmentInProgressModel> developmentInProgressModelArrayList=new ArrayList<DevelopmentInProgressModel>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -446,6 +450,24 @@ public class LoginActivity extends AppCompatActivity{
                     Log.e(LOG_TAG,"NEWS ELEMENT SIZE"+newsListUpdated.size());
                     editor.putString(Constants.NEWS_LIST, new Gson().toJson(newsListUpdated));
                 }
+                int noOfDevelopment= responseObject.getInt("NoOfDevelopments");
+                developmentInProgressModelArrayList.clear();
+                if(noOfDevelopment>0){
+                    JSONArray developmentJSONArray=responseObject.getJSONArray("Developments");
+                    for(int i=0;i<developmentJSONArray.length();i++){
+                        JSONObject developmentObj=developmentJSONArray.getJSONObject(i);
+                        developmentInProgressModel=new DevelopmentInProgressModel();
+                        developmentInProgressModel.setDevelopmentId(developmentObj.getString("DevelopmentId"));
+                        developmentInProgressModel.setDevelopmentTitle(developmentObj.getString("Title"));
+                        developmentInProgressModel.setDevelopmentSnippet(developmentObj.getString("Snippet"));
+                        developmentInProgressModel.setDevelopmentLat(developmentObj.getString("Lat"));
+                        developmentInProgressModel.setDevelopmentLong(developmentObj.getString("Lng"));
+                        developmentInProgressModel.setDevelopmentStartDate(developmentObj.getString("Start_date"));
+                        developmentInProgressModel.setDevelopmentEndDate(developmentObj.getString("End_date"));
+                        developmentInProgressModelArrayList.add(developmentInProgressModel);
+                    }
+                }
+                editor.putString(Constants.DEVELOPMENT_IN_PROGRESS, new Gson().toJson(developmentInProgressModelArrayList));
 
                 int noOfPollVotes=responseObject.getInt("NoOfPollVotes");
                 pollVoteList.clear();

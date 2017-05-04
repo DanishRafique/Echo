@@ -13,8 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-
-            android:src="@drawable/ic_splash" />
+            android:src="@drawable/background" />
 
     <LinearLayout
         android:id="@+id/fullscreen_content"
@@ -66,10 +65,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="India"
+            android:textStyle="bold"
+            android:textSize="16sp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="25dp"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent" />
+            android:textColor="#fff" />
     </RelativeLayout>
 
 </LinearLayout>
