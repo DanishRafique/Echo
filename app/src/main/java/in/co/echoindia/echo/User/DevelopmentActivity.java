@@ -1,8 +1,10 @@
 package in.co.echoindia.echo.User;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -12,65 +14,78 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 import in.co.echoindia.echo.Model.DevelopmentDetailsModel;
+import in.co.echoindia.echo.Model.DevelopmentInProgressModel;
 import in.co.echoindia.echo.R;
+import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Clustering.ClusterManager;
+import in.co.echoindia.echo.Utils.Constants;
 
-public class DevelopmentActivity extends AppCompatActivity implements OnMapReadyCallback {
+import static in.co.echoindia.echo.R.id.map;
+
+public class DevelopmentActivity extends AppCompatActivity  implements
+        GoogleMap.OnInfoWindowClickListener,
+        OnMapReadyCallback {
     private ClusterManager<DevelopmentDetailsModel> mClusterManager;
-
     private GoogleMap mMap;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    SharedPreferences sharedpreferences;
+    SharedPreferences.Editor editor;
+    private static final String LOG_TAG = "DevelopmentActivity";
+    TextView mapUpdate,mapSnippet;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_development);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_development);
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        sharedpreferences = AppUtil.getAppPreferences(this);
+        editor = sharedpreferences.edit();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(map);
         mapFragment.getMapAsync(this);
         setSupportActionBar(toolbar);
+        mapUpdate=(TextView)findViewById(R.id.map_title);
+        mapSnippet=(TextView)findViewById(R.id.map_snippet);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the deviced, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
         boolean success = googleMap.setMapStyle(new MapStyleOptions(getResources()
-                .getString(R.string.style_json_night)));
-        LatLng kolkata = new LatLng(51.5584087,-0.0915169);
+                .getString(R.string.style_json_echo)));
+        LatLng currentLocation = new LatLng(Double.parseDouble(sharedpreferences.getString(Constants.MY_LATITUDE,"")),Double.parseDouble(sharedpreferences.getString(Constants.MY_LONGITUDE,"")));
         CameraUpdate zoom= CameraUpdateFactory.zoomTo(13);
-        //mMap.addMarker(new MarkerOptions().position(kolkata).title("Marker in Kolkata"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(kolkata));
+        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Your Current Location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
         mMap.animateCamera(zoom);
-
         mClusterManager = new ClusterManager<DevelopmentDetailsModel>(this, mMap);
-
         mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMarkerClickListener((new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if(marker.getTitle()!=null) {
+                    mapUpdate.setText(marker.getTitle().trim());
+                }
+                if(marker.getSnippet()!=null){
+                    mapSnippet.setText(marker.getSnippet().trim());
+                }
+                return false;
+            }
+        }));
         try {
             readItems();
         } catch (JSONException e) {
@@ -78,52 +93,30 @@ public class DevelopmentActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+
     private void readItems() throws JSONException {
-        InputStream inputStream = getResources().openRawResource(R.raw.radar_search);
-        List<DevelopmentDetailsModel> items = new MyItemReader().read(inputStream);
-        for (int i = 0; i < 10; i++) {
-            double offset = i / 60d;
-            for (DevelopmentDetailsModel item : items) {
-                LatLng position = item.getPosition();
-                double lat = position.latitude + offset;
-                double lng = position.longitude + offset;
-                DevelopmentDetailsModel offsetItem = new DevelopmentDetailsModel(lat, lng);
+        Type type = new TypeToken<ArrayList<DevelopmentInProgressModel>>() {}.getType();
+        ArrayList<DevelopmentInProgressModel> development= new Gson().fromJson(sharedpreferences.getString(Constants.DEVELOPMENT_IN_PROGRESS, ""), type);
+            for (int i=0;i<development.size();i++) {
+                double lat = Double.parseDouble(development.get(i).getDevelopmentLat());
+                double lng =  Double.parseDouble(development.get(i).getDevelopmentLong());
+                DevelopmentDetailsModel offsetItem = new DevelopmentDetailsModel(lat, lng ,development.get(i).getDevelopmentTitle(),development.get(i).getDevelopmentSnippet() );
                 mClusterManager.addItem(offsetItem);
-            }
         }
     }
 
-    public class MyItemReader {
 
-        /*
-         * This matches only once in whole input,
-         * so Scanner.next returns whole InputStream as a String.
-         * http://stackoverflow.com/a/5445161/2183804
-         */
-        private static final String REGEX_INPUT_BOUNDARY_BEGINNING = "\\A";
 
-        public List<DevelopmentDetailsModel> read(InputStream inputStream) throws JSONException {
-            List<DevelopmentDetailsModel> items = new ArrayList<DevelopmentDetailsModel>();
-            String json = new Scanner(inputStream).useDelimiter(REGEX_INPUT_BOUNDARY_BEGINNING).next();
-            JSONArray array = new JSONArray(json);
-            for (int i = 0; i < array.length(); i++) {
-                String title = null;
-                String snippet = null;
-                JSONObject object = array.getJSONObject(i);
-                double lat = object.getDouble("lat");
-                double lng = object.getDouble("lng");
-                if (!object.isNull("title")) {
-                    title = object.getString("title");
-                }
-                if (!object.isNull("snippet")) {
-                    snippet = object.getString("snippet");
-                }
-                items.add(new DevelopmentDetailsModel(lat, lng, title, snippet));
-            }
-            return items;
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        /*Toast.makeText(this, marker.getTitle() + marker.getSnippet(), Toast.LENGTH_SHORT).show();
+        Log.e(LOG_TAG,marker.getTitle() + marker.getSnippet());*/
+        if(marker.getTitle()!=null) {
+            mapUpdate.setText(marker.getTitle().trim());
         }
-
-
+        if(marker.getSnippet()!=null){
+            mapSnippet.setText(marker.getSnippet().trim());
+        }
     }
-    }
+}
 

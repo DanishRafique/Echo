@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="11">
+        android:layout_weight="10.5">
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -22,16 +22,36 @@
         tools:context="in.co.echoindia.echo.User.DevelopmentInProgressActivity" />
     </LinearLayout>
 
-<TextView
-    android:id="@+id/map_update"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    tools:layout_editor_absoluteY="491dp"
-    tools:layout_editor_absoluteX="131dp"
-    android:layout_weight="1"
-    android:text="The map was last updated on 13th Mar , 2017 ."
-    android:textSize="12sp"
-    android:textStyle="italic"
-    />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1.5"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/map_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16sp"
+            android:layout_marginRight="16sp"
+            android:gravity="center"
+            android:text="Click on the Marker to know the detail"
+            android:textColor="#000"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/map_snippet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16sp"
+            android:layout_marginRight="16sp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#000"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+
 </LinearLayout>
