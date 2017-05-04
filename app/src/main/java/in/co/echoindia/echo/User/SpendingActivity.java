@@ -37,13 +37,13 @@ public class SpendingActivity extends AppCompatActivity {
     }
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        RepCentralFragment repCentralFragment = new RepCentralFragment();
-        RepStateFragment repStateFragment = new RepStateFragment();
-        RepLocalFragment repLocalFragment = new RepLocalFragment();
+        BudgetCentralFragment budgetCentralFragment = new BudgetCentralFragment();
+        BudgetStateFragment budgetStateFragment = new BudgetStateFragment();
+        BudgetLocalFragment budgetLocalFragment = new BudgetLocalFragment();
 
-        adapter.addFragment(repCentralFragment,"CENTRAL");
-        adapter.addFragment(repStateFragment,"STATE");
-        adapter.addFragment(repLocalFragment,"LOCAL");
+        adapter.addFragment(budgetCentralFragment,"CENTRAL");
+        adapter.addFragment(budgetStateFragment,"STATE");
+        adapter.addFragment(budgetLocalFragment,"LOCAL");
 
         viewPager.setAdapter(adapter);
     }

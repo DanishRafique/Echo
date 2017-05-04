@@ -545,7 +545,14 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            setNewsData(o);
+            if(o!=null) {
+                setNewsData(o);
+            }
+            else {
+                gotoNextActivity();
+                Toast.makeText(SplashActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -609,8 +616,14 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            if(o!=null){
             Log.e(LOG_TAG,"POLL : "+o.toString());
             setPollData(o);
+        }
+            else {
+                gotoNextActivity();
+            Toast.makeText(SplashActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+        }
         }
     }
 
@@ -674,8 +687,14 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            if(o!=null){
             Log.e(LOG_TAG,"BUZZ : "+o.toString());
             setBuzzData(o);
+        }
+            else {
+                gotoNextActivity();
+            Toast.makeText(SplashActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+        }
         }
     }
 
@@ -740,8 +759,14 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            if(o!=null){
             Log.e(LOG_TAG,"HOME : "+o.toString());
             setHomeData(o);
+        }
+            else {
+                gotoNextActivity();
+            Toast.makeText(SplashActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+        }
         }
     }
 
@@ -802,7 +827,14 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            if(o!=null){
+
             setPoliticalPartyData(o);
+        }
+            else {
+                gotoNextActivity();
+            Toast.makeText(SplashActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+        }
         }
     }
 }
