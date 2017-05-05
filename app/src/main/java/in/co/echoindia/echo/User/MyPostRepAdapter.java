@@ -764,6 +764,7 @@ public class MyPostRepAdapter extends BaseAdapter {
                 postDataParams.put("postFullName",postFullName);
                 postDataParams.put("postTime",timeNow);
                 postDataParams.put("postDate",dateToday);
+                postDataParams.put("maxID",sharedpreferences.getInt(Constants.LAST_BUZZ_UPDATE,0));
                 Log.e(LOG_TAG,"URL"+url_share_post);
                 Log.e(LOG_TAG,"PostParam Insert Comment "+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();

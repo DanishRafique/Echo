@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ import in.co.echoindia.echo.User.ElectedRepresentativeActivity;
 import in.co.echoindia.echo.User.LoginActivity;
 import in.co.echoindia.echo.User.MyAccountActivity;
 import in.co.echoindia.echo.User.MyPostActivity;
+import in.co.echoindia.echo.User.NotificationActivity;
 import in.co.echoindia.echo.User.PostActivity;
 import in.co.echoindia.echo.User.PromisesActivity;
 import in.co.echoindia.echo.User.SettingsActivity;
@@ -90,6 +92,8 @@ public class HomePageActivity extends AppCompatActivity
             ArrayList<PostDetailModel> userPost=new ArrayList<>();
 
             PostDetailModel mPostDetailModel;
+            TextView numberOfNotification;
+            RelativeLayout notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +171,34 @@ public class HomePageActivity extends AppCompatActivity
                 startActivity(postIntent);
             }
         });
+
+
+
+        notification=(RelativeLayout)findViewById(R.id.home_page_notification);
+        numberOfNotification=(TextView)findViewById(R.id.tv_number_of_notification);
+        int numberOfNotificationStr=sharedpreferences.getInt(Constants.NUMBER_OF_NOTIFICATION,0);
+        Log.e(LOG_TAG,"Number of Notification :"+numberOfNotificationStr);
+        if(numberOfNotificationStr!=0) {
+           numberOfNotification.setText(Integer.toString(numberOfNotificationStr));
+        }
+        else
+        {
+            numberOfNotification.setText("0");
+        }
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               editor.putInt(Constants.NUMBER_OF_NOTIFICATION,0);
+                editor.commit();
+                numberOfNotification.setText("0");
+                Intent notificationIntent=new Intent(HomePageActivity.this, NotificationActivity.class);
+                startActivity(notificationIntent);
+
+            }
+        });
+
+
+
     }
 
             public String capitalizeFirstLetter(String original) {

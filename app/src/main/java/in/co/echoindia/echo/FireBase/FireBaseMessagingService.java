@@ -14,16 +14,24 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
+import in.co.echoindia.echo.Model.NotificationModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.User.SplashActivity;
 import in.co.echoindia.echo.Utils.AppUtil;
+import in.co.echoindia.echo.Utils.Constants;
 
 /**
  * Created by Danish Rafique on 27-04-2017.
@@ -38,6 +46,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
     private static final String LOG_TAG = "FireBaseMessaging";
     InputStream in;
     Bitmap myBitmap;
+    ArrayList<NotificationModel> notificationModelArrayList=new ArrayList<>();
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -52,6 +61,35 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
 
         sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
+
+
+
+        Type type = new TypeToken<ArrayList<NotificationModel>>() {}.getType();
+        notificationModelArrayList = new Gson().fromJson(sharedpreferences.getString(Constants.MY_NOTIFICATION, ""), type);
+
+        if(notificationModelArrayList==null){
+            notificationModelArrayList=new ArrayList<>();
+        }
+
+        NotificationModel newNotification=new NotificationModel();
+        newNotification.setPostID(remoteMessage.getData().get("postid"));
+        newNotification.setNotificationID(remoteMessage.getData().get("id"));
+        newNotification.setNotificationBody(remoteMessage.getData().get("body"));
+        newNotification.setNotificationImage(remoteMessage.getData().get("image"));
+        newNotification.setNotificationMessage(remoteMessage.getData().get("message"));
+        newNotification.setNotificationTitle(remoteMessage.getData().get("title"));
+        Date currentDate = new Date();
+        String dateToday = new SimpleDateFormat("yyyy-MM-dd").format(currentDate);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        String timeNow = sdf.format(new Date());
+        newNotification.setNotificationTime(timeNow);
+        newNotification.setNotificationDate(dateToday);
+        notificationModelArrayList.add(newNotification);
+        int numberOfNotication=sharedpreferences.getInt(Constants.NUMBER_OF_NOTIFICATION,0);
+        editor.putString(Constants.MY_NOTIFICATION, new Gson().toJson(notificationModelArrayList));
+        editor.putInt(Constants.NUMBER_OF_NOTIFICATION,numberOfNotication+1);
+        editor.commit();
+
         Log.e(LOG_TAG, "FireBase Called");
         Log.e(LOG_TAG, remoteMessage.getData().toString());
         notificationId = remoteMessage.getData().get("id");
@@ -90,6 +128,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
             notificationBuilder.addAction(R.drawable.accept, "BID NOW", pendingIntent);
         }*/
         startForeground(1, notificationBuilder.build());
+
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
