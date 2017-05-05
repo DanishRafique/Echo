@@ -74,16 +74,32 @@ public class DevelopmentActivity extends AppCompatActivity  implements
         mClusterManager = new ClusterManager<DevelopmentDetailsModel>(this, mMap);
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnInfoWindowClickListener(this);
+
+
         mMap.setOnMarkerClickListener((new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 if(marker.getTitle()!=null) {
                     mapUpdate.setText(marker.getTitle().trim());
                 }
+                else{
+                    mapUpdate.setText("");
+                }
                 if(marker.getSnippet()!=null){
                     mapSnippet.setText(marker.getSnippet().trim());
                 }
+                else{
+                    mapSnippet.setText("");
+                }
                 return false;
+            }
+
+        }));
+        mMap.setOnMapClickListener((new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                mapUpdate.setText("Click on the Marker to know the detail");
+                mapSnippet.setText("");
             }
         }));
         try {
@@ -114,8 +130,14 @@ public class DevelopmentActivity extends AppCompatActivity  implements
         if(marker.getTitle()!=null) {
             mapUpdate.setText(marker.getTitle().trim());
         }
+        else{
+            mapUpdate.setText("");
+        }
         if(marker.getSnippet()!=null){
             mapSnippet.setText(marker.getSnippet().trim());
+        }
+        else{
+            mapSnippet.setText("");
         }
     }
 }

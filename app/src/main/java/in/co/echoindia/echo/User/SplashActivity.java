@@ -318,8 +318,9 @@ public class SplashActivity extends AppCompatActivity {
             if(checkStatus.equals("1")&&o != null){
                 Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
                 Boolean firstTime=sharedpreferences.getBoolean(Constants.IS_FIRST_TIME_LAUNCH,false);
-                if(firstTime==null) {
-                    buzzList = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
+                buzzList = new Gson().fromJson(sharedpreferences.getString(Constants.BUZZ_LIST, ""), type);
+                if(buzzList==null){
+                    buzzList=new ArrayList<>();
                 }
                 JSONArray newsArray=jObject.getJSONArray("posts");
                 for(int i =0 ; i<newsArray.length();i++){
@@ -388,8 +389,9 @@ public class SplashActivity extends AppCompatActivity {
             if(checkStatus.equals("1")&&o != null){
                 Type type = new TypeToken<ArrayList<PostDetailModel>>() {}.getType();
                 Boolean firstTime=sharedpreferences.getBoolean(Constants.IS_FIRST_TIME_LAUNCH,false);
-                if(firstTime==null) {
-                    homeList = new Gson().fromJson(sharedpreferences.getString(Constants.HOME_LIST, ""), type);
+                homeList = new Gson().fromJson(sharedpreferences.getString(Constants.HOME_LIST, ""), type);
+                if(homeList==null){
+                    homeList=new ArrayList<>();
                 }
                 JSONArray newsArray=jObject.getJSONArray("posts");
                 for(int i =0 ; i<newsArray.length();i++){
