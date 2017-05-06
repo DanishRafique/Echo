@@ -5,9 +5,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -85,6 +89,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
         String timeNow = sdf.format(new Date());
         newNotification.setNotificationTime(timeNow);
         newNotification.setNotificationDate(dateToday);
+        newNotification.setNotificationPostType(remoteMessage.getData().get("posttype"));
         notificationModelArrayList.add(newNotification);
         int numberOfNotication=sharedpreferences.getInt(Constants.NUMBER_OF_NOTIFICATION,0);
         editor.putString(Constants.MY_NOTIFICATION, new Gson().toJson(notificationModelArrayList));
@@ -94,7 +99,7 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
         Log.e(LOG_TAG, "FireBase Called");
         Log.e(LOG_TAG, remoteMessage.getData().toString());
         notificationId = remoteMessage.getData().get("id");
-        if (notificationId.equals("4")) {
+
             message = remoteMessage.getData().get("body");
             title = remoteMessage.getData().get("title");
             URL url = null;
@@ -111,24 +116,17 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-        }
         //Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.logo_blue_icon);
         intent=new Intent(this, SplashActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        Resources res = this.getResources();
-        int height = (int) res.getDimension(android.R.dimen.notification_large_icon_height);
-        int width = (int) res.getDimension(android.R.dimen.notification_large_icon_width);
-
-        myBitmap = Bitmap.createScaledBitmap(myBitmap, width, height, false);
+         Bitmap imageRounded=getCircleBitmap(myBitmap);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setSmallIcon(R.mipmap.icon)
-                .setLargeIcon(myBitmap)
+                .setLargeIcon(imageRounded)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
@@ -142,4 +140,43 @@ public class FireBaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(0, notificationBuilder.build());
     }
 
+    public static Bitmap getCircleBitmap(Bitmap bitmap) {
+        Bitmap output;
+        Rect srcRect, dstRect;
+        float r;
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+
+        if (width > height){
+            output = Bitmap.createBitmap(height, height, Bitmap.Config.ARGB_8888);
+            int left = (width - height) / 2;
+            int right = left + height;
+            srcRect = new Rect(left, 0, right, height);
+            dstRect = new Rect(0, 0, height, height);
+            r = height / 2;
+        }else{
+            output = Bitmap.createBitmap(width, width, Bitmap.Config.ARGB_8888);
+            int top = (height - width)/2;
+            int bottom = top + width;
+            srcRect = new Rect(0, top, width, bottom);
+            dstRect = new Rect(0, 0, width, width);
+            r = width / 2;
+        }
+
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawCircle(r, r, r, paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, srcRect, dstRect, paint);
+
+        bitmap.recycle();
+
+        return output;
+    }
 }

@@ -252,4 +252,5 @@ public class HomeFragment extends Fragment {
         mHomeAdapterRefreshed.notifyDataSetChanged();
         homeSwipeRefresh.setRefreshing(false);
     }
+
 }

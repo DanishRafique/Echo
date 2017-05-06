@@ -59,6 +59,7 @@ import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
 import in.co.echoindia.echo.User.OtherUserProfile;
+import in.co.echoindia.echo.User.ViewPostActivity;
 import in.co.echoindia.echo.Utils.AppUtil;
 import in.co.echoindia.echo.Utils.Constants;
 
@@ -436,6 +437,17 @@ public class BuzzAdapter extends BaseAdapter {
                 }
             }
         }
+
+        buzzImageList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent viewPost=new Intent(activity, ViewPostActivity.class);
+                Bundle mBundle = new Bundle();
+                mBundle.putSerializable("postObj", buzzObj);
+                viewPost.putExtra("postObj",mBundle);
+                activity.startActivity(viewPost);
+            }
+        });
 
 
 

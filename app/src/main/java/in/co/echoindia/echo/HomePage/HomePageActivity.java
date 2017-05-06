@@ -176,7 +176,7 @@ public class HomePageActivity extends AppCompatActivity
 
         notification=(RelativeLayout)findViewById(R.id.home_page_notification);
         numberOfNotification=(TextView)findViewById(R.id.tv_number_of_notification);
-        int numberOfNotificationStr=sharedpreferences.getInt(Constants.NUMBER_OF_NOTIFICATION,0);
+        final int numberOfNotificationStr=sharedpreferences.getInt(Constants.NUMBER_OF_NOTIFICATION,0);
         Log.e(LOG_TAG,"Number of Notification :"+numberOfNotificationStr);
         if(numberOfNotificationStr!=0) {
            numberOfNotification.setText(Integer.toString(numberOfNotificationStr));
@@ -188,10 +188,12 @@ public class HomePageActivity extends AppCompatActivity
         notification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               editor.putInt(Constants.NUMBER_OF_NOTIFICATION,0);
-                editor.commit();
+
                 numberOfNotification.setText("0");
                 Intent notificationIntent=new Intent(HomePageActivity.this, NotificationActivity.class);
+                editor.putInt(Constants.NUMBER_OF_COLORED_POST,numberOfNotificationStr);
+                editor.putInt(Constants.NUMBER_OF_NOTIFICATION,0);
+                editor.commit();
                 startActivity(notificationIntent);
 
             }
@@ -380,6 +382,7 @@ public class HomePageActivity extends AppCompatActivity
                         URL url = new URL(url_user_logout);
                         JSONObject postDataParams = new JSONObject();
                         postDataParams.put("username",userNameStr);
+                        postDataParams.put("userType",sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,""));
                         Log.e(LOG_TAG,"URL"+ url_user_logout);
                         Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

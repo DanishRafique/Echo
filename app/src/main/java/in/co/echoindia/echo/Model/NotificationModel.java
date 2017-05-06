@@ -13,6 +13,24 @@ public class NotificationModel {
     private String notificationMessage = "";
     private String notificationTime = "";
     private String notificationDate = "";
+    private String notificationPostType = "";
+    private String notificationSeen="";
+
+    public String getNotificationSeen() {
+        return notificationSeen;
+    }
+
+    public void setNotificationSeen(String notificationSeen) {
+        this.notificationSeen = notificationSeen;
+    }
+
+    public String getNotificationPostType() {
+        return notificationPostType;
+    }
+
+    public void setNotificationPostType(String notificationPostType) {
+        this.notificationPostType = notificationPostType;
+    }
 
     public String getNotificationTime() {
         return notificationTime;

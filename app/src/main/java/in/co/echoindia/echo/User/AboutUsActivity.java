@@ -22,7 +22,7 @@ public class AboutUsActivity extends AppCompatActivity {
         View aboutPage = new AboutPage(this)
                 .isRTL(false)
                 .setImage(R.mipmap.icon)
-                .setDescription("Change Description")
+                .setDescription("Let's bridge the gap between the masses and our Government . Locate the developments taking place around you . Know the promises made and the budget allocated . Join hands to make a stronger democracy.")
                 .addItem(new Element().setTitle("Version 1.0").setGravity(Gravity.CENTER))
                 .addItem(getCopyRightsElement())
                 .create();

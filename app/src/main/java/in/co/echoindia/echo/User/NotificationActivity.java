@@ -55,4 +55,11 @@ public class NotificationActivity extends AppCompatActivity {
             return Integer.parseInt(lhs.getPostID())<Integer.parseInt(rhs.getPostID()) ? 1:(Integer.parseInt(lhs.getPostID())==Integer.parseInt(rhs.getPostID())?0:-1);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        editor.putInt(Constants.NUMBER_OF_COLORED_POST,0);
+        editor.commit();
+    }
 }

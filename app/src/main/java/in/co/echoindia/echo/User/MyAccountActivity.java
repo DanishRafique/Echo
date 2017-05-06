@@ -1,5 +1,6 @@
 package in.co.echoindia.echo.User;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,12 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
@@ -38,12 +37,13 @@ public class MyAccountActivity extends AppCompatActivity {
 
     TextView tvParty,tvDesignation,tvLocation,tvQualification,tvWebsite,tvTwitter;
 
-    CircleImageView userPhoto;
+    //CircleImageView userPhoto;
     LinearLayout profileBackground;
 
     LinearLayout llLokSabha,llVidhanSabha;
 
     CardView myAccountPolitical;
+    TextView editDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,8 @@ public class MyAccountActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
+
+        editDetails=(TextView)findViewById(R.id.my_account_edit);
 
 
         tvName=(TextView)findViewById(R.id.tv_name);
@@ -66,7 +68,7 @@ public class MyAccountActivity extends AppCompatActivity {
         tvLokSabha=(TextView)findViewById(R.id.tv_lok_sabha);
         tvVidhanSabha=(TextView)findViewById(R.id.tv_vidhan_sabha);
         tvState=(TextView)findViewById(R.id.tv_state);
-        userPhoto=(CircleImageView)findViewById(R.id.user_photo);
+       // userPhoto=(CircleImageView)findViewById(R.id.user_photo);
         profileBackground=(LinearLayout)findViewById(R.id.profile_background);
         llLokSabha=(LinearLayout)findViewById(R.id.ll_lok_sabha);
         llVidhanSabha=(LinearLayout)findViewById(R.id.ll_vidhan_sabha);
@@ -100,7 +102,7 @@ public class MyAccountActivity extends AppCompatActivity {
                 llVidhanSabha.setVisibility(View.GONE);
             }
             tvState.setText(userDetailsModel.getState());
-            Glide.with(this).load(userDetailsModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
+           // Glide.with(this).load(userDetailsModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
             Glide.with(this).load(userDetailsModel.getUserPhoto()).asBitmap().into(new SimpleTarget<Bitmap>(500, 200) {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -132,7 +134,7 @@ public class MyAccountActivity extends AppCompatActivity {
                 llVidhanSabha.setVisibility(View.GONE);
             }
             tvState.setText(repDetailModel.getState());
-            Glide.with(this).load(repDetailModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
+            //Glide.with(this).load(repDetailModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
             Glide.with(this).load(repDetailModel.getUserPhoto()).asBitmap().into(new SimpleTarget<Bitmap>(500, 200) {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -150,6 +152,14 @@ public class MyAccountActivity extends AppCompatActivity {
             tvWebsite.setText(repDetailModel.getRepHomePage());
             tvTwitter.setText(repDetailModel.getRepTwitter());
         }
+
+        editDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editIntent=new Intent(MyAccountActivity.this, EditAccountActivity.class);
+                startActivity(editIntent);
+            }
+        });
 
     }
 }

@@ -152,6 +152,9 @@ public class SplashActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
+        editor.putInt(Constants.NUMBER_OF_COLORED_POST,0);
+        editor.commit();
+
         FetchNews mFetchNews =new FetchNews();
         mFetchNews.execute();
 

@@ -43,4 +43,5 @@ public class Constants {
     public static final String DEVELOPMENT_IN_PROGRESS="DEVELOPMENT_IN_PROGRESS";
     public static final String MY_NOTIFICATION="MY_NOTIFICATION";
     public static final String NUMBER_OF_NOTIFICATION="NUMBER_OF_NOTIFICATION";
+    public static final String NUMBER_OF_COLORED_POST="NUMBER_OF_COLORED_POST";
 }

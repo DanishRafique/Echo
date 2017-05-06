@@ -105,6 +105,7 @@ public class ViewPostActivity extends AppCompatActivity {
     String postLocation;
     TextView postLocationText;
     LinearLayout postLocationll;
+    TextView buzz_user_designation;
 
 
     @Override
@@ -137,6 +138,7 @@ public class ViewPostActivity extends AppCompatActivity {
         homeSharedFrom=(TextView)findViewById(R.id.home_shared_from);
         postLocationll=(LinearLayout)findViewById(R.id.home_location_ll);
         postLocationText=(TextView)findViewById(R.id.home_location_text);
+        buzz_user_designation=(TextView)findViewById(R.id.buzz_user_designation);
         final LinearLayout buzzShareButton=(LinearLayout)findViewById(R.id.home_share_button);
         sharedpreferences = AppUtil.getAppPreferences(this);
         editor = sharedpreferences.edit();
@@ -296,6 +298,11 @@ public class ViewPostActivity extends AppCompatActivity {
                 mSharePost.execute();
             }
         });
+
+        if(homeObj.getPostType().equals("BUZZ")){
+            buzz_user_designation.setVisibility(View.VISIBLE);
+            buzz_user_designation.setText(homeObj.getPostRepDesignation()+" , "+homeObj.getPostRepParty());
+        }
 
 
 
