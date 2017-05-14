@@ -164,6 +164,7 @@ public class PollFragment extends Fragment {
                     mPollDetailModel.setPollOptionTwoColor(pollObject.getInt("PollOptionTwoColor"));
                     mPollDetailModel.setPollVendorLogo(pollObject.getString("PollVendorLogo"));
                     mPollDetailModel.setPollStartDate(pollObject.getString("PollStartDate"));
+                    mPollDetailModel.setPollQuestion(pollObject.getString("PollQuestion"));
                     mPollDetailModel.setPollEndDate(pollObject.getString("PollEndDate"));
                     if(Integer.valueOf(mPollDetailModel.getPollId())>max){
                         max=Integer.valueOf(mPollDetailModel.getPollId());

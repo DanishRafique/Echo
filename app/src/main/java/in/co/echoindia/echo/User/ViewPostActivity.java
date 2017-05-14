@@ -69,7 +69,7 @@ public class ViewPostActivity extends AppCompatActivity {
 
     CircleImageView homeUserImage;
     TextView homeUserName;
-    TextView homeTime;
+    TextView buzzTime;
     TextView homeText;
     ListView homeImageListView;
     TextView homeUpvoteValue;
@@ -123,7 +123,7 @@ public class ViewPostActivity extends AppCompatActivity {
         homeFullName=(TextView)findViewById(R.id.home_full_name);
         homeUserImage=(CircleImageView)findViewById(R.id.home_user_image);
         homeUserName=(TextView)findViewById(R.id.home_user_name);
-        homeTime=(TextView)findViewById(R.id.home_time);
+        buzzTime=(TextView)findViewById(R.id.home_time);
         homeText=(TextView)findViewById(R.id.home_text);
         homeImageList=(LinearLayout)findViewById(R.id.home_image_list);
         homeUpvoteValue=(TextView)findViewById(R.id.home_upvote_value);
@@ -163,7 +163,7 @@ public class ViewPostActivity extends AppCompatActivity {
         Glide.with(this).load(homeObj.getPostUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(homeUserImage);
         homeUserName.setText(homeObj.getPostUserName());
 
-        homeTime.setText(homeObj.getPostTime());
+        //homeTime.setText(homeObj.getPostTime());
         homeText.setText(homeObj.getPostText());
         homeUpvoteValue.setText(String.valueOf(homeObj.getPostUpVote()));
         homeDownvoteValue.setText(String.valueOf(homeObj.getPostDownVote()));
@@ -302,6 +302,72 @@ public class ViewPostActivity extends AppCompatActivity {
         if(homeObj.getPostType().equals("BUZZ")){
             buzz_user_designation.setVisibility(View.VISIBLE);
             buzz_user_designation.setText(homeObj.getPostRepDesignation()+" , "+homeObj.getPostRepParty());
+        }
+
+
+        final String startDate=
+        homeObj.getPostDate();
+        Date currentDate = new Date();
+        final String dateToday = new SimpleDateFormat("yyyy-MM-dd").format(currentDate);
+        int dateDay=Integer.parseInt(dateToday.substring(8,10));
+        int dateMonth=Integer.parseInt(dateToday.substring(5,7));
+        int dateYear=Integer.parseInt(dateToday.substring(0,4));
+        int startDateDay=Integer.parseInt(startDate.substring(8,10));
+        int startDateMonth=Integer.parseInt(startDate.substring(5,7));
+        int startDateYear=Integer.parseInt(startDate.substring(0,4));
+        if(dateMonth>startDateMonth){
+            if((dateMonth-startDateMonth)==1) {
+                buzzTime.setText(dateMonth - startDateMonth + " month ago");
+            }
+            else
+            {
+                buzzTime.setText(dateMonth - startDateMonth + " months ago");
+            }
+
+        }
+        else if(startDateYear<dateYear){
+            buzzTime.setText(dateMonth+(12-startDateMonth) + " months ago");
+        }
+        else if(startDateYear==dateYear&&startDateMonth==dateMonth&&startDateDay<dateDay){
+            buzzTime.setText((dateDay-startDateDay) + " days ago");
+        }
+        else if(startDateYear==dateYear&&startDateMonth==dateMonth&&startDateDay==dateDay){
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            String timeNow = sdf.format(new Date());
+            final String postTime=homeObj.getPostTime();
+            int timeNowHour=Integer.parseInt(timeNow.substring(0,2));
+            int timeNowMin=Integer.parseInt(timeNow.substring(3,5));
+            int timeNowSec=Integer.parseInt(timeNow.substring(6));
+            int postTimeHour=Integer.parseInt(postTime.substring(0,2));
+            int postTimeMin=Integer.parseInt(postTime.substring(3,5));
+            int postTimeSec=Integer.parseInt(postTime.substring(6));
+            if(timeNowHour>postTimeHour){
+                if((timeNowHour-postTimeHour)==1) {
+                    buzzTime.setText(timeNowHour - postTimeHour + " hr ago");
+                }
+                else
+                {
+                    buzzTime.setText(timeNowHour - postTimeHour + " hrs ago");
+                }
+            }
+            else if(timeNowMin>postTimeMin){
+                if((timeNowMin-postTimeMin)==1) {
+                    buzzTime.setText(timeNowMin - postTimeMin + " min ago");
+                }
+                else
+                {
+                    buzzTime.setText(timeNowMin - postTimeMin + " mins ago");
+                }
+            }
+            else if(timeNowSec>postTimeSec){
+                if((timeNowSec-postTimeSec)==1) {
+                    buzzTime.setText(timeNowSec - postTimeSec + " sec ago");
+                }
+                else
+                {
+                    buzzTime.setText(timeNowSec - postTimeSec + " secs ago");
+                }
+            }
         }
 
 

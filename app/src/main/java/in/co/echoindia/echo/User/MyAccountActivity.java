@@ -2,10 +2,6 @@ package in.co.echoindia.echo.User;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -15,10 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.echoindia.echo.Model.RepDetailModel;
 import in.co.echoindia.echo.Model.UserDetailsModel;
 import in.co.echoindia.echo.R;
@@ -37,8 +33,8 @@ public class MyAccountActivity extends AppCompatActivity {
 
     TextView tvParty,tvDesignation,tvLocation,tvQualification,tvWebsite,tvTwitter;
 
-    //CircleImageView userPhoto;
-    LinearLayout profileBackground;
+    CircleImageView userPhoto;
+   // LinearLayout profileBackground;
 
     LinearLayout llLokSabha,llVidhanSabha;
 
@@ -68,8 +64,8 @@ public class MyAccountActivity extends AppCompatActivity {
         tvLokSabha=(TextView)findViewById(R.id.tv_lok_sabha);
         tvVidhanSabha=(TextView)findViewById(R.id.tv_vidhan_sabha);
         tvState=(TextView)findViewById(R.id.tv_state);
-       // userPhoto=(CircleImageView)findViewById(R.id.user_photo);
-        profileBackground=(LinearLayout)findViewById(R.id.profile_background);
+        userPhoto=(CircleImageView)findViewById(R.id.my_account_img_profile);
+        //profileBackground=(LinearLayout)findViewById(R.id.profile_background);
         llLokSabha=(LinearLayout)findViewById(R.id.ll_lok_sabha);
         llVidhanSabha=(LinearLayout)findViewById(R.id.ll_vidhan_sabha);
         myAccountPolitical=(CardView)findViewById(R.id.my_account_political);
@@ -102,8 +98,8 @@ public class MyAccountActivity extends AppCompatActivity {
                 llVidhanSabha.setVisibility(View.GONE);
             }
             tvState.setText(userDetailsModel.getState());
-           // Glide.with(this).load(userDetailsModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
-            Glide.with(this).load(userDetailsModel.getUserPhoto()).asBitmap().into(new SimpleTarget<Bitmap>(500, 200) {
+           Glide.with(this).load(userDetailsModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
+           /* Glide.with(this).load(userDetailsModel.getUserPhoto()).asBitmap().into(new SimpleTarget<Bitmap>(500, 200) {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                     Drawable drawable = new BitmapDrawable(resource);
@@ -111,7 +107,7 @@ public class MyAccountActivity extends AppCompatActivity {
                         profileBackground.setBackground(drawable);
                     }
                 }
-            });
+            });*/
         }
         else if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("REP")) {
 
@@ -134,8 +130,8 @@ public class MyAccountActivity extends AppCompatActivity {
                 llVidhanSabha.setVisibility(View.GONE);
             }
             tvState.setText(repDetailModel.getState());
-            //Glide.with(this).load(repDetailModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
-            Glide.with(this).load(repDetailModel.getUserPhoto()).asBitmap().into(new SimpleTarget<Bitmap>(500, 200) {
+            Glide.with(this).load(repDetailModel.getUserPhoto()).diskCacheStrategy(DiskCacheStrategy.ALL).into(userPhoto);
+           /* Glide.with(this).load(repDetailModel.getUserPhoto()).asBitmap().into(new SimpleTarget<Bitmap>(500, 200) {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                     Drawable drawable = new BitmapDrawable(resource);
@@ -143,7 +139,7 @@ public class MyAccountActivity extends AppCompatActivity {
                         profileBackground.setBackground(drawable);
                     }
                 }
-            });
+            });*/
 
             tvParty.setText(repDetailModel.getRepParty());
             tvDesignation.setText(repDetailModel.getRepDesignation());

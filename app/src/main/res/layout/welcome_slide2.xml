@@ -19,8 +19,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Opposition Speaks"
+            android:text="Representative Views"
             android:textColor="@android:color/white"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:gravity="center"
             android:textSize="@dimen/slide_title"
             android:textStyle="bold" />
 
@@ -30,10 +33,10 @@
             android:layout_marginTop="20dp"
             android:paddingLeft="@dimen/desc_padding"
             android:paddingRight="@dimen/desc_padding"
-            android:text="Opposition's opinions matter. Look what they have to say."
+            android:text="Find what stand your Elected Representative holds in the current matters"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/slide_desc" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
