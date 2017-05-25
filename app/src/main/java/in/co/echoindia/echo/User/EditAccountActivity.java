@@ -83,6 +83,13 @@ public class EditAccountActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Toast.makeText(EditAccountActivity.this, "Your Account Detail has been Updated", Toast.LENGTH_SHORT).show();
+                if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("USER")){
+                    getUserData();
+                }
+                else{
+                    getRepData();
+                }
+                EditAccountActivity.this.finish();
             }
         });
 
@@ -154,6 +161,58 @@ public class EditAccountActivity extends AppCompatActivity {
         ward.setText(repDetailModel.getWard());
         pinCode.setText(repDetailModel.getPinCode());
 
+    }
+
+    void getUserData(){
+        UserDetailsModel userModel=new UserDetailsModel();
+        userModel.setUserName(userDetailsModel.getUserName());
+        userModel.setUserPhoto(userDetailsModel.getUserPhoto());
+        userModel.setFirstName(firstName.getText().toString());
+        userModel.setLastName(lastName.getText().toString());
+        userModel.setEmailId(emailAddress.getText().toString());
+        userModel.setPhoneNo(phoneNumber.getText().toString());
+        userModel.setState(state.getText().toString());
+        userModel.setLokSabha(lokSabha.getText().toString());
+        userModel.setVidhanSabha(vidhanSabha.getText().toString());
+        userModel.setCity(city.getText().toString());
+        userModel.setWard(ward.getText().toString());
+        userModel.setPinCode(pinCode.getText().toString());
+        editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(userModel));
+        editor.commit();
+    }
+
+    void getRepData(){
+        RepDetailModel userModel=new RepDetailModel();
+        userModel.setRepName(repDetailModel.getRepName());
+        userModel.setUserPhoto(repDetailModel.getUserPhoto());
+        userModel.setFirstName(firstName.getText().toString());
+        userModel.setLastName(lastName.getText().toString());
+        userModel.setEmailId(emailAddress.getText().toString());
+        userModel.setPhoneNo(phoneNumber.getText().toString());
+        userModel.setState(state.getText().toString());
+        userModel.setLokSabha(lokSabha.getText().toString());
+        userModel.setVidhanSabha(vidhanSabha.getText().toString());
+        userModel.setCity(city.getText().toString());
+        userModel.setWard(ward.getText().toString());
+        userModel.setPinCode(pinCode.getText().toString());
+
+
+        userModel.setRepParty(repParty.getText().toString());
+        userModel.setRepDesignation(repDesignation.getText().toString());
+        userModel.setRepQualification(repQualification.getText().toString());
+        userModel.setRepLocation(repLocation.getText().toString());
+        userModel.setRepHomePage(repHomePage.getText().toString());
+        userModel.setRepTwitter(repTwitter.getText().toString());
+
+
+
+
+
+
+
+
+        editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(userModel));
+        editor.commit();
     }
 
 }
