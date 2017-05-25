@@ -510,7 +510,12 @@ public class HomeAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(String aVoid) {
             super.onPostExecute(aVoid);
-            Log.e("Voting", "Response : " + aVoid);
+            if(aVoid!=null) {
+                Log.e("Voting", "Response : " + aVoid);
+            }
+            else{
+                Toast.makeText(activity, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

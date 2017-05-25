@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
@@ -337,7 +338,12 @@ public class NewsAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(String aVoid) {
             super.onPostExecute(aVoid);
-            Log.e("Voting", "Response : " + aVoid);
+            if(aVoid!=null) {
+                Log.e("Voting", "Response : " + aVoid);
+            }
+            else{
+                Toast.makeText(activity, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

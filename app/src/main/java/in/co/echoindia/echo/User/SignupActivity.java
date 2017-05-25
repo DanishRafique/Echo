@@ -696,18 +696,23 @@ public class SignupActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             pDialog.dismiss();
-            JSONObject jObject= null;
-            try {
-                jObject = new JSONObject(o.toString());
-                String checkStatus=jObject.getString("status");
-                if(checkStatus.equals("1")){
-                    openOTPDialog();
+            if(o!=null) {
+                JSONObject jObject = null;
+                try {
+                    jObject = new JSONObject(o.toString());
+                    String checkStatus = jObject.getString("status");
+                    if (checkStatus.equals("1")) {
+                        openOTPDialog();
+                    } else if (checkStatus.equals("0")) {
+                        Toast.makeText(SignupActivity.this, jObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                else if(checkStatus.equals("0")){
-                    Toast.makeText(SignupActivity.this, jObject.getString("message"), Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            }
+            else
+            {
+                Toast.makeText(SignupActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -808,23 +813,28 @@ public class SignupActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             pDialog.dismiss();
-            JSONObject jObject= null;
-            try {
-                Log.e(LOG_TAG,"Registration JSON: "+o.toString());
-                jObject = new JSONObject(o.toString());
-                String checkStatus=jObject.getString("status");
-                if(checkStatus.equals("1")){
-                    Toast.makeText(SignupActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
-                    Intent intentDocumentUpload=new Intent(SignupActivity.this,DocumentUploadActivity.class);
-                    startActivity(intentDocumentUpload);
-                    SignupActivity.this.finish();
+            if(o!=null) {
+                JSONObject jObject = null;
+                try {
+                    Log.e(LOG_TAG, "Registration JSON: " + o.toString());
+                    jObject = new JSONObject(o.toString());
+                    String checkStatus = jObject.getString("status");
+                    if (checkStatus.equals("1")) {
+                        Toast.makeText(SignupActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
+                        Intent intentDocumentUpload = new Intent(SignupActivity.this, DocumentUploadActivity.class);
+                        startActivity(intentDocumentUpload);
+                        SignupActivity.this.finish();
+                    } else if (checkStatus.equals("0")) {
+                        Toast.makeText(SignupActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                else if(checkStatus.equals("0")){
-                    Toast.makeText(SignupActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+            else{
+                Toast.makeText(SignupActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+
 
 
         }
@@ -941,23 +951,29 @@ public class SignupActivity extends AppCompatActivity {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             pDialog.dismiss();
-            JSONObject jObject= null;
-            try {
-                Log.e(LOG_TAG,"Registration JSON: "+o.toString());
-                jObject = new JSONObject(o.toString());
-                String checkStatus=jObject.getString("status");
-                if(checkStatus.equals("1")){
-                    Toast.makeText(SignupActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
-                    Intent intentDocumentUpload=new Intent(SignupActivity.this,DocumentUploadActivity.class);
-                    startActivity(intentDocumentUpload);
-                    SignupActivity.this.finish();
+            if(o!=null) {
+                JSONObject jObject = null;
+                try {
+                    Log.e(LOG_TAG, "Registration JSON: " + o.toString());
+                    jObject = new JSONObject(o.toString());
+                    String checkStatus = jObject.getString("status");
+                    if (checkStatus.equals("1")) {
+                        Toast.makeText(SignupActivity.this, "User Registered Successfully", Toast.LENGTH_SHORT).show();
+                        Intent intentDocumentUpload = new Intent(SignupActivity.this, DocumentUploadActivity.class);
+                        startActivity(intentDocumentUpload);
+                        SignupActivity.this.finish();
+                    } else if (checkStatus.equals("0")) {
+                        Toast.makeText(SignupActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                else if(checkStatus.equals("0")){
-                    Toast.makeText(SignupActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+            else
+            {
+                Toast.makeText(SignupActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -1021,7 +1037,10 @@ public class SignupActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            setVidhanData(o);
+            if(o!=null) {
+                setVidhanData(o);
+            }
+
         }
     }
 
@@ -1085,7 +1104,9 @@ public class SignupActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            setMunicipalCorporationWardData(o);
+            if(o!=null) {
+                setMunicipalCorporationWardData(o);
+            }
         }
     }
 
@@ -1149,7 +1170,9 @@ public class SignupActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            setLokSabhaData(o);
+            if(o!=null) {
+                setLokSabhaData(o);
+            }
         }
     }
 
@@ -1212,7 +1235,10 @@ public class SignupActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            setDesignationData(o);
+            if(o!=null) {
+                setDesignationData(o);
+
+            }
         }
     }
 

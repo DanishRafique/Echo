@@ -384,7 +384,12 @@ public class PollAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            setPollCommentData(o,pollId);
+            if(o!=null) {
+                setPollCommentData(o, pollId);
+            }
+            else{
+                Toast.makeText(activity, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }
@@ -514,26 +519,31 @@ public class PollAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            try {
-            JSONObject jObject=new JSONObject(o.toString());
-            String checkStatus=jObject.getString("status");
-            if(checkStatus.equals("1")&&o != null) {
-                pollCommentEdit.setText("");
-                FetchPollComment fetchPollComment=new FetchPollComment(pollId);
-                fetchPollComment.execute();
+            if (o != null) {
+                try {
+                    JSONObject jObject = new JSONObject(o.toString());
+                    String checkStatus = jObject.getString("status");
+                    if (checkStatus.equals("1") && o != null) {
+                        pollCommentEdit.setText("");
+                        FetchPollComment fetchPollComment = new FetchPollComment(pollId);
+                        fetchPollComment.execute();
 
-            }
-            else if(checkStatus.equals("0")){
-                Toast.makeText(activity, "No Comment Found", Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
-            }
+                    } else if (checkStatus.equals("0")) {
+                        Toast.makeText(activity, "No Comment Found", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                    }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.e(LOG_TAG,e.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e(LOG_TAG, e.toString());
+                }
             }
+        else{
+                Toast.makeText(activity, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
             }
+        }
+
         }
 
 
@@ -605,10 +615,11 @@ public class PollAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            try {
-                JSONObject jObject=new JSONObject(o.toString());
-                String checkStatus=jObject.getString("status");
-                if(checkStatus.equals("1")&&o != null) {
+            if (o != null) {
+                try {
+                    JSONObject jObject = new JSONObject(o.toString());
+                    String checkStatus = jObject.getString("status");
+                    if (checkStatus.equals("1") && o != null) {
                   /* pollButton.setVisibility(View.GONE);
                     if(pollOption.equals("1")){
                         pollQuestion.setText("Your vote has been submitted for "+pollOptionOneText.getText());
@@ -616,26 +627,30 @@ public class PollAdapter extends BaseAdapter {
                     else if(pollOption.equals("2")){
                         pollQuestion.setText("Your vote has been submitted for "+pollOptionTwoText.getText());
                     }*/
-                    PollVoteModel pollVoteModel=new PollVoteModel();
-                    pollVoteModel.setPollId(pollId);
-                    pollVoteModel.setPollVoteOption(pollOption);
-                    Type type = new TypeToken<ArrayList<PollVoteModel>>() {}.getType();
+                        PollVoteModel pollVoteModel = new PollVoteModel();
+                        pollVoteModel.setPollId(pollId);
+                        pollVoteModel.setPollVoteOption(pollOption);
+                        Type type = new TypeToken<ArrayList<PollVoteModel>>() {
+                        }.getType();
 
-                    ArrayList<PollVoteModel> pollVoteModelArrayListUpdate=new Gson().fromJson(sharedpreferences.getString(Constants.POLL_VOTE, ""), type);
-                    pollVoteModelArrayListUpdate.add(pollVoteModel);
-                    editor.putString(Constants.POLL_VOTE, new Gson().toJson(pollVoteModelArrayListUpdate));
-                    editor.commit();
-                    Toast.makeText(activity, "Thanks for your feedback", Toast.LENGTH_SHORT).show();
-                }
-                else if(checkStatus.equals("0")){
-                    Toast.makeText(activity, "Your Vote wasn't submitted", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
-                }
+                        ArrayList<PollVoteModel> pollVoteModelArrayListUpdate = new Gson().fromJson(sharedpreferences.getString(Constants.POLL_VOTE, ""), type);
+                        pollVoteModelArrayListUpdate.add(pollVoteModel);
+                        editor.putString(Constants.POLL_VOTE, new Gson().toJson(pollVoteModelArrayListUpdate));
+                        editor.commit();
+                        Toast.makeText(activity, "Thanks for your feedback", Toast.LENGTH_SHORT).show();
+                    } else if (checkStatus.equals("0")) {
+                        Toast.makeText(activity, "Your Vote wasn't submitted", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(activity, "Server Connection Error", Toast.LENGTH_SHORT).show();
+                    }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.e(LOG_TAG,e.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e(LOG_TAG, e.toString());
+                }
+            }
+            else{
+                Toast.makeText(activity, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
             }
         }
     }

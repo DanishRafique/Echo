@@ -268,8 +268,13 @@ public class NotificationAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            Log.e(LOG_TAG,"NOTIFICATION : "+o.toString());
-              setHomeData(o);
+            if(o!=null) {
+                Log.e(LOG_TAG, "NOTIFICATION : " + o.toString());
+                setHomeData(o);
+            }
+            else{
+                Toast.makeText(activity, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

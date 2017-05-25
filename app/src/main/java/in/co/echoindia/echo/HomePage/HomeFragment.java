@@ -239,8 +239,10 @@ public class HomeFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            Log.e(LOG_TAG,"HOME : "+o.toString());
-            setHomeData(o);
+            if(o!=null) {
+                Log.e(LOG_TAG, "HOME : " + o.toString());
+                setHomeData(o);
+            }
         }
     }
 

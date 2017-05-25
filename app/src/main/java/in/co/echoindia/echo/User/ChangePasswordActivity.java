@@ -157,29 +157,32 @@ public class ChangePasswordActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            JSONObject jObject= null;
-            try {
-                jObject = new JSONObject(o.toString());
-                String checkStatus=jObject.getString("status");
-                if(checkStatus.equals("1")){
-                    Toast.makeText(ChangePasswordActivity.this, "Password Changed Successfully", Toast.LENGTH_SHORT).show();
+            if(o!=null) {
+                JSONObject jObject = null;
+                try {
+                    jObject = new JSONObject(o.toString());
+                    String checkStatus = jObject.getString("status");
+                    if (checkStatus.equals("1")) {
+                        Toast.makeText(ChangePasswordActivity.this, "Password Changed Successfully", Toast.LENGTH_SHORT).show();
 
-                    if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("USER")) {
-                        userDetailsModel.setPassword(newPassword);
-                        editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(userDetailsModel));
+                        if (sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE, "").equals("USER")) {
+                            userDetailsModel.setPassword(newPassword);
+                            editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(userDetailsModel));
+                        } else if (sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE, "").equals("REP")) {
+                            repDetailModel.setPassword(newPassword);
+                            editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(repDetailModel));
+                        }
+                        editor.commit();
+                        finish();
+                    } else if (checkStatus.equals("0")) {
+                        Toast.makeText(ChangePasswordActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                     }
-                    else if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("REP")) {
-                        repDetailModel.setPassword(newPassword);
-                        editor.putString(Constants.SETTINGS_OBJ_USER, new Gson().toJson(repDetailModel));
-                    }
-                    editor.commit();
-                    finish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                else if(checkStatus.equals("0")){
-                    Toast.makeText(ChangePasswordActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            }
+            else{
+                Toast.makeText(ChangePasswordActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
             }
 
 

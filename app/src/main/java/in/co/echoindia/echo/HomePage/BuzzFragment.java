@@ -244,8 +244,10 @@ public class BuzzFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            Log.e(LOG_TAG,"BUZZ : "+o.toString());
-            setBuzzData(o);
+            if(o!=null) {
+                Log.e(LOG_TAG, "BUZZ : " + o.toString());
+                setBuzzData(o);
+            }
         }
     }
 }

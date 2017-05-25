@@ -230,24 +230,27 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            JSONObject jObject= null;
-            try {
-                jObject = new JSONObject(o.toString());
-                String checkStatus=jObject.getString("status");
-                if(checkStatus.equals("1")){
-                    editor.putString("userType",jObject.getString("userType"));
-                    editor.putString("username",jObject.getString("username"));
-                    editor.commit();
-                    openOTPDialog();
+            if(o!=null) {
+                JSONObject jObject = null;
+                try {
+                    jObject = new JSONObject(o.toString());
+                    String checkStatus = jObject.getString("status");
+                    if (checkStatus.equals("1")) {
+                        editor.putString("userType", jObject.getString("userType"));
+                        editor.putString("username", jObject.getString("username"));
+                        editor.commit();
+                        openOTPDialog();
+                    } else if (checkStatus.equals("2")) {
+                        Toast.makeText(ForgotPasswordActivity.this, "User Doesn't Exist", Toast.LENGTH_SHORT).show();
+                    } else if (checkStatus.equals("0")) {
+                        Toast.makeText(ForgotPasswordActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                else if(checkStatus.equals("2")){
-                    Toast.makeText(ForgotPasswordActivity.this, "User Doesn't Exist", Toast.LENGTH_SHORT).show();
-                }
-                else if(checkStatus.equals("0")){
-                    Toast.makeText(ForgotPasswordActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            }
+            else{
+                Toast.makeText(ForgotPasswordActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -327,19 +330,23 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            JSONObject jObject= null;
-            try {
-                jObject = new JSONObject(o.toString());
-                String checkStatus=jObject.getString("status");
-                if(checkStatus.equals("1")){
-                    Toast.makeText(ForgotPasswordActivity.this, "Password Changed Successfully", Toast.LENGTH_SHORT).show();
-                    finish();
+            if(o!=null) {
+                JSONObject jObject = null;
+                try {
+                    jObject = new JSONObject(o.toString());
+                    String checkStatus = jObject.getString("status");
+                    if (checkStatus.equals("1")) {
+                        Toast.makeText(ForgotPasswordActivity.this, "Password Changed Successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else if (checkStatus.equals("0")) {
+                        Toast.makeText(ForgotPasswordActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                else if(checkStatus.equals("0")){
-                    Toast.makeText(ForgotPasswordActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            }
+            else{
+                Toast.makeText(ForgotPasswordActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
             }
         }
     }

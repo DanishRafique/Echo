@@ -137,7 +137,10 @@ public class NewsFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            setNewsData(o);
+            if(o!=null) {
+                setNewsData(o);
+            }
+
         }
     }
     private void setNewsData(Object o)  {

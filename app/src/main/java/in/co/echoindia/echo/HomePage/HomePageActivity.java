@@ -431,8 +431,13 @@ public class HomePageActivity extends AppCompatActivity
                 protected void onPostExecute(Object o) {
                     super.onPostExecute(o);
                     pDialog.dismiss();
-                    Log.e(LOG_TAG,"Logout "+o.toString());
-                    setWorkLogOut();
+                    if(o!=null) {
+                        Log.e(LOG_TAG, "Logout " + o.toString());
+                        setWorkLogOut();
+                    }
+                    else{
+                        Toast.makeText(HomePageActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
@@ -498,67 +503,70 @@ public class HomePageActivity extends AppCompatActivity
                 @Override
                 protected void onPostExecute(Object o) {
                     super.onPostExecute(o);
-                    try {
-                        JSONObject jObject=new JSONObject(o.toString());
-                        String checkStatus=jObject.getString("status");
-                        if(checkStatus.equals("1")&&o != null) {
+                    if(o!=null) {
+                        try {
+                            JSONObject jObject = new JSONObject(o.toString());
+                            String checkStatus = jObject.getString("status");
+                            if (checkStatus.equals("1") && o != null) {
 
-                            JSONArray jArrayMyPost=jObject.getJSONArray("Posts");
-                            for(int i =0 ; i<jArrayMyPost.length();i++){
-                                JSONObject buzzObject=jArrayMyPost.getJSONObject(i);
-                                mPostDetailModel=new PostDetailModel();
-                                mPostDetailModel.setPostId(buzzObject.getString("PostId"));
-                                mPostDetailModel.setPostUserName(buzzObject.getString("PostUserName"));
-                                mPostDetailModel.setPostText(buzzObject.getString("PostText"));
-                                mPostDetailModel.setPostTime(buzzObject.getString("PostTime"));
-                                mPostDetailModel.setPostDate(buzzObject.getString("PostDate"));
-                                mPostDetailModel.setPostUpVote(buzzObject.getInt("PostUpVote"));
-                                mPostDetailModel.setPostDownVote(buzzObject.getInt("PostDownVote"));
-                                mPostDetailModel.setPostType(buzzObject.getString("PostType"));
-                                mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
-                                mPostDetailModel.setPostImageRef(buzzObject.getString("PostImageRef"));
-                                mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
-                                mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
-                                mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
-                                mPostDetailModel.setSharedFromUserName(buzzObject.getString("SharedFromUserName"));
-                                mPostDetailModel.setPostFirstName(buzzObject.getString("FirstName"));
-                                mPostDetailModel.setPostLastName(buzzObject.getString("LastName"));
-                                mPostDetailModel.setPostUpVoteValue(false);
-                                mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
-                                mPostDetailModel.setPostDownVoteValue(false);
-                                mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
-                                if(sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE,"").equals("REP")){
-                                    mPostDetailModel.setPostRepParty(userParty);
-                                    mPostDetailModel.setPostRepDesignation(userDesignation);
+                                JSONArray jArrayMyPost = jObject.getJSONArray("Posts");
+                                for (int i = 0; i < jArrayMyPost.length(); i++) {
+                                    JSONObject buzzObject = jArrayMyPost.getJSONObject(i);
+                                    mPostDetailModel = new PostDetailModel();
+                                    mPostDetailModel.setPostId(buzzObject.getString("PostId"));
+                                    mPostDetailModel.setPostUserName(buzzObject.getString("PostUserName"));
+                                    mPostDetailModel.setPostText(buzzObject.getString("PostText"));
+                                    mPostDetailModel.setPostTime(buzzObject.getString("PostTime"));
+                                    mPostDetailModel.setPostDate(buzzObject.getString("PostDate"));
+                                    mPostDetailModel.setPostUpVote(buzzObject.getInt("PostUpVote"));
+                                    mPostDetailModel.setPostDownVote(buzzObject.getInt("PostDownVote"));
+                                    mPostDetailModel.setPostType(buzzObject.getString("PostType"));
+                                    mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
+                                    mPostDetailModel.setPostImageRef(buzzObject.getString("PostImageRef"));
+                                    mPostDetailModel.setIsShared(buzzObject.getString("IsShared"));
+                                    mPostDetailModel.setSharedCount(buzzObject.getString("ShareCount"));
+                                    mPostDetailModel.setSharedFrom(buzzObject.getString("SharedFrom"));
+                                    mPostDetailModel.setSharedFromUserName(buzzObject.getString("SharedFromUserName"));
+                                    mPostDetailModel.setPostFirstName(buzzObject.getString("FirstName"));
+                                    mPostDetailModel.setPostLastName(buzzObject.getString("LastName"));
+                                    mPostDetailModel.setPostUpVoteValue(false);
+                                    mPostDetailModel.setPostLocation(buzzObject.getString("PostLocation"));
+                                    mPostDetailModel.setPostDownVoteValue(false);
+                                    mPostDetailModel.setPostUserPhoto(buzzObject.getString("UserPhoto"));
+                                    if (sharedpreferences.getString(Constants.SETTINGS_IS_LOGGED_TYPE, "").equals("REP")) {
+                                        mPostDetailModel.setPostRepParty(userParty);
+                                        mPostDetailModel.setPostRepDesignation(userDesignation);
+                                    }
+                                    JSONArray postImageArray = buzzObject.getJSONArray("images");
+                                    ArrayList<String> postImageArrayList = new ArrayList<>();
+                                    for (int j = 0; j < postImageArray.length(); j++) {
+                                        postImageArrayList.add(postImageArray.getString(j));
+                                    }
+                                    if (postImageArray.length() > 0) {
+                                        mPostDetailModel.setPostImages(postImageArrayList);
+                                    } else {
+                                        mPostDetailModel.setPostImages(null);
+                                    }
+                                    userPost.add(mPostDetailModel);
                                 }
-                                JSONArray postImageArray=buzzObject.getJSONArray("images");
-                                ArrayList<String>postImageArrayList = new ArrayList<>();
-                                for(int j =0 ; j<postImageArray.length();j++) {
-                                    postImageArrayList.add(postImageArray.getString(j));
-                                }
-                                if(postImageArray.length()>0) {
-                                    mPostDetailModel.setPostImages(postImageArrayList);
-                                }
-                                else{
-                                    mPostDetailModel.setPostImages(null);
-                                }
-                                userPost.add(mPostDetailModel);
+                                Intent viewProfile = new Intent(HomePageActivity.this, MyPostActivity.class);
+                                Bundle mBundle = new Bundle();
+                                mBundle.putSerializable("userPost", userPost);
+                                viewProfile.putExtra("userPost", mBundle);
+                                startActivity(viewProfile);
+                            } else if (checkStatus.equals("0")) {
+                                Toast.makeText(HomePageActivity.this, "Post Share Failed", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(HomePageActivity.this, "Server Connection Error", Toast.LENGTH_SHORT).show();
                             }
-                            Intent viewProfile=new Intent(HomePageActivity.this, MyPostActivity.class);
-                            Bundle mBundle = new Bundle();
-                            mBundle.putSerializable("userPost",userPost);
-                            viewProfile.putExtra("userPost",mBundle);
-                            startActivity(viewProfile);
-                        }
-                        else if(checkStatus.equals("0")){
-                            Toast.makeText(HomePageActivity.this, "Post Share Failed", Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(HomePageActivity.this, "Server Connection Error", Toast.LENGTH_SHORT).show();
-                        }
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Log.e(LOG_TAG,e.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e(LOG_TAG, e.toString());
+                        }
+                    }
+                    else{
+                        Toast.makeText(HomePageActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
                     }
 
                 }

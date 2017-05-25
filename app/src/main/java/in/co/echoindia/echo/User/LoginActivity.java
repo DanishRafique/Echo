@@ -306,7 +306,12 @@ public class LoginActivity extends AppCompatActivity{
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             pDialog.dismiss();
-            setUserData(o);
+            if(o!=null) {
+                setUserData(o);
+            }
+            else{
+                Toast.makeText(gps, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
 
 
         }

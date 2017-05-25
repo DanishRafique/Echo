@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -422,9 +423,16 @@ public class PostActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            Log.e(LOG_TAG, "Insert Post : " + o.toString());
-            dialog.dismiss();
-            finish();
+            if(o!=null) {
+                Log.e(LOG_TAG, "Insert Post : " + o.toString());
+                dialog.dismiss();
+                finish();
+            }
+            else{
+                Toast.makeText(PostActivity.this, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+
         }
     }
 
