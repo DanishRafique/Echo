@@ -16,13 +16,13 @@ public class ContactUsActivity extends AppCompatActivity {
                 .setImage(R.mipmap.icon)
                 .setDescription("Feel free to Echo your valuable feedback to us using other social sites")
                 .addGroup("Connect with us")
-                .addEmail("elmehdi.sakout@gmail.com")
-                .addWebsite("http://medyo.github.io/")
-                .addFacebook("echo")
-                .addTwitter("medyo80")
-                .addYoutube("UCdPQtdWIsg7_pi4mrRu46vA","Subscribe our channel on YouTube")
-                .addPlayStore("com.ideashower.readitlater.pro")
-                .addInstagram("echo")
+                .addEmail("echoindiaconnect@gmail.com")
+                .addWebsite("http://www.github.com/DanishRafique/Echo/")
+                .addFacebook("echo.connect.7")
+                .addTwitter("echo_connect")
+                .addYoutube("UCwiScH1HLXS01PPyyrL_JDAc","Subscribe our channel on YouTube")
+                .addPlayStore("")
+                .addInstagram("echoconnect")
                 .create();
         setContentView(aboutPage);
     }

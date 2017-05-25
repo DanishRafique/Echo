@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,11 +41,16 @@ public class NotificationActivity extends AppCompatActivity {
         editor = sharedpreferences.edit();
         Type type= new TypeToken<ArrayList<NotificationModel>>() {}.getType();
         notificationList = new Gson().fromJson(sharedpreferences.getString(Constants.MY_NOTIFICATION, ""), type);
-        Log.e(LOG_TAG,"home Element Count "+notificationList.size());
-        Collections.sort(notificationList,new PostComparator());
-        notificationAdapter = new NotificationAdapter(this, notificationList);
-        notificationListView.setAdapter(notificationAdapter);
-        notificationAdapter.notifyDataSetChanged();
+        if(notificationList!=null) {
+            Log.e(LOG_TAG, "home Element Count " + notificationList.size());
+            Collections.sort(notificationList, new PostComparator());
+            notificationAdapter = new NotificationAdapter(this, notificationList);
+            notificationListView.setAdapter(notificationAdapter);
+            notificationAdapter.notifyDataSetChanged();
+        }
+        else{
+            Toast.makeText(this, "No new Notification", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class PostComparator implements Comparator<NotificationModel> {

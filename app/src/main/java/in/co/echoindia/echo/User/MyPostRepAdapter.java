@@ -1,8 +1,10 @@
 package in.co.echoindia.echo.User;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -117,9 +119,12 @@ public class MyPostRepAdapter extends BaseAdapter {
     String postLocation;
     TextView postLocationText;
     LinearLayout postLocationll;
-    public MyPostRepAdapter(Activity activity, ArrayList<PostDetailModel> buzzDetailsModels) {
+    ImageView homeDownDialog;
+    int indicator;
+    public MyPostRepAdapter(Activity activity, ArrayList<PostDetailModel> buzzDetailsModels,int indicator) {
         this.activity = activity;
         this.buzzDetailsModels = buzzDetailsModels;
+        this.indicator=indicator;
     }
 
     @Override
@@ -157,6 +162,7 @@ public class MyPostRepAdapter extends BaseAdapter {
         buzzImage1=(ImageView)convertView.findViewById(R.id.buzz_image_1);
         buzzImage2=(ImageView)convertView.findViewById(R.id.buzz_image_2);
         buzzImage3=(ImageView)convertView.findViewById(R.id.buzz_image_3);
+        homeDownDialog=(ImageView)convertView.findViewById(R.id.home_down_dialog);
 
         buzzMoreImageText=(TextView)convertView.findViewById(R.id.buzz_more_image_text);
         buzzMoreImage=(RelativeLayout)convertView.findViewById(R.id.buzz_more_image);
@@ -172,8 +178,6 @@ public class MyPostRepAdapter extends BaseAdapter {
         editor = sharedpreferences.edit();
 
         final LinearLayout  buzzShareButton=(LinearLayout)convertView.findViewById(R.id.buzz_share_button);
-
-
 
         if(buzzObj.getIsShared().equals("0")){
             buzzShare.setVisibility(View.GONE);
@@ -406,11 +410,123 @@ public class MyPostRepAdapter extends BaseAdapter {
             }
         }
 
+        final String isShared=buzzObj.getIsShared();
+        if(indicator==1){
+            homeDownDialog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setMessage("Do you want to Delete this post ?")
+                            .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    deletePost del=new deletePost(postId,isShared);
+                                    del.execute();
+                                    activity.finish();
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User cancelled the dialog
+                                }
+                            });
+                    // Create the AlertDialog object and return it
+                    builder.create();
+                    builder.show();
+                }
+            });
+        }
 
 
 
 
         return convertView;
+    }
+    class deletePost extends AsyncTask {
+
+        String url_poll_comment = "http://echoindia.co.in/php/delPost.php";
+        String postId="";
+        String isShared="";
+
+        public deletePost(String postId,String isShared){
+            this.postId=postId;
+            this.isShared=isShared;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            BufferedReader bufferedReader = null;
+            try {
+                URL url = new URL(url_poll_comment);
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("postId",postId);
+                postDataParams.put("isShared",isShared);
+                Log.e(LOG_TAG,"URL"+url_poll_comment);
+                Log.e(LOG_TAG,"PollId "+postId);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter( new OutputStreamWriter(os, "UTF-8"));
+                writer.write(AppUtil.getPostDataString(postDataParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader( conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+
+                    String line = "";
+                    while ((line = in.readLine()) != null) {
+                        sb.append(line);
+                        break;
+                    }
+                    in.close();
+                    Log.e(LOG_TAG,sb.toString());
+                    return sb.toString();
+
+                } else {
+                    return new String("false : " + responseCode);
+                }
+            } catch (Exception ex) {
+                return null;
+            } finally {
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if(o!=null) {
+                try {
+                    JSONObject jObject=new JSONObject(o.toString());
+                    if(jObject.getString("status").equals("1")){
+                        Toast.makeText(activity, "Post Deleted Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(activity, "Post not Deleted", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            else{
+                Toast.makeText(activity, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
 

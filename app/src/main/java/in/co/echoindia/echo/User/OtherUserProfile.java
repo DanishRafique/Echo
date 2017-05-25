@@ -38,12 +38,12 @@ public class OtherUserProfile extends AppCompatActivity {
         String userImage=userBundle.getString("userImage");
         Glide.with(this).load(userImage).diskCacheStrategy(DiskCacheStrategy.ALL).into(userProfileImage);
         if(userBundle.getString("userType").equals("USER")) {
-            myAdapter = new MyPostAdapter(this, userPostDetail);
+            myAdapter = new MyPostAdapter(this, userPostDetail,0);
             userList.setAdapter(myAdapter);
             myAdapter.notifyDataSetChanged();
         }
         else if(userBundle.getString("userType").equals("REP")) {
-            myRepAdapter = new MyPostRepAdapter(this, userPostDetail);
+            myRepAdapter = new MyPostRepAdapter(this, userPostDetail,0);
             userList.setAdapter(myRepAdapter);
             myRepAdapter.notifyDataSetChanged();
         }

@@ -67,7 +67,7 @@ public class MyPostActivity extends AppCompatActivity {
             collapsingToolbarLayout.setTitle(mUserDetailModel.getFirstName()+" "+mUserDetailModel.getLastName());
             if(myListArray!=null) {
                 Collections.sort(myListArray, new PostComparator());
-                myAdapter = new MyPostAdapter(this, myListArray);
+                myAdapter = new MyPostAdapter(this, myListArray,1);
                 myListView.setAdapter(myAdapter);
                 myAdapter.notifyDataSetChanged();
             }
@@ -78,7 +78,7 @@ public class MyPostActivity extends AppCompatActivity {
             collapsingToolbarLayout.setTitle(mRepDetailModel.getFirstName() + " " + mRepDetailModel.getLastName());
             if (myListArray!=null) {
                 Collections.sort(myListArray, new PostComparator());
-                myRepAdapter = new MyPostRepAdapter(this, myListArray);
+                myRepAdapter = new MyPostRepAdapter(this, myListArray,1);
                 myListView.setAdapter(myRepAdapter);
                 myRepAdapter.notifyDataSetChanged();
             }

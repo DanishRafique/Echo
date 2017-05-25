@@ -120,6 +120,7 @@ public class BuzzFragment extends Fragment {
             if(checkStatus.equals("1")&&o != null){
 
                 JSONArray newsArray=jObject.getJSONArray("posts");
+                buzzListArray.clear();
                 for(int i =0 ; i<newsArray.length();i++){
                     JSONObject buzzObject=newsArray.getJSONObject(i);
                     mPostDetailModel=new PostDetailModel();
@@ -196,7 +197,7 @@ public class BuzzFragment extends Fragment {
             try {
                 URL url = new URL(url_buzz_update);
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("maxID",maxID);
+                postDataParams.put("maxID",0);
                 Log.e(LOG_TAG,"URL"+url_buzz_update);
                 Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();

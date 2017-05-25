@@ -98,6 +98,7 @@ public class HomeFragment extends Fragment {
             String checkStatus=jObject.getString("status");
             if(checkStatus.equals("1")&&o != null){
                 JSONArray newsArray=jObject.getJSONArray("posts");
+                homeListArray.clear();
                 for(int i =0 ; i<newsArray.length();i++){
                     JSONObject buzzObject=newsArray.getJSONObject(i);
                     mPostDetailModel=new PostDetailModel();
@@ -191,7 +192,7 @@ public class HomeFragment extends Fragment {
             try {
                 URL url = new URL(url_home_update);
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("maxID",maxID);
+                postDataParams.put("maxID",0);
                 Log.e(LOG_TAG,"URL"+url_home_update);
                 Log.e(LOG_TAG,"PostParam"+postDataParams.toString());
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
